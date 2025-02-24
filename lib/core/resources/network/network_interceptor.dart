@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:guavafinance/core/resources/analytics/logger/logger.dart';
 import 'package:guavafinance/core/resources/encryption/encrypt.dart';
 import 'package:injectable/injectable.dart';
@@ -8,6 +9,10 @@ import 'package:injectable/injectable.dart';
 @lazySingleton
 class NetworkInterceptor {
   late EncryptionService encryptionService;
+
+  FirebasePerformance performance = FirebasePerformance.instance;
+
+  late HttpMetric metric;
 
   NetworkInterceptor({
     required this.dio,
@@ -34,6 +39,23 @@ class NetworkInterceptor {
     RequestOptions options,
     RequestInterceptorHandler requestInterceptorHandler,
   ) async {
+    metric = performance.newHttpMetric(
+      '${options.baseUrl}/${options.path}',
+      options.method.toUpperCase() == 'GET'
+          ? HttpMethod.Get
+          : options.method.toUpperCase() == 'POST'
+              ? HttpMethod.Post
+              : options.method.toUpperCase() == 'PATCH'
+                  ? HttpMethod.Patch
+                  : HttpMethod.Delete,
+    );
+
+    await metric.start();
+
+    metric.responseContentType = options.headers['Content-Type'];
+    // metric.httpResponseCode = options.statusCode;
+    // metric.responsePayloadSize = options.contentLength;
+
     responsesTime[options.path] = DateTime.now();
     Map<String, dynamic> logData = {};
 
@@ -58,7 +80,7 @@ class NetworkInterceptor {
   onResponseInterceptors(
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
-  ) {
+  ) async {
     final resTime = DateTime.now().difference(
       responsesTime[response.requestOptions.path] as DateTime,
     );
@@ -80,6 +102,8 @@ class NetworkInterceptor {
     responsesTime.remove(response.requestOptions.path);
 
     AppLogger.log(logData);
+
+    await metric.stop();
 
     return handler.next(response);
   }
@@ -118,6 +142,17 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
   }) async {
+    // todo: Call baseURL from enviroment
+    HttpMetric metric = performance.newHttpMetric(
+      '$endpoint',
+      HttpMethod.Get,
+    );
+
+    metric.putAttribute('endpoint', endpoint);
+
+    // Start the trace
+    await metric.start();
+
     Response response = await dio.get(
       // todo: Call baseURL from enviroment
       '$endpoint',
@@ -126,6 +161,8 @@ class NetworkInterceptor {
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
       }),
     );
+
+    await metric.stop();
 
     return response.data;
   }
@@ -136,6 +173,16 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
   }) async {
+    HttpMetric metric = performance.newHttpMetric(
+      '$endpoint',
+      HttpMethod.Post,
+    );
+
+    metric.putAttribute('endpoint', endpoint);
+
+    // Start the trace
+    await metric.start();
+
     Response response = await dio.post(
       '$endpoint',
       data: isFormData ? FormData.fromMap(data) : data,
@@ -144,6 +191,8 @@ class NetworkInterceptor {
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
       }),
     );
+
+    await metric.stop();
 
     return response.data;
   }
@@ -154,6 +203,16 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
   }) async {
+    HttpMetric metric = performance.newHttpMetric(
+      '$endpoint',
+      HttpMethod.Patch,
+    );
+
+    metric.putAttribute('endpoint', endpoint);
+
+    // Start the trace
+    await metric.start();
+
     Response response = await dio.patch(
       '$endpoint',
       data: isFormData ? FormData.fromMap(data) : data,
@@ -163,6 +222,8 @@ class NetworkInterceptor {
       }),
     );
 
+    await metric.stop();
+
     return response.data;
   }
 
@@ -171,6 +232,16 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
   }) async {
+    HttpMetric metric = performance.newHttpMetric(
+      '$endpoint',
+      HttpMethod.Delete,
+    );
+
+    metric.putAttribute('endpoint', endpoint);
+
+    // Start the trace
+    await metric.start();
+
     Response response = await dio.delete(
       '$endpoint',
       options: Options(headers: {
@@ -179,10 +250,13 @@ class NetworkInterceptor {
       }),
     );
 
+    await metric.stop();
+
     return response.data;
   }
 
   setToken(RequestOptions options) {
     // todo: get token from secured storage
+    options.headers = {};
   }
 }
