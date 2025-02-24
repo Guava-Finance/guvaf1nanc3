@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
@@ -18,4 +19,7 @@ abstract class RegisterModule {
         '',
         trackAutomaticEvents: true,
       );
+
+  @preResolve
+  FlutterSecureStorage get storage => const FlutterSecureStorage();
 }

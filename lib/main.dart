@@ -14,11 +14,14 @@ import 'package:guavafinance/core/theme/theme.dart';
 import 'package:guavafinance/firebase_options.dart';
 
 import 'core/resources/notification/wrapper/notification.wrapper.dart';
+import 'core/service_locator/injection_container.dart';
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    await configureDependencies();
 
     /// Init Firebase setup
     await Firebase.initializeApp(
