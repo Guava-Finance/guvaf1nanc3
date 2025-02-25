@@ -20,6 +20,9 @@ abstract class LocalWalletFunctions {
   /// The [mnenomic] is gotten from secure storage and together with the
   /// derivative path the private public key pair is gotten
   Future<String> walletAddress();
+
+  /// Display Mnenomics to user for backup
+  Future<String> showMnenomics();
 }
 
 @LazySingleton(as: LocalWalletFunctions)
@@ -85,5 +88,16 @@ class LocalWalletFunctionsImpl extends LocalWalletFunctions {
     }
 
     throw Exception('No wallet found');
+  }
+
+  @override
+  Future<String> showMnenomics() async {
+    final mnenomics = await secureStorage.read(key: Strings.mnenomics);
+
+    if (mnenomics != null) {
+      return mnenomics;
+    }
+
+    throw Exception('Oops! Nothing here');
   }
 }
