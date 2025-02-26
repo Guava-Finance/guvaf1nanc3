@@ -1,16 +1,25 @@
-# guavafinance
+# GuavaFinance
 
-A new Flutter project.
+GuavaFinance is a fintech cross-border payment and wallet solution for individuals and SMEs, powered by the Solana blockchain and leveraging the USDC stablecoin for payments. This project is built using Flutter, providing a seamless and efficient user experience.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point for a Flutter application. Below are the steps to set up the project on your local machine.
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Before you begin, ensure you have the following installed:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Flutter SDK**: [Install Flutter](https://docs.flutter.dev/get-started/install)
+- **Dart SDK**: Comes bundled with Flutter.
+- **Git**: [Install Git](https://git-scm.com/downloads)
+
+---
+
+### Cloning the Repository
+
+To get started, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/guavafinance.git
+cd guavafinance
