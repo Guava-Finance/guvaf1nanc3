@@ -31,6 +31,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+.env
+lib/core/resources/env/env.g.dart
+
 # Symbolication related
 app.*.symbols
 

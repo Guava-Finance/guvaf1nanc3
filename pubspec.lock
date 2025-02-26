@@ -326,6 +326,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.3"
+  envied:
+    dependency: "direct main"
+    description:
+      name: envied
+      sha256: a4e2b1d0caa479b5d61332ae516518c175a6d09328a35a0bc0a53894cc5d7e4d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
+  envied_generator:
+    dependency: "direct dev"
+    description:
+      name: envied_generator
+      sha256: "894f6c5eb624c60a1ce6f642b6fd7ec68bc3440aa6f1881837aa9acbbeade0c8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   equatable:
     dependency: "direct main"
     description:
@@ -605,6 +621,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  injectable_generator:
+    dependency: "direct dev"
+    description:
+      name: injectable_generator
+      sha256: af403d76c7b18b4217335e0075e950cd0579fd7f8d7bd47ee7c85ada31680ba1
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.2"
   intl:
     dependency: "direct main"
     description:
@@ -813,6 +837,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   riverpod:
     dependency: transitive
     description:

@@ -2,7 +2,7 @@ import 'package:bip39/bip39.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guavafinance/core/app_strings.dart';
 import 'package:guavafinance/core/resources/analytics/logger/logger.dart';
-import 'package:guavafinance/core/resources/network/network_interceptor.dart';
+import 'package:guavafinance/core/resources/network/interceptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/solana.dart';

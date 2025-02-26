@@ -21,8 +21,10 @@ abstract class RegisterModule {
         trackAutomaticEvents: true,
       );
 
-  @preResolve
-  FlutterSecureStorage get storage => const FlutterSecureStorage();
+  @lazySingleton
+  Future<FlutterSecureStorage> get storage async {
+    return const FlutterSecureStorage();
+  }
 
   @lazySingleton
   // todo: get RPC Client Url from .env
