@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guavafinance/core/resources/env/env.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:solana/solana.dart';
@@ -16,8 +17,7 @@ abstract class RegisterModule {
 
   @preResolve
   Future<Mixpanel> get mixPanel => Mixpanel.init(
-        // todo: put our Mixpanel here
-        '',
+        Env.mixpanel,
         trackAutomaticEvents: true,
       );
 
@@ -27,6 +27,5 @@ abstract class RegisterModule {
   }
 
   @lazySingleton
-  // todo: get RPC Client Url from .env
-  RpcClient get rpcClient => RpcClient('');
+  RpcClient get rpcClient => RpcClient(Env.rpcClient);
 }

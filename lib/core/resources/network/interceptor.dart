@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:guavafinance/core/resources/analytics/logger/logger.dart';
 import 'package:guavafinance/core/resources/encryption/encrypt.dart';
+import 'package:guavafinance/core/resources/env/env.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
@@ -141,10 +142,12 @@ class NetworkInterceptor {
     String endpoint, {
     bool isProtected = true,
     bool isFormData = false,
+    String? baseUrl,
   }) async {
-    // todo: Call baseURL from enviroment
+    String bUrl = baseUrl ?? Env.baseUrl;
+
     HttpMetric metric = performance.newHttpMetric(
-      '$endpoint',
+      '$bUrl$endpoint',
       HttpMethod.Get,
     );
 
@@ -155,7 +158,7 @@ class NetworkInterceptor {
 
     Response response = await dio.get(
       // todo: Call baseURL from enviroment
-      '$endpoint',
+      '$bUrl$endpoint',
       options: Options(headers: {
         if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
@@ -172,9 +175,12 @@ class NetworkInterceptor {
     required Map<String, dynamic> data,
     bool isProtected = true,
     bool isFormData = false,
+    String? baseUrl,
   }) async {
+    String bUrl = baseUrl ?? Env.baseUrl;
+
     HttpMetric metric = performance.newHttpMetric(
-      '$endpoint',
+      '$bUrl$endpoint',
       HttpMethod.Post,
     );
 
@@ -184,7 +190,7 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.post(
-      '$endpoint',
+      '$bUrl$endpoint',
       data: isFormData ? FormData.fromMap(data) : data,
       options: Options(headers: {
         if (isProtected) 'Authorization': 'Bearer $token',
@@ -202,9 +208,12 @@ class NetworkInterceptor {
     required Map<String, dynamic> data,
     bool isProtected = true,
     bool isFormData = false,
+    String? baseUrl,
   }) async {
+    String bUrl = baseUrl ?? Env.baseUrl;
+
     HttpMetric metric = performance.newHttpMetric(
-      '$endpoint',
+      '$bUrl$endpoint',
       HttpMethod.Patch,
     );
 
@@ -214,7 +223,7 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.patch(
-      '$endpoint',
+      '$bUrl$endpoint',
       data: isFormData ? FormData.fromMap(data) : data,
       options: Options(headers: {
         if (isProtected) 'Authorization': 'Bearer $token',
@@ -231,9 +240,12 @@ class NetworkInterceptor {
     String endpoint, {
     bool isProtected = true,
     bool isFormData = false,
+    String? baseUrl,
   }) async {
+    String bUrl = baseUrl ?? Env.baseUrl;
+
     HttpMetric metric = performance.newHttpMetric(
-      '$endpoint',
+      '$bUrl$endpoint',
       HttpMethod.Delete,
     );
 
@@ -243,7 +255,7 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.delete(
-      '$endpoint',
+      '$bUrl$endpoint',
       options: Options(headers: {
         if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
