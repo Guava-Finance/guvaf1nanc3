@@ -22,7 +22,38 @@ To get started, clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/your-username/guavafinance.git
-
-
-```bash
 cd guavafinance
+```
+
+### Run the Script:
+Execute the script to create the .env file:
+```bash
+./setup_env.sh
+```
+
+### Installing Dependencies
+
+After setting up the environment variables, install the project dependencies:
+```bash
+flutter pub get
+```
+
+### Running Build Runner
+To generate the code needed to successfully run the project uses code generation (i.e. Service locator setup and env.g.dart), you'll need to run build_runner:
+```bash
+flutter pub run build_runner build
+```
+> Note: `--delete-conflicting-outputs` might be required to override conflicts.
+
+### Running the Application
+Once everything is set up, you can run the application:
+```bash
+flutter run
+```
+
+### Troubleshooting
+Flutter Issues: If you encounter issues with Flutter, ensure your environment is correctly set up by running flutter doctor.
+
+Solana Issues: If you have trouble with Solana, check the Solana CLI documentation or community forums for assistance.
+
+
