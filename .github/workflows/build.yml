@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up environment variables
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          RPC_CLIENT: ${{ secrets.RPC_CLIENT }}
+          MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
+        run: |
+          ./setup_env_from_github_secrets.sh
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run build runner
+        run: flutter pub run build_runner build
+
+      - name: Build the project
+        run: flutter build apk
