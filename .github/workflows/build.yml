@@ -18,6 +18,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           RPC_CLIENT: ${{ secrets.RPC_CLIENT }}
           MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
+          AES_ENCRPTION_KEY: ${{ secrets.AES_ENCRPTION_KEY }}
         run: |
           ./setup_env_from_github_secrets.sh
 

@@ -17,7 +17,7 @@ abstract class RegisterModule {
 
   @preResolve
   Future<Mixpanel> get mixPanel => Mixpanel.init(
-        Env.mixpanel,
+        Env.mixpanelToken,
         trackAutomaticEvents: true,
       );
 

@@ -13,6 +13,9 @@ abstract class Env {
   @EnviedField(varName: 'RPC_CLIENT')
   static String rpcClient = _Env.rpcClient;
 
-  @EnviedField(varName: 'MIXPANEL')
-  static String mixpanel = _Env.mixpanel;
+  @EnviedField(varName: 'MIXPANEL_TOKEN')
+  static String mixpanelToken = _Env.mixpanelToken;
+
+  @EnviedField(varName: 'AES_ENCRPTION_KEY')
+  static String aesEncryptionKey = _Env.aesEncryptionKey;
 }

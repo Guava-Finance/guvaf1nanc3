@@ -26,8 +26,9 @@ class NetworkInterceptor {
       ),
     );
 
-    // todo: Change to proper encryptionkey gotten from .env
-    encryptionService = EncryptionService(encryptionKey: 'LoremIspum');
+    encryptionService = EncryptionService(
+      encryptionKey: Env.aesEncryptionKey,
+    );
   }
 
   final Dio dio;
