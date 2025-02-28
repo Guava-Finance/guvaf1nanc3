@@ -11,3 +11,9 @@ class ErrorState extends AppState {
 
   ErrorState(this.msg);
 }
+
+class NoInternetState extends AppState {
+  final String msg;
+
+  NoInternetState(this.msg);
+}

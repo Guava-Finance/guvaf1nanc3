@@ -8,4 +8,7 @@ extension AppStateExtention on AppState {
   String get errorMessage => (this as ErrorState).msg;
 
   dynamic get responseData => (this as LoadedState).data;
+
+  /// This checks whether the AppState response is no Internet
+  bool get noInternetConnection => (this is NoInternetState);
 }

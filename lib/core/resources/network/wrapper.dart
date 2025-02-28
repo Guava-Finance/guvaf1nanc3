@@ -61,7 +61,7 @@ class NetworkExceptionWrapper {
       }
     } else {
       FirebaseCrashlytics.instance.log('no internet');
-      return ErrorState('No internet access.');
+      return NoInternetState('No internet access.');
     }
   }
 }
