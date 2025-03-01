@@ -43,13 +43,7 @@ class NetworkInterceptor {
   ) async {
     metric = performance.newHttpMetric(
       '${options.baseUrl}/${options.path}',
-      options.method.toUpperCase() == 'GET'
-          ? HttpMethod.Get
-          : options.method.toUpperCase() == 'POST'
-              ? HttpMethod.Post
-              : options.method.toUpperCase() == 'PATCH'
-                  ? HttpMethod.Patch
-                  : HttpMethod.Delete,
+      whatHttpMethod(options.method),
     );
 
     await metric.start();
@@ -272,4 +266,15 @@ class NetworkInterceptor {
     // todo: get token from secured storage
     options.headers = {};
   }
+}
+
+HttpMethod whatHttpMethod(String method) {
+  return switch (method.toUpperCase()) {
+    'GET' => HttpMethod.Get,
+    'POST' => HttpMethod.Post,
+    'PATCH' => HttpMethod.Patch,
+    'DELETE' => HttpMethod.Delete,
+    'PUT' => HttpMethod.Put,
+    String() => HttpMethod.Post,
+  };
 }
