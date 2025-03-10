@@ -60,7 +60,7 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
 
   @override
   Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
-    final address = await getTokenAddress();
+    final address = await _getTokenAddress();
 // Fetch the token account info
     final accountInfo = await rpcClient.getAccountInfo(address.toBase58());
 
@@ -75,7 +75,7 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
 
   @override
   Future<String> enableUSDCForWallet() async {
-    final wallet = await getWallet();
+    final wallet = await _getWallet();
     final usdcMint = Ed25519HDPublicKey.fromBase58(
       Strings.usdcMintTokenAddress,
     );
@@ -112,7 +112,7 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
   @override
   Future<bool> isGasFeeSufficient({int noOfSignatures = 1}) async {
     try {
-      final wallet = await getWallet();
+      final wallet = await _getWallet();
 
       /// Checks whether there's enough [sol] in the wallet to pay gas fee
       final walletBalance = await rpcClient.getBalance(wallet.address);
@@ -137,7 +137,7 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
 
   @override
   Future<TokenAmount> checkBalance() async {
-    final tokenAddress = await getTokenAddress();
+    final tokenAddress = await _getTokenAddress();
 
     final tokenBalance = await rpcClient.getTokenAccountBalance(
       tokenAddress.toBase58(),
@@ -150,9 +150,10 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
   Future<String> transferUSDC({
     required double amount,
     required String receiverAddress,
+    double? transactionFee,
     String? narration,
   }) async {
-    final wallet = await getWallet();
+    final wallet = await _getWallet();
 
     final senderUSDCWallet = await findAssociatedTokenAddress(
       owner: wallet.publicKey,
@@ -178,14 +179,17 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
       owner: wallet.publicKey,
     );
 
-    // Transfer to Companies wallet
-    final txnFeeInstruction = TokenInstruction.transfer(
-      // todo: rework/re-calculate transaction fee
-      amount: ((amount * lamportsPerSol) / 100).toInt(),
-      source: senderUSDCWallet,
-      destination: companyUSDCWallet,
-      owner: wallet.publicKey,
-    );
+    late TokenInstruction txnFeeInstruction;
+
+    if (transactionFee != null) {
+      // Transfer to Companies wallet
+      txnFeeInstruction = TokenInstruction.transfer(
+        amount: (transactionFee * lamportsPerSol).toInt(),
+        source: senderUSDCWallet,
+        destination: companyUSDCWallet,
+        owner: wallet.publicKey,
+      );
+    }
 
     final memoInstruction = MemoInstruction(
       memo: narration ??
@@ -196,20 +200,21 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     final message = Message(
       instructions: [
         instruction,
-        txnFeeInstruction,
+        if (transactionFee != null) txnFeeInstruction,
         memoInstruction,
       ],
     );
 
-    final transactionId = await rpcClient.signAndSendTransaction(
-      message,
-      [wallet],
+    /// Sign the message instructions and send the encode SignedTx to the backend for submission
+    final signedTx = await wallet.signMessage(
+      message: message,
+      recentBlockhash: (await rpcClient.getLatestBlockhash()).value.blockhash,
     );
 
-    return transactionId;
+    return signedTx.encode();
   }
 
-  Future<Ed25519HDKeyPair> getWallet() async {
+  Future<Ed25519HDKeyPair> _getWallet() async {
     final mnenomic = await secureStorage.read(key: Strings.mnenomics);
 
     if (mnenomic != null) {
@@ -224,8 +229,8 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     throw Exception('No Wallet found');
   }
 
-  Future<Ed25519HDPublicKey> getTokenAddress() async {
-    final wallet = await getWallet();
+  Future<Ed25519HDPublicKey> _getTokenAddress() async {
+    final wallet = await _getWallet();
 
     final usdcMint = Ed25519HDPublicKey.fromBase58(
       Strings.usdcMintTokenAddress,

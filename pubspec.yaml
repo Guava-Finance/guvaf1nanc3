@@ -55,6 +55,8 @@ dependencies:
   bip39: ^1.0.6
   solana: ^0.31.2
   envied: ^1.1.1
+  pinput: ^5.0.1
+  hashlib: ^1.21.1
 
 dev_dependencies:
   flutter_test:
