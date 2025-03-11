@@ -1,4 +1,4 @@
-package com.example.guavafinance
+package finance.guavafinance
 
 import io.flutter.embedding.android.FlutterActivity
 

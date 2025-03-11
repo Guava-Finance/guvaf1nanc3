@@ -6,9 +6,9 @@ package_rename_config:
     # lang: # (Optional) (String) The android development language {kotlin(default) or java}
 
   ios:
-    app_name: # (String) The display name of the ios app
-    bundle_name: # (String) The bundle name of the ios app
-    package_name: # (String) The product bundle identifier of the ios app
+    app_name: "Guava Finance"
+    bundle_name: finance.guava
+    package_name: finance.guava
 
   # linux:
   #   app_name: # (String) The window title of the linux app
