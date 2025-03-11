@@ -1,7 +1,7 @@
 class Strings {
   Strings._();
 
-  static const String title = "GuavaFinance";
+  static const String title = "guava";
   static const String mnenomics = 'my_wallet_mnenomics';
 
   // todo: Fetch from Config

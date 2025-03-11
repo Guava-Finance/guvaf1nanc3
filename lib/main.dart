@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guavafinance/core/routes/router.dart';
-import 'package:guavafinance/core/theme/theme.dark.dart';
-import 'package:guavafinance/core/theme/theme.dart';
-import 'package:guavafinance/firebase_options.dart';
+import 'package:guava/core/routes/router.dart';
+import 'package:guava/core/theme/theme.dark.dart';
+import 'package:guava/core/theme/theme.dart';
+import 'package:guava/firebase_options.dart';
 
 import 'core/resources/notification/wrapper/notification.wrapper.dart';
 import 'core/service_locator/injection_container.dart';
@@ -25,7 +25,6 @@ void main() async {
 
     /// Init Firebase setup
     await Firebase.initializeApp(
-      name: 'GuavaFinance',
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
@@ -58,6 +57,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           title: 'Guava Finance',
           theme: theme(context),
+          debugShowCheckedModeBanner: false,
           darkTheme: themeDark(context),
           routerConfig: router,
           builder: (context, child) {

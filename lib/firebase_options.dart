@@ -66,10 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAwyBt32MyTra5t69KLETSj2LiLZ7wDeYs',
-    appId: '1:894739389977:ios:d825185eadee7388175488',
+    appId: '1:894739389977:ios:e643f154b5784b32175488',
     messagingSenderId: '894739389977',
     projectId: 'guavafinance-7d405',
     storageBucket: 'guavafinance-7d405.firebasestorage.app',
-    iosBundleId: 'com.example.guavafinance',
+    iosBundleId: 'finance.guava',
   );
+
 }

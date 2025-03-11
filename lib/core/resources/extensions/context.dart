@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guavafinance/core/resources/notification/wrapper/notification.wrapper.dart';
+import 'package:guava/core/resources/notification/wrapper/notification.wrapper.dart';
 
 extension CxtExtension on BuildContext {
   // theme related

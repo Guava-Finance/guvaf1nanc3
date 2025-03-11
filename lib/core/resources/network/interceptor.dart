@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:guavafinance/core/resources/analytics/logger/logger.dart';
-import 'package:guavafinance/core/resources/encryption/encrypt.dart';
-import 'package:guavafinance/core/resources/env/env.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/encryption/encrypt.dart';
+import 'package:guava/core/resources/env/env.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton

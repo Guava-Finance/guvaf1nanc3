@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:guavafinance/core/resources/network/state.dart';
+import 'package:guava/core/resources/network/state.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton

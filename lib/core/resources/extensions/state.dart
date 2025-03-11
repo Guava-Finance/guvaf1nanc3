@@ -1,4 +1,4 @@
-import 'package:guavafinance/core/resources/network/state.dart';
+import 'package:guava/core/resources/network/state.dart';
 
 extension AppStateExtention on AppState {
   /// This checks whether the AppState response is an error

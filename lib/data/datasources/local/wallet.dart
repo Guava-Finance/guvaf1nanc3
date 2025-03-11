@@ -1,6 +1,6 @@
 import 'package:bip39/bip39.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:guavafinance/core/app_strings.dart';
+import 'package:guava/core/app_strings.dart';
 import 'package:injectable/injectable.dart';
 import 'package:solana/solana.dart';
 

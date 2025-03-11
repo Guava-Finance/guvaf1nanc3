@@ -797,6 +797,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  metamap_plugin_flutter:
+    dependency: "direct main"
+    description:
+      name: metamap_plugin_flutter
+      sha256: "5a2c0404b66d68e5ba607564268e9053b03c4619b1b23604871dcb80b66749a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.9"
   mime:
     dependency: transitive
     description:

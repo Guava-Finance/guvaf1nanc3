@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:guavafinance/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 
 class FCMService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guavafinance/presentation/pages/splash.page.dart';
+import 'package:guava/presentation/pages/splash.page.dart';
 
 /// [p] suffix means path
 const String pRoot = '/';

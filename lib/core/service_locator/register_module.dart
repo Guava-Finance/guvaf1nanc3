@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:guavafinance/core/resources/env/env.dart';
+import 'package:guava/core/resources/env/env.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:solana/solana.dart';
