@@ -1,0 +1,135 @@
+{
+    "metadata": {
+        "ipinfo": {
+            "status": "success",
+            "country": "Nigeria",
+            "city": "Lagos",
+            "district": "",
+            "zip": "",
+            "lat": 6.4474,
+            "lon": 3.3903,
+            "timezone": "Africa/Lagos",
+            "isp": "MTN NIGERIA Communication limited",
+            "org": "MTN Nigeria",
+            "as": "AS29465 MTN NIGERIA Communication limited",
+            "mobile": true,
+            "proxy": false,
+            "hosting": true,
+            "query": "102.88.36.137",
+            "region_name": "Lagos"
+        },
+        "device_info": "Mozilla/5.0 (Linux; Android 15; Pixel 6a Build/BP1A.250305.019; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.138 Mobile Safari/537.36",
+        "user_id": "9FGvJ1odLGcjbfzZVvE514Grk6dAvnTLnYpWsNS4nAaa"
+    },
+    "data": {
+        "index": {
+            "data": {},
+            "message": "Successfully continued to the main checks.",
+            "status": true
+        },
+        "email": {
+            "data": {
+                "email": "robor.eminokanju@gmail.com"
+            },
+            "status": true,
+            "message": "robor.eminokanju@gmail.com validation Successful"
+        },
+        "government_data": {
+            "data": {
+                "nin": {
+                    "entity": {
+                        "customer": "6bb82c41-e15e-4308-b99d-e9640818eca9",
+                        "app_id": null,
+                        "nin": "1234567890",
+                        "first_name": "JOHN",
+                        "last_name": "DOE",
+                        "middle_name": "DOE",
+                        "gender": "Male",
+                        "date_of_birth": "1992-10-10",
+                        "phone_number": null,
+                        "image_url": "https://images.dojah.io/id_John_Doe_1720615487.jpg",
+                        "email": null,
+                        "employment_status": null,
+                        "marital_status": "Single",
+                        "birth_country": "Nigeria",
+                        "birth_lga": null,
+                        "birth_state": null,
+                        "educational_level": null,
+                        "maiden_name": "PAUL",
+                        "nspoken_lang": null,
+                        "profession": null,
+                        "religion": null,
+                        "residence_address_line_1": null,
+                        "residence_address_line_2": null,
+                        "residence_status": null,
+                        "residence_town": null,
+                        "residence_lga": null,
+                        "residence_state": "ONDO",
+                        "ospoken_lang": null,
+                        "origin_lga": "OSE",
+                        "origin_place": "Ondo",
+                        "origin_state": null,
+                        "height": null,
+                        "p_first_name": null,
+                        "p_middle_name": null,
+                        "p_last_name": null,
+                        "createdAt": "2024-11-23T21:07:53.000Z",
+                        "updatedAt": "2024-11-23T21:07:53.000Z",
+                        "firstname": "JOHN",
+                        "surname": "DOE",
+                        "birthdate": "1992-10-10",
+                        "telephoneno": null,
+                        "middlename": "DOE"
+                    }
+                }
+            },
+            "message": "",
+            "status": true
+        },
+        "id": {
+            "data": {
+                "id_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+                "back_url": "",
+                "id_data": {
+                    "first_name": "Doe",
+                    "last_name": "John",
+                    "middle_name": "",
+                    "nationality": "Nigerian",
+                    "mrz_status": "",
+                    "expiry_date": "2020-01-01",
+                    "document_type": "Id Card",
+                    "document_number": "123456789",
+                    "date_of_birth": "1990-01-01",
+                    "date_issued": "2019-01-01",
+                    "extras": ""
+                }
+            },
+            "status": true,
+            "message": "Successfully verified your id"
+        },
+        "selfie": {
+            "data": {
+                "selfie_url": "https://images.dojah.io/selfie_sample_image_1720624219.jpg"
+            },
+            "message": "Successfully validated your liveness",
+            "status": true
+        }
+    },
+    "id_type": "NIN",
+    "value": "123456789",
+    "id_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+    "back_url": "",
+    "message": "Successfully completed the verification.",
+    "reference_id": "DJ-2C215E5D3A",
+    "widget_id": "67d456febe80a0c611488b42",
+    "verification_mode": "LIVENESS",
+    "verification_type": "NG-NIN-SLIP",
+    "verification_value": "123456789",
+    "verification_url": "https://app.dojah.io/verifications/bio-data/107aa165-97df-4406-a849-fd61657f9a8b",
+    "selfie_url": "https://images.dojah.io/selfie_sample_image_1720624219.jpg",
+    "status": true,
+    "aml": {
+        "status": false
+    },
+    "verification_status": "Completed"
+}

@@ -1,0 +1,19 @@
+{
+    "jsonrpc": "2.0",
+    "method": "blockNotification",
+    "params": {
+        "result": {
+            "context": {
+                "slot": 367246406
+            },
+            "value": {
+                "slot": 367246433,
+                "block": null,
+                "err": {
+                    "UnsupportedTransactionVersion": 0
+                }
+            }
+        },
+        "subscription": 567911
+    }
+}

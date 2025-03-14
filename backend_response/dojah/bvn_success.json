@@ -1,0 +1,125 @@
+{
+    "metadata": {
+        "ipinfo": {
+            "status": "success",
+            "country": "Nigeria",
+            "city": "Lagos",
+            "district": "",
+            "zip": "",
+            "lat": 6.4474,
+            "lon": 3.3903,
+            "timezone": "Africa/Lagos",
+            "isp": "MTN NIGERIA Communication limited",
+            "org": "MTN Nigeria",
+            "as": "AS29465 MTN NIGERIA Communication limited",
+            "mobile": true,
+            "proxy": false,
+            "hosting": true,
+            "query": "102.88.36.137",
+            "region_name": "Lagos"
+        },
+        "device_info": "Mozilla/5.0 (Linux; Android 15; Pixel 6a Build/BP1A.250305.019; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.138 Mobile Safari/537.36",
+        "user_id": "9FGvJ1odLGcjbfzZVvE514Grk6dAvnTLnYpWsNS4nAaa"
+    },
+    "data": {
+        "index": {
+            "data": {},
+            "message": "Successfully continued to the main checks.",
+            "status": true
+        },
+        "email": {
+            "data": {
+                "email": "robor.eminokanju@gmail.com"
+            },
+            "status": true,
+            "message": "robor.eminokanju@gmail.com validation Successful"
+        },
+        "government_data": {
+            "data": {
+                "bvn": {
+                    "entity": {
+                        "customer": "6bb82c41-e15e-4308-b99d-e9640818eca9",
+                        "app_id": null,
+                        "bvn": "22324280081",
+                        "first_name": "IFEANYI",
+                        "last_name": "OKERE",
+                        "middle_name": "",
+                        "gender": "Male",
+                        "date_of_birth": "01-Jun-1982",
+                        "phone_number1": "08011111111",
+                        "phone_number2": "",
+                        "image_url": null,
+                        "email": "",
+                        "enrollment_bank": "",
+                        "enrollment_branch": "",
+                        "level_of_account": "",
+                        "lga_of_origin": "",
+                        "lga_of_residence": "",
+                        "marital_status": "",
+                        "name_on_card": "",
+                        "nationality": "",
+                        "nin": "",
+                        "registration_date": "",
+                        "residential_address": "",
+                        "state_of_origin": "",
+                        "state_of_residence": "",
+                        "title": "",
+                        "type": "BASIC",
+                        "xc": null,
+                        "sc": true,
+                        "watch_listed": "",
+                        "createdAt": "2024-11-23T18:38:32.000Z",
+                        "updatedAt": "2024-11-23T18:38:32.000Z"
+                    }
+                }
+            },
+            "message": "",
+            "status": true
+        },
+        "id": {
+            "data": {
+                "id_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+                "back_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+                "id_data": {
+                    "first_name": "Doe",
+                    "last_name": "John",
+                    "middle_name": "",
+                    "nationality": "Nigerian",
+                    "mrz_status": "",
+                    "expiry_date": "2020-01-01",
+                    "document_type": "National ID",
+                    "document_number": "123456789",
+                    "date_of_birth": "1990-01-01",
+                    "date_issued": "2019-01-01",
+                    "extras": ""
+                }
+            },
+            "status": true,
+            "message": "Successfully verified your id"
+        },
+        "selfie": {
+            "data": {
+                "selfie_url": "https://images.dojah.io/selfie_sample_image_1720624219.jpg"
+            },
+            "message": "Successfully validated your liveness",
+            "status": true
+        }
+    },
+    "id_type": "BVN",
+    "value": "123456789",
+    "id_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+    "back_url": "https://images.dojah.io/id_sample_id_1720624047.jpg",
+    "message": "Successfully completed the verification.",
+    "reference_id": "DJ-828C95A398",
+    "widget_id": "67d456febe80a0c611488b42",
+    "verification_mode": "LIVENESS",
+    "verification_type": "NATIONAL_ID",
+    "verification_value": "123456789",
+    "verification_url": "https://app.dojah.io/verifications/bio-data/c571781c-90f5-4202-8615-206c3b2e527a",
+    "selfie_url": "https://images.dojah.io/selfie_sample_image_1720624219.jpg",
+    "status": true,
+    "aml": {
+        "status": false
+    },
+    "verification_status": "Completed"
+}

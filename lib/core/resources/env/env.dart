@@ -16,6 +16,15 @@ abstract class Env {
   @EnviedField(varName: 'MIXPANEL_TOKEN')
   static String mixpanelToken = _Env.mixpanelToken;
 
-  @EnviedField(varName: 'AES_ENCRPTION_KEY')
+  @EnviedField(varName: 'AES_ENCRYPTION_KEY')
   static String aesEncryptionKey = _Env.aesEncryptionKey;
+
+  @EnviedField(varName: 'DOJAH_API_ID')
+  static String dojahApiId = _Env.dojahApiId;
+
+  @EnviedField(varName: 'DOJAH_PUBLIC_KEY')
+  static String dojahPublicKey = _Env.dojahPublicKey;
+
+  @EnviedField(varName: 'DOJAH_WIDGET_ID')
+  static String dojahWidgetId = _Env.dojahWidgetId;
 }

@@ -6,12 +6,18 @@ echo "Setting up environment variables..."
 read -p "Enter BASE_URL: " BASE_URL
 read -p "Enter RPC_CLIENT: " RPC_CLIENT
 read -p "Enter MIXPANEL_TOKEN: " MIXPANEL_TOKEN
-read -p "Enter AES_ENCRPTION_KEY: " AES_ENCRPTION_KEY
+read -p "Enter AES_ENCRYPTION_KEY: " AES_ENCRYPTION_KEY
+read -p "Enter DOJAH_API_ID: " DOJAH_API_ID
+read -p "Enter DOJAH_PUBLIC_KEY: " DOJAH_PUBLIC_KEY
+read -p "Enter DOJAH_WIDGET_ID: " DOJAH_WIDGET_ID
 
 # Create the .env file
 echo "BASE_URL=$BASE_URL" > .env
 echo "RPC_CLIENT=$RPC_CLIENT" >> .env
 echo "MIXPANEL_TOKEN=$MIXPANEL_TOKEN" >> .env
-echo "AES_ENCRPTION_KEY=$AES_ENCRPTION_KEY" >> .env
+echo "AES_ENCRYPTION_KEY=$AES_ENCRYPTION_KEY" >> .env
+echo "DOJAH_API_ID=$DOJAH_API_ID" >> .env
+echo "DOJAH_PUBLIC_KEY=$DOJAH_PUBLIC_KEY" >> .env
+echo "DOJAH_WIDGET_ID=$DOJAH_WIDGET_ID" >> .env
 
 echo ".env file created successfully!"
