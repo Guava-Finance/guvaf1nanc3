@@ -18,7 +18,10 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           RPC_CLIENT: ${{ secrets.RPC_CLIENT }}
           MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
-          AES_ENCRPTION_KEY: ${{ secrets.AES_ENCRPTION_KEY }}
+          AES_ENCRYPTION_KEY: ${{ secrets.AES_ENCRYPTION_KEY }}
+          DOJAH_API_ID: ${{ secrets.DOJAH_API_ID }}
+          DOJAH_PUBLIC_KEY: ${{ secrets.DOJAH_PUBLIC_KEY }}
+          DOJAH_WIDGET_ID: ${{ secrets.DOJAH_WIDGET_ID }}
         run: |
           ./setup_env_from_github_secrets.sh
 
