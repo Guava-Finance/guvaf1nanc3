@@ -48,15 +48,15 @@ Future<_i174.GetIt> init(
       () => _i528.MixPanel(mixpanel: gh<_i184.Mixpanel>()));
   gh.lazySingleton<_i969.NetworkInterceptor>(
       () => _i969.NetworkInterceptor(dio: gh<_i361.Dio>()));
+  gh.lazySingletonAsync<_i47.LocalWalletFunctions>(() async =>
+      _i47.LocalWalletFunctionsImpl(
+          secureStorage: await gh.getAsync<_i558.FlutterSecureStorage>()));
   gh.lazySingletonAsync<_i299.RemoteWalletFunctions>(
       () async => _i299.RemoteWalletFunctionsImpl(
             rpcClient: gh<_i895.RpcClient>(),
             secureStorage: await gh.getAsync<_i558.FlutterSecureStorage>(),
             networkInterceptor: gh<_i969.NetworkInterceptor>(),
           ));
-  gh.lazySingletonAsync<_i47.LocalWalletFunctions>(() async =>
-      _i47.LocalWalletFunctionsImpl(
-          secureStorage: await gh.getAsync<_i558.FlutterSecureStorage>()));
   return getIt;
 }
 

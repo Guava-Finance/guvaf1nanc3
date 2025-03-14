@@ -13,8 +13,8 @@ class SplashPage extends ConsumerWidget {
         child: TextButton(
           onPressed: () {
             MetaMapFlutter.showMetaMapFlow(
-              clientId: "YOUR_CLIENT_ID",
-              flowId: "YOUR_FLOW_ID",
+              clientId: "robor.eminokanju@gmail.com",
+              flowId: "67d1763ea42cc8175d533901",
             );
             MetaMapFlutter.resultCompleter.future.then((result) {
               AppLogger.log(result);

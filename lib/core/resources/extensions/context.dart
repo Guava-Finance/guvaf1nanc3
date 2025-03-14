@@ -5,9 +5,9 @@ extension CxtExtension on BuildContext {
   // theme related
   ThemeData get theme => Theme.of(this);
   AppBarTheme get appbarTheme => AppBarTheme.of(this);
-  DialogTheme get dialogTheme => DialogTheme.of(this);
+  DialogThemeData get dialogTheme => DialogTheme.of(this);
   TextTheme get textTheme => Theme.of(this).textTheme;
-  TabBarTheme get tabbarTheme => Theme.of(this).tabBarTheme;
+  TabBarThemeData get tabbarTheme => Theme.of(this).tabBarTheme;
 
   // size related
   Size get size => MediaQuery.of(this).size;

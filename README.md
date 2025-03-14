@@ -41,7 +41,7 @@ flutter pub get
 ### Running Build Runner
 To generate the code needed to successfully run the project uses code generation (i.e. Service locator setup and env.g.dart), you'll need to run build_runner:
 ```bash
-flutter pub run build_runner build
+dart run build_runner build
 ```
 > Note: `--delete-conflicting-outputs` might be required to override conflicts.
 
