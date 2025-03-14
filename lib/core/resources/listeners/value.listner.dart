@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class MyValueListener<T> extends StatelessWidget {
   const MyValueListener({
-    super.key,
     required this.child,
     required this.value,
     required this.builder,
+    super.key,
   });
 
   final Widget child;
@@ -15,9 +15,9 @@ class MyValueListener<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<T>(
-        valueListenable: value,
-        builder: builder,
-        child: child,
+      valueListenable: value,
+      builder: builder,
+      child: child,
     );
   }
 }

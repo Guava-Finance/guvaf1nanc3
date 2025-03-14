@@ -1,8 +1,8 @@
 class Strings {
   Strings._();
 
-  static const String title = "guava";
-  static const String mnenomics = 'my_wallet_mnenomics';
+  static const String title = 'guava';
+  static const String mnemonics = 'my_wallet_mnemonics';
 
   // todo: Fetch from Config
   static String derivativePath = 'm/44\'/501\'/0\'/0\'';

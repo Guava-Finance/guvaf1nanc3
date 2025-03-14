@@ -5,6 +5,7 @@ import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:solana/dto.dart';
+import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 /// This class would handle everything from Signing of Transaction and
@@ -26,7 +27,8 @@ abstract class RemoteWalletFunctions {
   /// Solana blockchain via RPC network call
   Future<TokenAmount> checkBalance();
 
-  /// The amount would be converted to [lamport] the unit of measurement on solana
+  /// The amount would be converted to [lamport] the unit of measurement
+  /// on solana
   /// And the transaction would be signed locally using the user's
   /// private key securely kept on the device.
   Future<dynamic> transferUSDC({
@@ -37,12 +39,12 @@ abstract class RemoteWalletFunctions {
 
   /// The user's Sol balance is checked to know if it can cover the gas fee
   /// else the user would be pre-funded before proceed to send the transaction.
-  /// The amount would be converted to [lamport] to unit of measurement for solana
+  /// The amount would be converted to [lamport] to unit of measurement for solana ///
   Future<bool> isGasFeeSufficient({int noOfSignatures = 1});
 
   /// This sends the wallet's public address so that the system can credit it
   /// with enough SOL to cover for gas fee for the month
-  /// Wallet would always be prefunded
+  /// Wallet would always be pre-funded
   Future<dynamic> prefund();
 }
 
@@ -89,16 +91,17 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     /// The token SPL account creation instruction is created
     /// the token wallet is a non-custodian wallet meaning the user is the
     /// owner of all wallet account that's why transactions are signed locally
-    final instruction = AssociatedTokenAccountInstruction.createAccount(
+    final AssociatedTokenAccountInstruction instruction =
+        AssociatedTokenAccountInstruction.createAccount(
       funder: wallet.publicKey,
       address: address,
       owner: wallet.publicKey,
       mint: usdcMint,
     );
 
-    /// User signes and send transaction to block chain
+    /// User signs and send transaction to block chain
     /// this activity cost over [0.00002 SOL] by estimation
-    final transactionId = await rpcClient.signAndSendTransaction(
+    final String transactionId = await rpcClient.signAndSendTransaction(
       Message.only(instruction),
       [wallet],
       onSigned: (signature) {
@@ -131,15 +134,15 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
 
   @override
   Future prefund() {
-    // TODO: implement prefund
     throw UnimplementedError();
   }
 
   @override
   Future<TokenAmount> checkBalance() async {
-    final tokenAddress = await _getTokenAddress();
+    final Ed25519HDPublicKey tokenAddress = await _getTokenAddress();
 
-    final tokenBalance = await rpcClient.getTokenAccountBalance(
+    final TokenAmountResult tokenBalance =
+        await rpcClient.getTokenAccountBalance(
       tokenAddress.toBase58(),
     );
 
@@ -153,29 +156,32 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     double? transactionFee,
     String? narration,
   }) async {
-    final wallet = await _getWallet();
+    final Ed25519HDKeyPair wallet = await _getWallet();
 
-    final senderUSDCWallet = await findAssociatedTokenAddress(
+    final Ed25519HDPublicKey senderUSDCWallet =
+        await findAssociatedTokenAddress(
       owner: wallet.publicKey,
       mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
     );
 
-    final receipentUSDCWallet = await findAssociatedTokenAddress(
+    final Ed25519HDPublicKey recipientUSDCWallet =
+        await findAssociatedTokenAddress(
       owner: Ed25519HDPublicKey.fromBase58(receiverAddress),
       mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
     );
 
-    final companyUSDCWallet = await findAssociatedTokenAddress(
+    final Ed25519HDPublicKey companyUSDCWallet =
+        await findAssociatedTokenAddress(
       // todo: fetch companies wallet from Config
       owner: Ed25519HDPublicKey.fromBase58(''),
       mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
     );
 
-    // Transfer to Receipent
-    final instruction = TokenInstruction.transfer(
+    // Transfer to Recipient
+    final TokenInstruction instruction = TokenInstruction.transfer(
       amount: (amount * lamportsPerSol).toInt(),
       source: senderUSDCWallet,
-      destination: receipentUSDCWallet,
+      destination: recipientUSDCWallet,
       owner: wallet.publicKey,
     );
 
@@ -191,13 +197,13 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
       );
     }
 
-    final memoInstruction = MemoInstruction(
+    final MemoInstruction memoInstruction = MemoInstruction(
       memo: narration ??
           'Transfer of $amount USDC on ${DateTime.now().toIso8601String()}',
-      signers: [wallet.publicKey],
+      signers: <Ed25519HDPublicKey>[wallet.publicKey],
     );
 
-    final message = Message(
+    final Message message = Message(
       instructions: [
         instruction,
         if (transactionFee != null) txnFeeInstruction,
@@ -205,8 +211,9 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
       ],
     );
 
-    /// Sign the message instructions and send the encode SignedTx to the backend for submission
-    final signedTx = await wallet.signMessage(
+    /// Sign the message instructions and send the encode SignedTx
+    /// to the backend for submission
+    final SignedTx signedTx = await wallet.signMessage(
       message: message,
       recentBlockhash: (await rpcClient.getLatestBlockhash()).value.blockhash,
     );
@@ -215,11 +222,11 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
-    final mnenomic = await secureStorage.read(key: Strings.mnenomics);
+    final String? mnemonics = await secureStorage.read(key: Strings.mnemonics);
 
-    if (mnenomic != null) {
-      final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
-        seed: mnemonicToSeed(mnenomic),
+    if (mnemonics != null) {
+      final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+        seed: mnemonicToSeed(mnemonics),
         hdPath: Strings.derivativePath,
       );
 
@@ -230,14 +237,14 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
   }
 
   Future<Ed25519HDPublicKey> _getTokenAddress() async {
-    final wallet = await _getWallet();
+    final Ed25519HDKeyPair wallet = await _getWallet();
 
-    final usdcMint = Ed25519HDPublicKey.fromBase58(
+    final Ed25519HDPublicKey usdcMint = Ed25519HDPublicKey.fromBase58(
       Strings.usdcMintTokenAddress,
     );
 
     /// This get the associated wallet address for that token mint
-    final address = await findAssociatedTokenAddress(
+    final Ed25519HDPublicKey address = await findAssociatedTokenAddress(
       owner: wallet.publicKey,
       mint: usdcMint,
     );

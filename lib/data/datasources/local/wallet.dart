@@ -9,20 +9,22 @@ import 'package:solana/solana.dart';
 /// This makes the wallet fully decentralized
 abstract class LocalWalletFunctions {
   /// Using [bip39] either 12 or 24 secret phrases is generated
-  /// The secret phrase i.e. [Mnenomics] would be kept securely within the device
+  /// The secret phrase i.e. [mnemonics] would be kept 
+  /// securely within the device
   Future<String> createANewWallet({int walletStrength = 128});
 
-  /// The [mnenomics] is reversed to generate the wallet private key
-  /// This mnenomics should be kept securely to avoid lost of money
-  /// And it should be kept locally within the user's device to ensure decentralization
-  Future<String> restoreAWallet(String mnenomics);
+  /// The [mnemonics] is reversed to generate the wallet private key
+  /// This mnemonics should be kept securely to avoid lost of money
+  /// And it should be kept locally within the 
+  /// user's device to ensure decentralization
+  Future<String> restoreAWallet(String mnemonics);
 
-  /// The [mnenomic] is gotten from secure storage and together with the
+  /// The [mnemonics] is gotten from secure storage and together with the
   /// derivative path the private public key pair is gotten
   Future<String> walletAddress();
 
-  /// Display Mnenomics to user for backup
-  Future<String> showMnenomics();
+  /// Display mnemonics to user for backup
+  Future<String> showMnemonics();
 }
 
 @LazySingleton(as: LocalWalletFunctions)
@@ -37,14 +39,14 @@ class LocalWalletFunctionsImpl extends LocalWalletFunctions {
   Future<String> createANewWallet({int walletStrength = 256}) async {
     /// [walletStrength = 128] generates 12 phrases secret words
     /// [walletStrength = 256] generates 24 phrases secret words
-    final mnemonic = generateMnemonic(strength: walletStrength);
+    final String mnemonic = generateMnemonic(strength: walletStrength);
 
     /// This saves the secret phrase to a secure storage on the user's device
-    await secureStorage.write(key: Strings.mnenomics, value: mnemonic);
+    await secureStorage.write(key: Strings.mnemonics, value: mnemonic);
 
     /// Generate a standard wallet address that can be used on various
     /// Wallet app such as Phantom e.t.c.
-    final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+    final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
       seed: mnemonicToSeed(mnemonic),
       hdPath: Strings.derivativePath,
     );
@@ -54,18 +56,18 @@ class LocalWalletFunctionsImpl extends LocalWalletFunctions {
   }
 
   @override
-  Future<String> restoreAWallet(String mnenomics) async {
-    final noOfMnenomics = mnenomics.split(' ').toList();
+  Future<String> restoreAWallet(String mnemonics) async {
+    final List<String> noOfMnemonics = mnemonics.split(' ').toList();
 
-    if (noOfMnenomics.length != 12 || noOfMnenomics.length != 24) {
-      throw Exception('Invalid Mnenomics');
+    if (noOfMnemonics.length != 12 || noOfMnemonics.length != 24) {
+      throw Exception('Invalid mnemonics');
     }
 
-    /// Save correct Mnenomics to a secure storage on User's device
-    await secureStorage.write(key: Strings.mnenomics, value: mnenomics);
+    /// Save correct mnemonics to a secure storage on User's device
+    await secureStorage.write(key: Strings.mnemonics, value: mnemonics);
 
-    final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
-      seed: mnemonicToSeed(mnenomics),
+    final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+      seed: mnemonicToSeed(mnemonics),
       hdPath: Strings.derivativePath,
     );
 
@@ -75,12 +77,13 @@ class LocalWalletFunctionsImpl extends LocalWalletFunctions {
 
   @override
   Future<String> walletAddress() async {
-    final mnenomics = await secureStorage.read(key: Strings.mnenomics);
+    final String? mnemonics = await secureStorage.read(key: Strings.mnemonics);
 
-    /// Ensure there's a Mnenomic to read so that the correct wallet can be gotten
-    if (mnenomics != null) {
-      final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
-        seed: mnemonicToSeed(mnenomics),
+    /// Ensure there's a Mnemomic to read 
+    /// so that the correct wallet can be gotten
+    if (mnemonics != null) {
+      final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+        seed: mnemonicToSeed(mnemonics),
         hdPath: Strings.derivativePath,
       );
 
@@ -91,11 +94,11 @@ class LocalWalletFunctionsImpl extends LocalWalletFunctions {
   }
 
   @override
-  Future<String> showMnenomics() async {
-    final mnenomics = await secureStorage.read(key: Strings.mnenomics);
+  Future<String> showMnemonics() async {
+    final String? mnemonics = await secureStorage.read(key: Strings.mnemonics);
 
-    if (mnenomics != null) {
-      return mnenomics;
+    if (mnemonics != null) {
+      return mnemonics;
     }
 
     throw Exception('Oops! Nothing here');

@@ -29,7 +29,7 @@ class FCMService {
     if (token != null) {
       AppLogger.log('FCM Token: $token');
       // You can send this token to your server for targeting specific devices
-      // todo: saved fcm token to storage so that it can be called and sent to backend with the public wallet address
+      /// todo: saved fcm token to storage so that it can be called and sent to backend with the public wallet address ///
     }
 
     // Handle foreground messages
