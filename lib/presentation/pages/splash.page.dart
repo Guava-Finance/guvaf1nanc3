@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:pubnub/pubnub.dart';
 
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
@@ -53,4 +54,5 @@ class SplashPage extends ConsumerWidget {
       ),
     );
   }
+
 }

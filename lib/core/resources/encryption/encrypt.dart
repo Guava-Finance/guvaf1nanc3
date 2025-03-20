@@ -6,7 +6,7 @@ class EncryptionService {
 
   EncryptionService({required String encryptionKey})
       : _key = Key.fromUtf8(encryptionKey),
-        _iv = IV.fromLength(16);
+        _iv = IV.fromLength(64);
 
   // Encrypt data
   dynamic encryptData(dynamic data) {
@@ -20,6 +20,7 @@ class EncryptionService {
       throw ArgumentError('Unsupported data type for encryption');
     }
   }
+
 
   // Decrypt data
   dynamic decryptData(dynamic data) {
@@ -38,6 +39,7 @@ class EncryptionService {
   String _encryptString(String text) {
     final encrypter = Encrypter(AES(_key, mode: AESMode.cbc));
     final encrypted = encrypter.encrypt(text, iv: _iv);
+
     return encrypted.base64;
   }
 
@@ -45,6 +47,7 @@ class EncryptionService {
   String _decryptString(String encryptedText) {
     final encrypter = Encrypter(AES(_key, mode: AESMode.cbc));
     final decrypted = encrypter.decrypt64(encryptedText, iv: _iv);
+
     return decrypted;
   }
 

@@ -27,4 +27,10 @@ abstract class Env {
 
   @EnviedField(varName: 'DOJAH_WIDGET_ID')
   static String dojahWidgetId = _Env.dojahWidgetId;
+
+  @EnviedField(varName: 'PUB_NUB_SUBCRIBE_KEY')
+  static String pubNubSubscribeKey = _Env.pubNubSubscribeKey;
+
+  @EnviedField(varName: 'PUB_NUB_PUBLISH_KEY')
+  static String pubNubPublishKey = _Env.pubNubPublishKey;
 }

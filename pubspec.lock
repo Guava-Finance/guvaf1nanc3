@@ -150,6 +150,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.9.3"
+  cbor:
+    dependency: transitive
+    description:
+      name: cbor
+      sha256: "1e0094d5f034c9dfc23f46cf8f8550da1d537c6f5c4ca196a7e02de80d7bbd55"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   characters:
     dependency: transitive
     description:
@@ -629,6 +637,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  form_data:
+    dependency: transitive
+    description:
+      name: form_data
+      sha256: "33fcc5b356ec75f4698653479c4e3880ba88fe2b39b235ccdaacdc2d9a54d758"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0-nullsafety.1"
   freezed_annotation:
     dependency: transitive
     description:
@@ -981,6 +997,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  pedantic:
+    dependency: transitive
+    description:
+      name: pedantic
+      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.11.1"
   permission_handler:
     dependency: transitive
     description:
@@ -1029,6 +1053,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: "07c8f0b1913bcde1ff0d26e57ace2f3012ccbf2b204e070290dad3bb22797646"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
   pinenacl:
     dependency: transitive
     description:
@@ -1085,6 +1117,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
+  pubnub:
+    dependency: "direct main"
+    description:
+      name: pubnub
+      sha256: ab5fd60ab5dad1653306d20a452edfc9464373c0594fc5ce867be4bde28363ea
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -1370,6 +1410,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   yaml:
     dependency: transitive
     description:
