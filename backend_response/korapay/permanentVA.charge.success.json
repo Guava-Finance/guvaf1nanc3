@@ -1,0 +1,27 @@
+
+{
+    "event": "charge.success",
+    "data": {
+        "fee": 1.61,
+        "amount": 100,
+        "status": "success",
+        "currency": "NGN",
+        "reference": "KPY-PAY-2rIneJNhuDCLlcy",
+        "transaction_date": "2025-03-19 12:37:54",
+        "payment_reference": "KPY-PAY-2rIneJNhuDCLlcy",
+        "virtual_bank_account_details": {
+            "payer_bank_account": {
+                "bank_name": "HABARIPAY LIMITED",
+                "account_name": "EMINOKANJU  OGHENEKPAROBOR AAR",
+                "account_number": "******4231"
+            },
+            "virtual_bank_account": {
+                "bank_name": "Globus Bank",
+                "permanent": true,
+                "account_name": "GuavaFi - Oghenekparobor",
+                "account_number": "8187647806",
+                "account_reference": "9mxF8njZEd8FEM2Y4BfQvzvL94it7LijkSN4GHb2uscJ"
+            }
+        }
+    }
+}

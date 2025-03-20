@@ -134,6 +134,47 @@
                             "is_usdc": true
                         }
                     ]
+                },
+                "ramping": {
+                    "on_ramp": [
+                        {
+                            "providers": [
+                                "korapay"
+                            ],
+                            "min": 0,
+                            "max": 1000,
+                            "rule": "between"
+                        },
+                        {
+                            "providers": [
+                                "paystack",
+                                "flutterwave"
+                            ],
+                            "min": 1000,
+                            "max": 10000,
+                            "rule": "between"
+                        }
+                    ],
+                    "off_ramp": [
+                        {
+                            "providers": [
+                                "korapay",
+                                "fincra"
+                            ],
+                            "min": 0,
+                            "max": 1000,
+                            "rule": "between"
+                        },
+                        {
+                            "providers": [
+                                "paystack",
+                                "flutterwave"
+                            ],
+                            "min": 1000,
+                            "max": 10000,
+                            "rule": "between"
+                        }
+                    ]
                 }
             },
             {

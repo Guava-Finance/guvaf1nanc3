@@ -1,0 +1,9 @@
+workflows:
+  android:
+    environment:
+      flutter: stable
+    name: Android app build
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+

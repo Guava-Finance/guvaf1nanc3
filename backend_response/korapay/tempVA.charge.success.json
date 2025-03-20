@@ -1,0 +1,12 @@
+{
+    "event": "charge.success",
+    "data": {
+        "reference": "90c0f03a-ad22-4fea-8de9-533ahdc203c5",
+        "payment_reference": "90c0f03a-ad22-4fea-8de9-533ahdc203c5",
+        "currency": "NGN",
+        "amount": 100,
+        "fee": 1.61,
+        "payment_method": "bank_transfer",
+        "status": "success"
+    }
+}
