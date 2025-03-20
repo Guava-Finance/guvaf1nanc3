@@ -1,0 +1,2 @@
+/Users/rootcode/guavafinance/android/app/.cxx/RelWithDebInfo/31j1l37n/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/rootcode/guavafinance/android/app/.cxx/RelWithDebInfo/31j1l37n/armeabi-v7a/CMakeFiles/rebuild_cache.dir

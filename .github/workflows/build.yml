@@ -1,35 +1,57 @@
-name: Build and Deploy
+workflows:
+  android:
+    name: Android app build
+    environment:
+      flutter: stable
+      android_signing:
+        - guavafi
+      groups:
+        - guava_env # Ensure you define this group in Codemagic UI
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    scripts:
+      - name: Set up local.properties
+        script: | 
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      
+      - name: Create .env file
+        script: |
+          cat > .env <<EOF
+          BASE_URL=$BASE_URL
+          RPC_CLIENT=$RPC_CLIENT
+          MIXPANEL_TOKEN=$MIXPANEL_TOKEN
+          AES_ENCRYPTION_KEY=$AES_ENCRYPTION_KEY
+          DOJAH_API_ID=$DOJAH_API_ID
+          DOJAH_PUBLIC_KEY=$DOJAH_PUBLIC_KEY
+          DOJAH_WIDGET_ID=$DOJAH_WIDGET_ID
+          EOF
 
-on:
-  push:
-    branches:
-      - main
+      - name: Install Shorebird
+        script: | 
+          curl --proto '=https' --tlsv1.2 -sSf https://install.shorebird.dev | bash
+          export PATH="$HOME/.shorebird/bin:$PATH"
+          shorebird doctor
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up environment variables
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          RPC_CLIENT: ${{ secrets.RPC_CLIENT }}
-          MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
-          AES_ENCRYPTION_KEY: ${{ secrets.AES_ENCRYPTION_KEY }}
-          DOJAH_API_ID: ${{ secrets.DOJAH_API_ID }}
-          DOJAH_PUBLIC_KEY: ${{ secrets.DOJAH_PUBLIC_KEY }}
-          DOJAH_WIDGET_ID: ${{ secrets.DOJAH_WIDGET_ID }}
-        run: |
-          ./setup_env_from_github_secrets.sh
-
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Get Flutter packages
+        script: | 
+          flutter pub get
 
       - name: Run build runner
-        run: flutter pub run build_runner build
+        script: |
+          flutter pub run build_runner build
 
-      - name: Build the project
-        run: flutter build apk
+      - name: Build APK with Shorebird
+        script: | 
+          shorebird release android
+
+      - name: Upload to Firebase App Distribution
+        script: | 
+          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+            --app <FIREBASE_APP_ID> \
+            --groups testers \
+            --token "$FIREBASE_CLI_TOKEN"
+
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
