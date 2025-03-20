@@ -28,9 +28,11 @@ workflows:
 
       - name: Install Shorebird
         script: | 
-          curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash bash
+          curl --proto '=https' --tlsv1.2 -sSf https://install.shorebird.dev | bash
           export PATH="$HOME/.shorebird/bin:$PATH"
-          shorebird doctor
+          echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.bashrc
+          echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.zshrc
+          shorebird --version
 
       - name: Get Flutter packages
         script: | 
@@ -42,6 +44,7 @@ workflows:
 
       - name: Build APK with Shorebird
         script: | 
+          export PATH="$HOME/.shorebird/bin:$PATH"
           shorebird release android
 
       - name: Upload to Firebase App Distribution
