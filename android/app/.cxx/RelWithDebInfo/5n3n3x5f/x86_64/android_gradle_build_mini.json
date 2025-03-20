@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/rootcode/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/rootcode/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/rootcode/guavafinance/android/app/.cxx/RelWithDebInfo/5n3n3x5f/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/rootcode/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/rootcode/guavafinance/android/app/.cxx/RelWithDebInfo/5n3n3x5f/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

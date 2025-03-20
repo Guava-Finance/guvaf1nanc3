@@ -53,10 +53,10 @@ workflows:
 
       - name: Upload to Firebase App Distribution
         script: | 
+          export GOOGLE_APPLICATION_CREDENTIALS=$CM_BUILD_DIR/service-account.json
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app $FIREBASE_APP_ID \
-            --groups android-developer \
-            --token "$FIREBASE_CLI_TOKEN"
+            --app "$FIREBASE_APP_ID" \
+            --groups android-developer
 
     artifacts:
       - build/**/outputs/**/*.apk
