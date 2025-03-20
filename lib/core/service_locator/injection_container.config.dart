@@ -13,12 +13,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:mixpanel_flutter/mixpanel_flutter.dart' as _i184;
-import 'package:pubnub/pubnub.dart' as _i432;
 import 'package:solana/solana.dart' as _i895;
 
 import '../../data/datasources/local/wallet.dart' as _i47;
 import '../../data/datasources/remote/wallet.dart' as _i299;
 import '../resources/analytics/mixpanel/mix.dart' as _i528;
+import '../resources/listeners/pubnub.dart' as _i978;
 import '../resources/network/interceptor.dart' as _i969;
 import '../resources/network/wrapper.dart' as _i926;
 import 'register_module.dart' as _i291;
@@ -43,9 +43,10 @@ Future<_i174.GetIt> init(
   gh.lazySingletonAsync<_i558.FlutterSecureStorage>(
       () => registerModule.storage);
   gh.lazySingleton<_i895.RpcClient>(() => registerModule.rpcClient);
-  gh.lazySingleton<_i432.PubNub>(() => registerModule.pubnub);
   gh.lazySingleton<_i926.NetworkExceptionWrapper>(
       () => _i926.NetworkExceptionWrapper());
+  gh.lazySingleton<_i978.PubSubService>(
+      () => _i978.PubSubService(walletAddress: gh<String>()));
   gh.lazySingleton<_i528.MixPanel>(
       () => _i528.MixPanel(mixpanel: gh<_i184.Mixpanel>()));
   gh.lazySingleton<_i969.NetworkInterceptor>(
