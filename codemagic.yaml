@@ -32,6 +32,9 @@ workflows:
           export PATH="$HOME/.shorebird/bin:$PATH"
           echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.bashrc
           echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.zshrc
+
+          # Authenticate Shorebird
+          shorebird auth login --token "$SHOREBIRD_AUTH_TOKEN"
           shorebird --version
 
       - name: Get Flutter packages
