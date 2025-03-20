@@ -28,7 +28,7 @@ workflows:
 
       - name: Install Shorebird
         script: | 
-          curl --proto '=https' --tlsv1.2 -sSf https://install.shorebird.dev | bash
+          curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
           export PATH="$HOME/.shorebird/bin:$PATH"
           echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.bashrc
           echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.zshrc
