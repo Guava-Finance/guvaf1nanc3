@@ -34,7 +34,7 @@ workflows:
           echo 'export PATH="$HOME/.shorebird/bin:$PATH"' >> $HOME/.zshrc
 
           # Authenticate Shorebird
-          shorebird auth login --token "$SHOREBIRD_AUTH_TOKEN"
+          shorebird login:ci --token "$SHOREBIRD_AUTH_TOKEN"
           shorebird --version
 
       - name: Get Flutter packages
@@ -48,7 +48,8 @@ workflows:
       - name: Build APK with Shorebird
         script: | 
           export PATH="$HOME/.shorebird/bin:$PATH"
-          shorebird release android
+          # shorebird release android --artifact=apk
+          flutter build apk
 
       - name: Upload to Firebase App Distribution
         script: | 
