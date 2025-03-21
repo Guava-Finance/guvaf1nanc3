@@ -3,6 +3,7 @@
         "appbar",
         "guavafi",
         "Mnemomic",
+        "navkey",
         "riverpod"
     ]
 }

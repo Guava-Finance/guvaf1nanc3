@@ -5,6 +5,8 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/services/liveliness.dart';
+import 'package:guava/core/service_locator/injection_container.dart';
 import 'package:pubnub/pubnub.dart';
 
 class SplashPage extends ConsumerWidget {
@@ -15,45 +17,10 @@ class SplashPage extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: TextButton(
-          onPressed: () {
-            DojahKYC? dojahKYC;
-
-            /// Use your appId and publicKey
-            dojahKYC = DojahKYC(
-              appId: Env.dojahApiId,
-              publicKey: Env.dojahPublicKey,
-              type: 'custom',
-              userData: {
-                // add the user's wallet address here
-                'user_id': '9FGvJ1odLGcjbfzZVvE514Grk6dAvnTLnYpWsNS4nAaa'
-              },
-              metaData: {
-                // add the user's wallet address here
-                'user_id': '9FGvJ1odLGcjbfzZVvE514Grk6dAvnTLnYpWsNS4nAaa',
-              },
-              config: {
-                'widget_id': Env.dojahWidgetId,
-              },
-            );
-
-            dojahKYC.open(
-              context,
-              onSuccess: (result) {
-                AppLogger.log(result);
-                context.nav.pop();
-              },
-              onClose: (close) {
-                AppLogger.log(close);
-              },
-              onError: (error) {
-                AppLogger.log(error);
-              },
-            );
-          },
+          onPressed: () {},
           child: const Text('Launch Dojah.io KYC'),
         ),
       ),
     );
   }
-
 }

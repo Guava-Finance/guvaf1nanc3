@@ -18,7 +18,7 @@ import 'package:solana/solana.dart' as _i895;
 import '../../data/datasources/local/wallet.dart' as _i47;
 import '../../data/datasources/remote/wallet.dart' as _i299;
 import '../resources/analytics/mixpanel/mix.dart' as _i528;
-import '../resources/listeners/pubnub.dart' as _i978;
+import '../resources/services/pubnub.dart' as _i978;
 import '../resources/network/interceptor.dart' as _i969;
 import '../resources/network/wrapper.dart' as _i926;
 import 'register_module.dart' as _i291;
