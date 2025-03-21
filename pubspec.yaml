@@ -78,6 +78,7 @@ dev_dependencies:
   package_rename: ^1.8.0
   injectable_generator: ^2.1.0 
   envied_generator: ^1.1.1
+  flutter_asset_manager: "^0.0.1"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -89,11 +90,16 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Usama Azad <https://github.com/Usama-Azad>
+  # Generate by [flutter_asset_manager](https://github.com/Usama-Azad/flutter_asset_manager) library.
+  # PLEASE DO NOT EDIT MANUALLY.
   assets:
+    - assets/images/
+    - assets/icons/
     - shorebird.yaml
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

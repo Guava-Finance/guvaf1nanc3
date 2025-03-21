@@ -26,7 +26,7 @@ cd guavafinance
 ```
 
 ### Run the Script:
-Execute the script to create the .env file:
+Execute the script to create the `.env` file:
 ```bash
 ./setup_env.sh
 ```
@@ -39,11 +39,39 @@ flutter pub get
 ```
 
 ### Running Build Runner
-To generate the code needed to successfully run the project uses code generation (i.e. Service locator setup and env.g.dart), you'll need to run build_runner:
+To generate the code needed to successfully run the project, such as service locator setup and `env.g.dart`, you'll need to run build_runner:
 ```bash
 dart run build_runner build
 ```
-> Note: `--delete-conflicting-outputs` might be required to override conflicts.
+> Note: Use `--delete-conflicting-outputs` if conflicts arise.
+
+### Installing `flutter_asset_generator`
+
+To automatically manage assets, install `flutter_asset_generator` globally:
+```bash
+dart pub global activate -s git https://github.com/fluttercandies/flutter_asset_generator.git
+```
+This package monitors the project and automatically handles asset management, including additions, removals, or path changes. It ensures that asset paths are managed automatically in `lib/const/resources.dart`.
+
+To activate real-time asset monitoring, run:
+```bash
+fgen
+```
+in a terminal within VS Code.
+
+#### Usage Example:
+To use assets in the project:
+```dart
+Image.asset(R.ASSETS_ONBOARD_IMAGE_1)
+```
+
+### Using `flutter_asset_manager`
+
+For structured asset management, use `flutter_asset_manager` to create and register asset folders automatically:
+```bash
+dart run flutter_asset_manager --no-default <folder_name>
+```
+This will create `<folder_name>` under the `assets` folder and register it in `pubspec.yaml` automatically.
 
 ### Running the Application
 Once everything is set up, you can run the application:
@@ -52,8 +80,8 @@ flutter run
 ```
 
 ### Troubleshooting
-Flutter Issues: If you encounter issues with Flutter, ensure your environment is correctly set up by running flutter doctor.
-
-Solana Issues: If you have trouble with Solana, check the Solana CLI documentation or community forums for assistance.
-
-
+- **Flutter Issues**: If you encounter issues with Flutter, ensure your environment is correctly set up by running:
+  ```bash
+  flutter doctor
+  ```
+- **Solana Issues**: If you have trouble with Solana, check the Solana CLI documentation or community forums for assistance.
