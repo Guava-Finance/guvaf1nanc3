@@ -1,69 +1,102 @@
 import 'package:bip39/bip39.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
-/// This class would handle everything from Signing of Transaction and
-/// Setup of SPL Token
-/// This makes the wallet fully decentralized
-abstract class RemoteWalletFunctions {
-  /// This method check whether user has already created SPLToken account
-  /// To avoid trying to recreate it
-  /// SPLToken account is created only once
-  Future<bool> doesSPLTokenAccountExist(String tokenMintAddress);
+import 'storage.dart';
 
-  /// This method sets up SPLToken account for Solana Wallet
-  /// Newly created wallet would be pre-funded by the system to enable
-  /// wallet create the USDC SPL Token account on the blockchain
-  /// ANd it return the transactionId after creating
-  Future<String> enableUSDCForWallet();
-
-  /// The splToken address is passed and the balance is gotten from
-  /// Solana blockchain via RPC network call
-  Future<TokenAmount> checkBalance();
-
-  /// The amount would be converted to [lamport] the unit of measurement
-  /// on solana
-  /// And the transaction would be signed locally using the user's
-  /// private key securely kept on the device.
-  Future<dynamic> transferUSDC({
-    required double amount,
-    required String receiverAddress,
-    String? narration,
-  });
-
-  /// The user's Sol balance is checked to know if it can cover the gas fee
-  /// else the user would be pre-funded before proceed to send the transaction.
-  /// The amount would be converted to [lamport] to unit of measurement for solana ///
-  Future<bool> isGasFeeSufficient({int noOfSignatures = 1});
-
-  /// This sends the wallet's public address so that the system can credit it
-  /// with enough SOL to cover for gas fee for the month
-  /// Wallet would always be pre-funded
-  Future<dynamic> prefund();
-}
-
-@LazySingleton(as: RemoteWalletFunctions)
-class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
-  RemoteWalletFunctionsImpl({
+@lazySingleton
+class SolanaService {
+  SolanaService({
     required this.rpcClient,
-    required this.secureStorage,
+    required this.storageService,
     required this.networkInterceptor,
   });
 
   final RpcClient rpcClient;
-  final FlutterSecureStorage secureStorage;
+  final SecuredStorageService storageService;
   final NetworkInterceptor networkInterceptor;
 
-  @override
+  /// Using [bip39] either 12 or 24 secret phrases is generated
+  /// The secret phrase i.e. [mnemonics] would be kept
+  /// securely within the device
+  Future<String> createANewWallet({int walletStrength = 256}) async {
+    /// [walletStrength = 128] generates 12 phrases secret words
+    /// [walletStrength = 256] generates 24 phrases secret words
+    final String mnemonic = generateMnemonic(strength: walletStrength);
+
+    /// This saves the secret phrase to a secure storage on the user's device
+    await storageService.writeToStorage(
+      key: Strings.mnemonics,
+      value: mnemonic,
+    );
+
+    /// Generate a standard wallet address that can be used on various
+    /// Wallet app such as Phantom e.t.c.
+    final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+      seed: mnemonicToSeed(mnemonic),
+      hdPath: Strings.derivativePath,
+    );
+
+    /// return wallets public key for display
+    return wallet.address;
+  }
+
+  /// The [mnemonics] is reversed to generate the wallet private key
+  /// This mnemonics should be kept securely to avoid lost of money
+  /// And it should be kept locally within the
+  /// user's device to ensure decentralization
+  Future<String> restoreAWallet(String mnemonics) async {
+    final List<String> noOfMnemonics = mnemonics.split(' ').toList();
+
+    if (noOfMnemonics.length != 12 || noOfMnemonics.length != 24) {
+      throw Exception('Invalid mnemonics');
+    }
+
+    /// Save correct mnemonics to a secure storage on User's device
+    await storageService.writeToStorage(
+      key: Strings.mnemonics,
+      value: mnemonics,
+    );
+
+    final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+      seed: mnemonicToSeed(mnemonics),
+      hdPath: Strings.derivativePath,
+    );
+
+    /// Display the public address of user's wallet
+    return wallet.address;
+  }
+
+  /// The [mnemonics] is gotten from secure storage and together with the
+  /// derivative path the private public key pair is gotten
+  Future<String> walletAddress() async {
+    return (await _getWallet()).address;
+  }
+
+  /// Display mnemonics to user for backup
+  Future<String> showMnemonics() async {
+    final String? mnemonics = await storageService.readFromStorage(
+      Strings.mnemonics,
+    );
+
+    if (mnemonics != null) {
+      return mnemonics;
+    }
+
+    throw Exception('Oops! Nothing here');
+  }
+
+  /// This method check whether user has already created SPLToken account
+  /// To avoid trying to recreate it
+  /// SPLToken account is created only once
   Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
     final address = await _getTokenAddress();
-// Fetch the token account info
+
+    // Fetch the token account info
     final accountInfo = await rpcClient.getAccountInfo(address.toBase58());
 
     /// Check if the account exists and is initialized
@@ -75,9 +108,13 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     }
   }
 
-  @override
+  /// This method sets up SPLToken account for Solana Wallet
+  /// Newly created wallet would be pre-funded by the system to enable
+  /// wallet create the USDC SPL Token account on the blockchain
+  /// ANd it return the transactionId after creating
   Future<String> enableUSDCForWallet() async {
     final wallet = await _getWallet();
+
     final usdcMint = Ed25519HDPublicKey.fromBase58(
       Strings.usdcMintTokenAddress,
     );
@@ -104,15 +141,14 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     final String transactionId = await rpcClient.signAndSendTransaction(
       Message.only(instruction),
       [wallet],
-      onSigned: (signature) {
-        AppLogger.log(signature);
-      },
     );
 
     return transactionId;
   }
 
-  @override
+  /// The user's Sol balance is checked to know if it can cover the gas fee
+  /// else the user would be pre-funded before proceed to send the transaction.
+  /// The amount would be converted to [lamport] to unit of measurement for solana ///
   Future<bool> isGasFeeSufficient({int noOfSignatures = 1}) async {
     try {
       final wallet = await _getWallet();
@@ -132,12 +168,15 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     }
   }
 
-  @override
+  /// This sends the wallet's public address so that the system can credit it
+  /// with enough SOL to cover for gas fee for the month
+  /// Wallet would always be pre-funded
   Future prefund() {
     throw UnimplementedError();
   }
 
-  @override
+  /// The splToken address is passed and the balance is gotten from
+  /// Solana blockchain via RPC network call
   Future<TokenAmount> checkBalance() async {
     final Ed25519HDPublicKey tokenAddress = await _getTokenAddress();
 
@@ -149,7 +188,10 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
     return tokenBalance.value;
   }
 
-  @override
+  /// The amount would be converted to [lamport] the unit of measurement
+  /// on solana
+  /// And the transaction would be signed locally using the user's
+  /// private key securely kept on the device.
   Future<String> transferUSDC({
     required double amount,
     required String receiverAddress,
@@ -222,7 +264,9 @@ class RemoteWalletFunctionsImpl extends RemoteWalletFunctions {
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
-    final String? mnemonics = await secureStorage.read(key: Strings.mnemonics);
+    final String? mnemonics = await storageService.readFromStorage(
+      Strings.mnemonics,
+    );
 
     if (mnemonics != null) {
       final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
