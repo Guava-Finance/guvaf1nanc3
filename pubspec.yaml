@@ -60,6 +60,7 @@ dependencies:
   shorebird_code_push: ^2.0.3
   flutter_dojah_kyc: ^0.5.2
   pubnub: ^5.2.0
+  posthog_flutter: ^4.10.4
 
 dev_dependencies:
   flutter_test:

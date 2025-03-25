@@ -1,11 +1,12 @@
 {
-    "cSpell.words": [
-        "appbar",
-        "Blockhash",
-        "Encrypter",
-        "guavafi",
-        "Mnemomic",
-        "navkey",
-        "riverpod"
-    ]
+  "cSpell.words": [
+    "appbar",
+    "Blockhash",
+    "Encrypter",
+    "guavafi",
+    "Mnemomic",
+    "navkey",
+    "riverpod"
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/3.29.1"
 }
