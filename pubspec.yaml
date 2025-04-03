@@ -92,6 +92,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+
   # Usama Azad <https://github.com/Usama-Azad>
   # Generate by [flutter_asset_manager](https://github.com/Usama-Azad/flutter_asset_manager) library.
   # PLEASE DO NOT EDIT MANUALLY.
