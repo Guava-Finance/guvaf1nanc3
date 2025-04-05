@@ -10,7 +10,7 @@ class SplashPage extends ConsumerWidget {
       body: Center(
         child: TextButton(
           onPressed: () {},
-          child: const Text('Launch Dojah.io KYC'),
+          child: const Text('Text encrytion'),
         ),
       ),
     );

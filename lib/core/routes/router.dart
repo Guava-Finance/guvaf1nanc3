@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/features/dashboard/presentation/pages/survey/form.dart';
 import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
 
 /// [p] suffix means path
@@ -16,7 +15,7 @@ final router = GoRouter(
     GoRoute(
       name: 'splash',
       path: pRoot,
-      builder: (context, state) => const GuavafiSurvey(),
+      builder: (context, state) => const SplashPage(),
     ),
   ],
 );
