@@ -24,6 +24,8 @@ workflows:
           DOJAH_API_ID=$DOJAH_API_ID
           DOJAH_PUBLIC_KEY=$DOJAH_PUBLIC_KEY
           DOJAH_WIDGET_ID=$DOJAH_WIDGET_ID
+          PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY
+          PUB_NUB_PUBLISH_KEY=$PUB_NUB_PUBLISH_KEY
           EOF
 
       - name: Install Shorebird

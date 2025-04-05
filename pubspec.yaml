@@ -60,6 +60,7 @@ dependencies:
   shorebird_code_push: ^2.0.3
   flutter_dojah_kyc: ^0.5.2
   pubnub: ^5.2.0
+  posthog_flutter: ^4.10.4
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +71,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   riverpod_generator: ^2.6.3
   build_runner: ^2.4.13
   custom_lint: ^0.7.0
@@ -90,6 +91,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
 
   # Usama Azad <https://github.com/Usama-Azad>
   # Generate by [flutter_asset_manager](https://github.com/Usama-Azad/flutter_asset_manager) library.
