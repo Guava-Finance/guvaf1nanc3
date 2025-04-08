@@ -4,9 +4,6 @@
 class R {
   const R._();
 
-  /// ![preview](file:///Users/rootcode/guavafinance/assets/images/Group%202.png)
-  static const String ASSETS_IMAGES_GROUP_2_PNG = 'assets/images/Group 2.png';
-
-  /// ![preview](file:///Users/rootcode/guavafinance/shorebird.yaml)
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/Guava/guavafinance/shorebird.yaml)
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }
