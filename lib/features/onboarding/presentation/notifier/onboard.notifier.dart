@@ -42,15 +42,19 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       'sub_icons_n_positions': [
         {
           'icon': R.ASSETS_ICONS_WALLET_TO_WALLET_FLOATER_SVG,
-          'ltrb': [null, 30.0, 10.0, null],
+          'ltrb': [null, 70.0, 15.0, null],
         },
         {
           'icon': R.ASSETS_ICONS_NFC_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, null, 30.0, 180.0],
         },
         {
           'icon': R.ASSETS_ICONS_QR_CODE_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [35.0, null, null, 100.0],
+        },
+        {
+          'icon': R.ASSETS_ICONS_SWAP_FLOATER_SVG,
+          'ltrb': [150.0, 200.0, null, null],
         },
       ]
     },
@@ -62,19 +66,19 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       'sub_icons_n_positions': [
         {
           'icon': R.ASSETS_ICONS_NO_LIMIT_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [35.0, 100.0, null, null],
         },
         {
           'icon': R.ASSETS_ICONS_ACCESS_ANYWHERE_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, 130.0, 35.0, null],
         },
         {
           'icon': R.ASSETS_ICONS_WORLDWIDE_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [60.0, null, null, 75.0],
         },
         {
           'icon': R.ASSETS_ICONS_SOLANA_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, null, 45.0, 70.0],
         },
       ]
     },
@@ -86,19 +90,19 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       'sub_icons_n_positions': [
         {
           'icon': R.ASSETS_ICONS_FAST_TRANSFER_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, 200.0, 40.0, null],
         },
         {
           'icon': R.ASSETS_ICONS_NO_HDDEN_CHARGE_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [60.0, null, null, 140.0],
         },
         {
           'icon': R.ASSETS_ICONS_LOW_FEES_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, null, 70.0, 55.0],
         },
         {
           'icon': R.ASSETS_ICONS_RATE_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, 90.0, 120.0, null],
         },
       ]
     },
@@ -110,11 +114,11 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       'sub_icons_n_positions': [
         {
           'icon': R.ASSETS_ICONS_YOUR_CONTROL_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, null, 35.0, 220.0],
         },
         {
           'icon': R.ASSETS_ICONS_SECURITY_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, null, 100.0, 50.0],
         },
       ]
     }
