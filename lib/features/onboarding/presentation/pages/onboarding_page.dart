@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/utility_widget.dart';
@@ -46,14 +48,16 @@ class Onboardingpage extends ConsumerWidget {
                       ),
                       Text(
                         'I agree to the Terms of Service',
-                        style: context.medium.copyWith(
-                          color: hexColor('#FCFCFC')
-                        ),
+                        style:
+                            context.medium.copyWith(color: hexColor('#FCFCFC')),
                       ),
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  CustomButton(onTap: () {}, title: 'Create a new wallet',),
+                  CustomButton(
+                    onTap: () => context.push(Strings.dashboard),
+                    title: 'Create a new wallet',
+                  ),
                   SizedBox(height: 5.h),
                   Center(
                     child: TextButton(

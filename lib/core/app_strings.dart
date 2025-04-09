@@ -12,4 +12,6 @@ class Strings {
 
   //Pages
   static const onboarding = '/onboarding';
+  static const dashboard = '/dashboard';
+  static const setupPin = '/setup-pin';
 }

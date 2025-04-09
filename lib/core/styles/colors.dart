@@ -4,6 +4,8 @@ class BrandColors {
   BrandColors._();
 
   static const primary = Color(0XFFF2FD7D);
+  static const light = Color(0XFFFCFCFC);
+  static const scaffoldColor = Color(0XFF28443F);
   static const kDarColor = Color(0XFF000000);
   static const red = Color(0xFFED1B23);
   static const bc1C1939 = Color(0xFF1C1939);
@@ -48,7 +50,6 @@ class BrandColors {
   static const primaryFade = Color(0xFFFAE1DC);
   static const primaryFade2 = Color(0xFFFFCFCE);
   static const indigo = Color(0xFF4464BE);
-  static const light = Color(0xFFF5F5F5);
   static const darkD9 = Color(0xFFD9D9D9);
   static const dark59 = Color(0xFF595175);
   static const darkB7 = Color(0xFFB7BCEE);
