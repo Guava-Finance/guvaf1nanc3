@@ -62,6 +62,7 @@ dependencies:
   pubnub: ^5.2.0
   posthog_flutter: ^4.10.4
   flutter_svg: ^2.0.17
+  dart_casing: ^3.0.1
 
 dev_dependencies:
   flutter_test:

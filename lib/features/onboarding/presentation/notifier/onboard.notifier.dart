@@ -29,9 +29,9 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
 
   List<dynamic> slides = [
     {
-      'title': 'Welcome to Guavafi',
+      'title': 'Welcome to Guava',
       'subtitle': '',
-      'background_icon': R.ASSETS_ICONS_ONBOARD_1_SVG,
+      'background_icon': '',
       'sub_icons_n_positions': []
     },
     {

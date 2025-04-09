@@ -27,15 +27,17 @@ class OnboardingSlide extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                Align(
-                  child: AnimatedCustomIcon(
-                    icon: e['background_icon'] as String,
-                    width: double.infinity,
-                    height: 330.h,
-                    movementIntensity: 1.5, // Subtle movement
-                    movementSpeed: 0.5, // Slow speed
+                if ((e['background_icon'] as String).isNotEmpty) ...{
+                  Align(
+                    child: AnimatedCustomIcon(
+                      icon: e['background_icon'] as String,
+                      width: double.infinity,
+                      height: 330.h,
+                      movementIntensity: 1.5, // Subtle movement
+                      movementSpeed: 0.5, // Slow speed
+                    ),
                   ),
-                ),
+                },
                 ...(e['sub_icons_n_positions'] as List).map((e) {
                   // Randomize animation properties slightly for each icon
                   final random = math.Random();

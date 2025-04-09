@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/extensions/string.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/features/onboarding/presentation/widgets/slide.dart';
@@ -54,6 +57,7 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage> {
               ),
               Expanded(
                 child: PageView(
+                  physics: const ClampingScrollPhysics(),
                   onPageChanged: (value) {
                     setState(() {
                       on.slideIndex = value;
@@ -89,7 +93,9 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage> {
                     ),
                     SizedBox(height: 5.h),
                     CustomButton(
-                      onTap: () {},
+                      onTap: () {
+                        AppLogger.log(pOnboarding.pathToName);
+                      },
                       title: 'Create a new wallet',
                     ),
                     SizedBox(height: 5.h),

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/routes/router.dart';
+import 'package:guava/core/styles/theme/theme.dark.dart';
 import 'package:guava/core/styles/theme/theme.dart';
 import 'package:guava/firebase_options.dart';
 
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
           title: 'Guava Finance',
           theme: theme(context),
           debugShowCheckedModeBanner: false,
-          // darkTheme: themeDark(context),
+          darkTheme: themeDark(context),
           routerConfig: router,
           builder: (context, child) {
             final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(
