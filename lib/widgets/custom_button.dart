@@ -20,21 +20,22 @@ class CustomButton extends StatelessWidget {
   final bool showBorder;
   final TextStyle? textStyle;
 
-  const CustomButton(
-      {required this.onTap,
-      super.key,
-      this.title,
-      this.filled = true,
-      this.backgroundColor,
-      this.textColor,
-      this.textSize,
-      this.disable = false,
-      this.padding,
-      this.radius,
-      this.height,
-      this.child,
-      this.showBorder = false,
-      this.textStyle});
+  const CustomButton({
+    required this.onTap,
+    super.key,
+    this.title,
+    this.filled = true,
+    this.backgroundColor,
+    this.textColor,
+    this.textSize,
+    this.disable = false,
+    this.padding,
+    this.radius,
+    this.height,
+    this.child,
+    this.showBorder = false,
+    this.textStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,25 +54,31 @@ class CustomButton extends StatelessWidget {
           padding: height != null
               ? EdgeInsets.zero
               : padding ??
-                  EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
+                  EdgeInsets.symmetric(
+                    vertical: 8.h,
+                    horizontal: 15.w,
+                  ),
           width: double.infinity,
           height: 42.h,
           decoration: BoxDecoration(
-              color: disable
-                  ? Color(0xFF979797)
-                  : filled
-                      ? (backgroundColor ?? BrandColors.primary)
-                      : null,
-              border: !disable
-                  ? showBorder
-                      ? Border.all(
-                          color: backgroundColor ?? const Color(0xFFe2e8f0))
-                      : null
-                  : Border.all(
-                      color: disable
-                          ? Colors.transparent
-                          : (backgroundColor ?? const Color(0xFF011B55))),
-              borderRadius: BorderRadius.circular(radius ?? 50.r)),
+            color: disable
+                ? Color(0xFF979797)
+                : filled
+                    ? (backgroundColor ?? BrandColors.primaryColor)
+                    : null,
+            border: !disable
+                ? showBorder
+                    ? Border.all(
+                        color: backgroundColor ?? const Color(0xFFe2e8f0),
+                      )
+                    : null
+                : Border.all(
+                    color: disable
+                        ? Colors.transparent
+                        : (backgroundColor ?? const Color(0xFF011B55)),
+                  ),
+            borderRadius: BorderRadius.circular(radius ?? 50.r),
+          ),
           child: Center(
             child: child ??
                 FittedBox(
@@ -80,9 +87,10 @@ class CustomButton extends StatelessWidget {
                     '$title',
                     style: textStyle ??
                         context.semiBold.copyWith(
-                            fontSize: textSize ?? 14.sp,
-                            color: textColor ?? hexColor('#28443F'),
-                            height: 1.875),
+                          fontSize: textSize ?? 14.sp,
+                          color: textColor ?? hexColor('#28443F'),
+                          height: 1.875,
+                        ),
                     textAlign: TextAlign.center,
                   ),
                 ),

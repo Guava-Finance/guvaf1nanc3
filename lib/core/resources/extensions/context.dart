@@ -12,33 +12,30 @@ extension CxtExtension on BuildContext {
 
   // text-styles related
   TextStyle get regular => textTheme.bodyMedium!.copyWith(
-    fontSize: 12.sp,
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-  );
+        fontSize: 12.sp,
+        color: Colors.white,
+        fontWeight: FontWeight.w400,
+      );
   TextStyle get medium => textTheme.bodyMedium!.copyWith(
-    fontSize: 12.sp,
-    color: Colors.white,
-    fontWeight: FontWeight.w500
-  );
+      fontSize: 12.sp, color: Colors.white, fontWeight: FontWeight.w500);
 
   TextStyle get semiBold => textTheme.bodyMedium!.copyWith(
-    fontSize: 32.sp,
-    color: Colors.white,
-    fontWeight: FontWeight.w600,
-  );
+        fontSize: 32.sp,
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      );
 
   TextStyle get bold => textTheme.bodyMedium!.copyWith(
-    fontSize: 12.sp,
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-  );
+        fontSize: 12.sp,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      );
 
   TextStyle get extraBold => textTheme.bodyMedium!.copyWith(
-    fontSize: 12.sp,
-    color: Colors.white,
-    fontWeight: FontWeight.w900,
-  );
+        fontSize: 12.sp,
+        color: Colors.white,
+        fontWeight: FontWeight.w900,
+      );
 
   // size related
   Size get size => MediaQuery.of(this).size;
@@ -60,8 +57,8 @@ extension CxtExtension on BuildContext {
 
 extension TextStylesExtension on BuildContext {
   TextStyle get brandRegular => Theme.of(this).textTheme.bodyMedium!.copyWith(
-    fontSize: 12,
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-  );
+        fontSize: 12,
+        color: Colors.white,
+        fontWeight: FontWeight.w400,
+      );
 }
