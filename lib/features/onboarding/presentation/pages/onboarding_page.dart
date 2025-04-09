@@ -69,7 +69,9 @@ class Onboardingpage extends ConsumerWidget {
                                 ),
                                 Text(
                                   e['subtitle'] as String,
-                                  style: context.textTheme.bodyMedium,
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: BrandColors.washedTextColor,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -123,7 +125,7 @@ class Onboardingpage extends ConsumerWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20.h),
+              10.verticalSpace,
             ],
           ),
         ),

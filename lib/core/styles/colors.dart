@@ -8,6 +8,7 @@ class BrandColors {
   static Color backgroundColor = hexColor('28443F');
   static Color textColor = hexColor('FCFCFC');
   static Color disabledTextColor = hexColor('D9D9D9');
+  static Color washedTextColor = hexColor('B0B7B1');
 
   static const kDarColor = Color(0XFF000000);
   static const red = Color(0xFFED1B23);
