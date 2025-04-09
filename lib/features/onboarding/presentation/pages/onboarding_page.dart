@@ -7,6 +7,7 @@ import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
+import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/utility_widget.dart';
 
@@ -64,7 +65,25 @@ class Onboardingpage extends ConsumerWidget {
                                 ),
                                 Expanded(
                                   child: Stack(
-                                    children: [],
+                                    children: [
+                                      Align(
+                                        child: CustomIcon(
+                                          icon: e['background_icon'] as String,
+                                        ),
+                                      ),
+                                      ...(e['sub_icons_n_positions'] as List)
+                                          .map((e) {
+                                        return Positioned(
+                                          left: e['ltrb'][0] as double?,
+                                          top: e['ltrb'][1] as double?,
+                                          right: e['ltrb'][2] as double?,
+                                          bottom: e['ltrb'][3] as double?,
+                                          child: CustomIcon(
+                                            icon: e['icon'] as String,
+                                          ),
+                                        );
+                                      }),
+                                    ],
                                   ),
                                 ),
                                 Text(

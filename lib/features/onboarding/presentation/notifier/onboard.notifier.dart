@@ -42,7 +42,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       'sub_icons_n_positions': [
         {
           'icon': R.ASSETS_ICONS_WALLET_TO_WALLET_FLOATER_SVG,
-          'ltrb': [null, null, null, null],
+          'ltrb': [null, 30.0, 10.0, null],
         },
         {
           'icon': R.ASSETS_ICONS_NFC_FLOATER_SVG,
