@@ -72,26 +72,6 @@ class R {
   static const String ASSETS_ICONS_YOUR_CONTROL_SVG =
       'assets/icons/your-control.svg';
 
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/onboard_image1.png)
-  static const String ASSETS_IMAGES_ONBOARD_IMAGE1_PNG =
-      'assets/images/onboard_image1.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/onboard_image2.png)
-  static const String ASSETS_IMAGES_ONBOARD_IMAGE2_PNG =
-      'assets/images/onboard_image2.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/onboard_image3.png)
-  static const String ASSETS_IMAGES_ONBOARD_IMAGE3_PNG =
-      'assets/images/onboard_image3.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/onboard_image4.png)
-  static const String ASSETS_IMAGES_ONBOARD_IMAGE4_PNG =
-      'assets/images/onboard_image4.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/onboard_image5.png)
-  static const String ASSETS_IMAGES_ONBOARD_IMAGE5_PNG =
-      'assets/images/onboard_image5.png';
-
   /// ![preview](file:///Users/oghenekparobor/guavafinance/shorebird.yaml)
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }

@@ -38,7 +38,7 @@ extension CxtExtension on BuildContext {
       );
 
   // size related
-  Size get size => MediaQuery.of(this).size;
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
   EdgeInsets get padding => MediaQuery.of(this).padding;
 
   // navigator related
