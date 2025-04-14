@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 class Strings {
   Strings._();
 
@@ -8,4 +10,8 @@ class Strings {
   static String derivativePath = 'm/44\'/501\'/0\'/0\'';
   static String usdcMintTokenAddress =
       '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
+
+  //Pages
+  static const root = '/';
+  static const onboarding = '/onboarding';
 }
