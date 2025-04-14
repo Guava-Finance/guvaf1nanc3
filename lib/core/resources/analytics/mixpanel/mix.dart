@@ -17,7 +17,7 @@ class MixPanel {
     FirebaseCrashlytics.instance.setUserIdentifier(email);
   }
 
-  void log(String event, {properties}) {
+  void track(String event, {properties}) {
     mixpanel.track(event, properties: properties);
   }
 

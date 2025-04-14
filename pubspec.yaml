@@ -61,6 +61,8 @@ dependencies:
   flutter_dojah_kyc: ^0.5.2
   pubnub: ^5.2.0
   posthog_flutter: ^4.10.4
+  flutter_svg: ^2.0.17
+  dart_casing: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -91,8 +93,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
-
 
 
   # Usama Azad <https://github.com/Usama-Azad>

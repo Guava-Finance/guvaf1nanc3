@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
           title: 'Guava Finance',
           theme: theme(context),
           debugShowCheckedModeBanner: false,
-          darkTheme: themeDark(context),
+          // darkTheme: themeDark(context),
           routerConfig: router,
           builder: (context, child) {
             final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(

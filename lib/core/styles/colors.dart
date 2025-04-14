@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guava/widgets/utility_widget.dart';
 
 class BrandColors {
   BrandColors._();
@@ -6,6 +7,13 @@ class BrandColors {
   static const primary = Color(0XFFF2FD7D);
   static const light = Color(0XFFFCFCFC);
   static const scaffoldColor = Color(0XFF28443F);
+  static Color primaryColor = hexColor('F2FD7D');
+  static Color backgroundColor = hexColor('28443F');
+  static Color textColor = hexColor('FCFCFC');
+  static Color disabledTextColor = hexColor('D9D9D9');
+  static Color washedTextColor = hexColor('B0B7B1');
+  static Color disabledButton = hexColor('979797');
+
   static const kDarColor = Color(0XFF000000);
   static const red = Color(0xFFED1B23);
   static const bc1C1939 = Color(0xFF1C1939);
