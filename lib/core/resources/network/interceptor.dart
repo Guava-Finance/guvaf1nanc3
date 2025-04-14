@@ -28,6 +28,7 @@ class NetworkInterceptor {
 
     encryptionService = EncryptionService(
       encryptionKey: Env.aesEncryptionKey,
+      iv: Env.aesEncryptionIv,
     );
   }
 

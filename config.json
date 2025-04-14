@@ -12,7 +12,7 @@
     },
     "guava_pay": {
         "business_wallet_derivative_paths": [
-            "m/44'/501'/11'/0'",
+            "m/44'/501'/21'/0'",
             "m/44'/501'/22'/0'",
             "m/44'/501'/23'/0'",
             "m/44'/501'/24'/0'",
@@ -45,10 +45,14 @@
                     11,
                     14
                 ],
-                "kyc_partners": [
+                "kyb_partners": [
                     "dojah",
                     "meta_map"
                 ],
+                "is_wallet_transfer_enabled": true,
+                "is_on_ramp_enabled": true,
+                "is_off_ramp_enabled": true,
+                "is_kyb_enabled": true,
                 "rates": {
                     "off_ramp": [
                         {
@@ -179,111 +183,6 @@
                         }
                     ]
                 }
-            },
-            {
-                "name": "Ghana",
-                "country_code": "GH",
-                "currency": "Cedi",
-                "currency_code": "GH₵",
-                "currency_symbol": "₵",
-                "calling_code": "+233",
-                "phone_length": [
-                    9,
-                    13
-                ],
-                "kyc_partners": [
-                    "dojah",
-                    "meta_map"
-                ],
-                "rates": {
-                    "off_ramp": [
-                        {
-                            "min": 0,
-                            "max": 50000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "between",
-                            "is_usdc": false
-                        },
-                        {
-                            "min": 50001,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 5000,
-                            "is_capped": false,
-                            "rule": "between",
-                            "is_usdc": false
-                        },
-                        {
-                            "min": 500000,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "above",
-                            "is_usdc": false
-                        }
-                    ],
-                    "on_ramp": [
-                        {
-                            "min": 0,
-                            "max": 50000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "between",
-                            "is_usdc": true
-                        },
-                        {
-                            "min": 50001,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 5000,
-                            "is_capped": false,
-                            "rule": "between",
-                            "is_usdc": true
-                        },
-                        {
-                            "min": 500000,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "above",
-                            "is_usdc": true
-                        }
-                    ],
-                    "wallet_transfer": [
-                        {
-                            "min": 0,
-                            "max": 50000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "between",
-                            "is_usdc": true
-                        },
-                        {
-                            "min": 50001,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 5000,
-                            "is_capped": false,
-                            "rule": "between",
-                            "is_usdc": true
-                        },
-                        {
-                            "min": 500000,
-                            "max": 500000,
-                            "percentage_charge": 1.2,
-                            "capped_amount": 500,
-                            "is_capped": true,
-                            "rule": "above",
-                            "is_usdc": true
-                        }
-                    ]
-                }
             }
         ]
     },
@@ -303,111 +202,10 @@
                 "dojah",
                 "meta_map"
             ],
-            "rates": {
-                "off_ramp": [
-                    {
-                        "min": 0,
-                        "max": 50000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "between",
-                        "is_usdc": false
-                    },
-                    {
-                        "min": 50001,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 5000,
-                        "is_capped": false,
-                        "rule": "between",
-                        "is_usdc": false
-                    },
-                    {
-                        "min": 500000,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "above",
-                        "is_usdc": false
-                    }
-                ],
-                "on_ramp": [
-                    {
-                        "min": 0,
-                        "max": 50000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "between",
-                        "is_usdc": true
-                    },
-                    {
-                        "min": 50001,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 5000,
-                        "is_capped": false,
-                        "rule": "between",
-                        "is_usdc": true
-                    },
-                    {
-                        "min": 500000,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "above",
-                        "is_usdc": true
-                    }
-                ],
-                "wallet_transfer": [
-                    {
-                        "min": 0,
-                        "max": 50000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "between",
-                        "is_usdc": true
-                    },
-                    {
-                        "min": 50001,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 5000,
-                        "is_capped": false,
-                        "rule": "between",
-                        "is_usdc": true
-                    },
-                    {
-                        "min": 500000,
-                        "max": 500000,
-                        "percentage_charge": 1.2,
-                        "capped_amount": 500,
-                        "is_capped": true,
-                        "rule": "above",
-                        "is_usdc": true
-                    }
-                ]
-            }
-        },
-        {
-            "name": "Ghana",
-            "country_code": "GH",
-            "currency": "Cedi",
-            "currency_code": "GH₵",
-            "currency_symbol": "₵",
-            "calling_code": "+233",
-            "phone_length": [
-                9,
-                13
-            ],
-            "kyc_partners": [
-                "dojah",
-                "meta_map"
-            ],
+            "is_wallet_transfer_enabled": true,
+            "is_on_ramp_enabled": true,
+            "is_off_ramp_enabled": true,
+            "is_kyc_enabled": true,
             "rates": {
                 "off_ramp": [
                     {

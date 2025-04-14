@@ -19,6 +19,9 @@ abstract class Env {
   @EnviedField(varName: 'AES_ENCRYPTION_KEY')
   static String aesEncryptionKey = _Env.aesEncryptionKey;
 
+  @EnviedField(varName: 'AES_ENCRYPTION_IV')
+  static String aesEncryptionIv = _Env.aesEncryptionIv;
+
   @EnviedField(varName: 'DOJAH_API_ID')
   static String dojahApiId = _Env.dojahApiId;
 

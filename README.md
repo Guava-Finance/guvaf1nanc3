@@ -53,6 +53,10 @@ dart pub global activate -s git https://github.com/fluttercandies/flutter_asset_
 ```
 This package monitors the project and automatically handles asset management, including additions, removals, or path changes. It ensures that asset paths are managed automatically in `lib/const/resources.dart`.
 
+```bash
+dart pub global activate flutter_asset_generator
+```
+
 To activate real-time asset monitoring, run:
 ```bash
 fgen

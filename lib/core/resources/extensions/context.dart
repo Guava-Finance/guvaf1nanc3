@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/notification/wrapper/notification.wrapper.dart';
+import 'package:guava/core/service_locator/injection_container.dart';
 
 extension CxtExtension on BuildContext {
   // theme related
   ThemeData get theme => Theme.of(this);
   AppBarTheme get appbarTheme => AppBarTheme.of(this);
-  DialogThemeData get dialogTheme => DialogTheme.of(this);
   TextTheme get textTheme => Theme.of(this).textTheme;
   TabBarThemeData get tabbarTheme => Theme.of(this).tabBarTheme;
 
@@ -53,6 +54,8 @@ extension CxtExtension on BuildContext {
   // view models
 
   Object get arg => ModalRoute.of(this)!.settings.arguments!;
+
+  MixPanel get mixpanel => sl<MixPanel>();
 }
 
 extension TextStylesExtension on BuildContext {
