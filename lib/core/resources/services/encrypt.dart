@@ -10,9 +10,9 @@ class EncryptionService {
   final IV _iv;
 
   // Main constructor
-  EncryptionService({required String encryptionKey})
+  EncryptionService({required String encryptionKey, required String iv})
       : _key = _generateKey(encryptionKey),
-        _iv = IV.fromLength(16); // AES block size is 16 bytes
+        _iv = IV.fromUtf8(iv); // AES block size is 16 bytes
 
   // Generate a 256-bit key from any input string
   static Key _generateKey(String input) {
@@ -115,7 +115,10 @@ class EncryptionService {
   }
 
   // Create an instance with a specific key and generate a fresh IV
-  factory EncryptionService.withKey({required String encryptionKey}) {
-    return EncryptionService(encryptionKey: encryptionKey);
+  factory EncryptionService.withKey({
+    required String encryptionKey,
+    required String iv,
+  }) {
+    return EncryptionService(encryptionKey: encryptionKey, iv: iv);
   }
 }
