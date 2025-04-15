@@ -14,4 +14,13 @@ class Strings {
   //Pages
   static const root = '/';
   static const onboarding = '/onboarding';
+  static const dashboard = '/dashboard';
+  static const setupPin = '/setup-pin';
+  static const fullscreenLoader = '/fullscreen-loader';
+
+  // Home Banners
+  static const connectWallet = 'WalletConnect';
+  static const createUsername = 'UsernameCreation';
+  static const backupPhrase = 'MnenomicsBackup';
+  static const kycVerification = 'KYCVerification';
 }

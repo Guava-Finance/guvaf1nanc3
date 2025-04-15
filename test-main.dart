@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/services/encrypt.dart';

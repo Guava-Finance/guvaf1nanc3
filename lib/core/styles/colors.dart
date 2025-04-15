@@ -4,12 +4,22 @@ import 'package:guava/widgets/utility_widget.dart';
 class BrandColors {
   BrandColors._();
 
+  static const primary = Color(0XFFF2FD7D);
+  static const light = Color(0XFFFCFCFC);
+  static const scaffoldColor = Color(0XFF28443F);
   static Color primaryColor = hexColor('F2FD7D');
   static Color backgroundColor = hexColor('28443F');
   static Color textColor = hexColor('FCFCFC');
   static Color disabledTextColor = hexColor('D9D9D9');
   static Color washedTextColor = hexColor('B0B7B1');
   static Color disabledButton = hexColor('979797');
+  static Color selectedNavBarLabel = hexColor('#B0B7B1');
+  static Color washedRed = hexColor('F4A988');
+  static Color washedGreen = hexColor('A9B0A6');
+  static Color washedBlue = hexColor('599DB0');
+  static Color washedYellow = hexColor('D4A441');
+  static Color containerColor = hexColor('334e48');
+  static Color lightGreen = hexColor('A8E6A0');
 
   static const kDarColor = Color(0XFF000000);
   static const red = Color(0xFFED1B23);
@@ -55,7 +65,6 @@ class BrandColors {
   static const primaryFade = Color(0xFFFAE1DC);
   static const primaryFade2 = Color(0xFFFFCFCE);
   static const indigo = Color(0xFF4464BE);
-  static const light = Color(0xFFF5F5F5);
   static const darkD9 = Color(0xFFD9D9D9);
   static const dark59 = Color(0xFF595175);
   static const darkB7 = Color(0xFFB7BCEE);

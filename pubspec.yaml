@@ -63,6 +63,7 @@ dependencies:
   posthog_flutter: ^4.10.4
   flutter_svg: ^2.0.17
   dart_casing: ^3.0.1
+  animated_text_kit: ^4.2.3
 
 dev_dependencies:
   flutter_test:
