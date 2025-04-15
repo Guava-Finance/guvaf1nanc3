@@ -13,6 +13,13 @@ class BrandColors {
   static Color disabledTextColor = hexColor('D9D9D9');
   static Color washedTextColor = hexColor('B0B7B1');
   static Color disabledButton = hexColor('979797');
+  static Color selectedNavBarLabel = hexColor('#B0B7B1');
+  static Color washedRed = hexColor('F4A988');
+  static Color washedGreen = hexColor('A9B0A6');
+  static Color washedBlue = hexColor('599DB0');
+  static Color washedYellow = hexColor('D4A441');
+  static Color containerColor = hexColor('334e48');
+  static Color lightGreen = hexColor('A8E6A0');
 
   static const kDarColor = Color(0XFF000000);
   static const red = Color(0xFFED1B23);

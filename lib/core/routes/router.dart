@@ -4,8 +4,8 @@ import 'package:guava/core/app_strings.dart';
 import 'package:guava/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:guava/features/setup_pin/presentation/pages/setup_pin_page.dart';
-import 'package:guava/features/splash/presentation/pages/splash.page.dart';
+import 'package:guava/features/onboarding/presentation/pages/setup_pin_page.dart';
+import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
 
 /// [p] suffix means path
 const String pRoot = Strings.root;

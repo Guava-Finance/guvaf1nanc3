@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/extensions/string.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/dashboard/presentation/pages/loader.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/features/onboarding/presentation/widgets/slide.dart';
 import 'package:guava/widgets/custom_button.dart';
@@ -96,7 +94,27 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage> {
                     SizedBox(height: 5.h),
                     CustomButton(
                       onTap: () {
-                        context.push(Strings.dashboard);
+                        context.nav.push(
+                          MaterialPageRoute(
+                            builder: (_) => FullScreenLoader(
+                              onLoading: () async {
+                                await Future.delayed(Duration(seconds: 3));
+                              },
+                              onSuccess: () {
+                                context.push(Strings.dashboard);
+                              },
+                              onError: () {
+                                context.pop();
+                              },
+                              subMessages: [
+                                'Generating secret phrase',
+                                'Creating SPL token accounts',
+                                'This may take a few minutes',
+                              ],
+                              title: 'Creating your wallet',
+                            ),
+                          ),
+                        );
                       },
                       title: 'Create a new wallet',
                     ),

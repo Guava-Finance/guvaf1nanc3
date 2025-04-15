@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dashboardProvider =
-    StateNotifierProvider<DashboardStateNotifier, int>((ref) {
-  return DashboardStateNotifier();
+final bottomNavProvider =
+    StateNotifierProvider<BottomNavNotifier, int>((ref) {
+  return BottomNavNotifier();
 });
 
-class DashboardStateNotifier extends StateNotifier<int> {
-  DashboardStateNotifier() : super(0);
+class BottomNavNotifier extends StateNotifier<int> {
+  BottomNavNotifier() : super(0);
 
   void setIndex(int index) {
     state = index;
