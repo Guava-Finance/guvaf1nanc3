@@ -16,6 +16,9 @@ class Strings {
   static const onboarding = '/onboarding';
   static const dashboard = '/dashboard';
   static const setupPin = '/setup-pin';
+  static const addConnectWallet = '/add-connect-wallet';
+  static const importRecoveryPhrase = '/import-recovery-phrase';
+  static const importPrivateKey = '/import-private-key';
   static const fullscreenLoader = '/fullscreen-loader';
 
   // Home Banners
