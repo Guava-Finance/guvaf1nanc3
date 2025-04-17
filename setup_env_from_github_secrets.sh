@@ -20,6 +20,7 @@ echo "DOJAH_API_ID=$DOJAH_API_ID" >> .env
 echo "DOJAH_PUBLIC_KEY=$DOJAH_PUBLIC_KEY" >> .env
 echo "DOJAH_WIDGET_ID=$DOJAH_WIDGET_ID" >> .env
 echo "PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY" >> .env
-echo "PUB_NUB_PUBLISH_KEY=$PUB_NUB_PUBLISH_KEY" >> .env
+echo "PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY" >> .env
+echo "APP_ID=$APP_ID" >> .env
 
 echo ".env file created successfully from GitHub Secrets!"

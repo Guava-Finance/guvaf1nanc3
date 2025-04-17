@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/network/state.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+final networkExceptionWrapperProvider = Provider<NetworkExceptionWrapper>(
+  (ref) => NetworkExceptionWrapper(),
+);
+
 class NetworkExceptionWrapper {
   NetworkExceptionWrapper();
 
@@ -43,6 +47,9 @@ class NetworkExceptionWrapper {
         }
 
         if (e.response?.statusCode == 400 || e.response?.statusCode == 401) {
+          AppLogger.log(e);
+          AppLogger.log(e.message);
+
           return ErrorState(e.response?.data['message']);
         }
 

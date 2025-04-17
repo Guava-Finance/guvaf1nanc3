@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
@@ -42,8 +41,9 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage>
   void _startAutoScroll() {
     // Set a timer that triggers every 3 seconds
     _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      final on = ref.read(onboardingNotifierProvider);
       if (!mounted) return;
+
+      final on = ref.read(onboardingNotifierProvider);
 
       if (_isForward) {
         // Moving forward
@@ -214,20 +214,28 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage>
                         MaterialPageRoute(
                           builder: (_) => FullScreenLoader(
                             onLoading: () async {
-                              await Future.delayed(Duration(seconds: 3));
+                              await on.createAWallet();
                             },
-                            onSuccess: () {
-                              context.push(Strings.dashboard);
+                            onSuccess: () async {
+                              context.pop();
+
+                              // setup access code after creating wallet
+                              navkey.currentContext!.go(pSetupPin);
                             },
                             onError: () {
                               context.pop();
                             },
                             subMessages: [
-                              'Generating secret phrase',
-                              'Creating SPL token accounts',
-                              'This may take a few minutes',
+                              'Initializing wallet creation...',
+                              'Generating secure wallet keys...',
+                              'Encrypting private credentials...',
+                              'Saving wallet securely to device...',
+                              'Prefunding your wallet account...',
+                              'Verifying USDC token account...',
+                              'Enabling USDC support if needed...',
+                              'Finalizing wallet setup...',
                             ],
-                            title: 'Creating your wallet',
+                            title: 'Please wait...',
                           ),
                         ),
                       );

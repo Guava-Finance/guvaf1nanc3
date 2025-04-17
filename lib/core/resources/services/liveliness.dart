@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dojah_kyc/flutter_dojah_kyc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/routes/router.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+final livelinessServiceProvider = Provider<LivelinessService>((ref) {
+  return LivelinessService();
+});
+
 class LivelinessService {
   late final DojahKYC _dojahKYC;
 

@@ -1,15 +1,28 @@
 import 'package:bip39/bip39.dart';
+import 'package:bip39/bip39.dart' as bip39;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
-import 'package:injectable/injectable.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 import 'storage.dart';
 
-@lazySingleton
-class SolanaService {
+final rpcClientProvider = Provider<RpcClient>((ref) {
+  return RpcClient(Env.rpcClient);
+});
+
+final solanaServiceProvider = Provider<SolanaService>((ref) {
+  return SolanaService(
+    rpcClient: ref.watch(rpcClientProvider),
+    storageService: ref.watch(securedStorageServiceProvider),
+    networkInterceptor: ref.watch(networkInterceptorProvider),
+  );
+});
+
+final class SolanaService {
   SolanaService({
     required this.rpcClient,
     required this.storageService,
@@ -50,12 +63,6 @@ class SolanaService {
   /// And it should be kept locally within the
   /// user's device to ensure decentralization
   Future<String> restoreAWallet(String mnemonics) async {
-    final List<String> noOfMnemonics = mnemonics.split(' ').toList();
-
-    if (noOfMnemonics.length != 12 || noOfMnemonics.length != 24) {
-      throw Exception('Invalid mnemonics');
-    }
-
     /// Save correct mnemonics to a secure storage on User's device
     await storageService.writeToStorage(
       key: Strings.mnemonics,
@@ -168,13 +175,6 @@ class SolanaService {
     }
   }
 
-  /// This sends the wallet's public address so that the system can credit it
-  /// with enough SOL to cover for gas fee for the month
-  /// Wallet would always be pre-funded
-  Future prefund() {
-    throw UnimplementedError();
-  }
-
   /// The splToken address is passed and the balance is gotten from
   /// Solana blockchain via RPC network call
   Future<TokenAmount> checkBalance() async {
@@ -261,6 +261,10 @@ class SolanaService {
     );
 
     return signedTx.encode();
+  }
+
+  bool isMnemonicValid(String mnemonic) {
+    return bip39.validateMnemonic(mnemonic);
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {

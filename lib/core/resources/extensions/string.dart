@@ -8,10 +8,10 @@ extension StringExt on String {
   }
 
   String toMaskedFormat({
-    int prefixLength = 3,
+    int prefixLength = 4,
     int suffixLength = 4,
     String maskCharacter = '.',
-    int maskLength = 4,
+    int maskLength = 3,
   }) {
     // Handle edge cases
     if (isEmpty) return '';

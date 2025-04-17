@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/widgets/app_icon.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class WalletDetails extends StatelessWidget {
   const WalletDetails({super.key});
@@ -36,41 +37,51 @@ class WalletDetails extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 6.h,
-            horizontal: 10.w,
-          ),
-          decoration: ShapeDecoration(
-            color: BrandColors.containerColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-          ),
-          child: Row(
-            children: [
-              Text(
-                '9Cu6uYFinFz6wd3iJPoPvTiTVsgxnKzZNhgkbJXnAaP1'.toMaskedFormat(),
-                style: context.medium.copyWith(
-                  color: hexColor('#B0B7B1'),
-                  fontSize: 12.sp,
+        Consumer(
+          builder: (context, ref, _) {
+            final walletAsync = ref.watch(walletAddressProvider);
+
+            return walletAsync.when(
+              data: (walletAddress) => Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 6.h,
+                  horizontal: 10.w,
+                ),
+                decoration: ShapeDecoration(
+                  color: BrandColors.containerColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      walletAddress.toMaskedFormat(),
+                      style: context.medium.copyWith(
+                        color: BrandColors.washedTextColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    4.horizontalSpace,
+                    InkWell(
+                      onTap: () {
+                        Clipboard.getData(walletAddress).then((_) {
+                          // todo: copied notification
+                        });
+                      },
+                      child: CustomIcon(
+                        icon: R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
+                        height: 16.h,
+                        width: 16.w,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              4.horizontalSpace,
-              InkWell(
-                onTap: () {
-                  Clipboard.getData(
-                    '9Cu6uYFinFz6wd3iJPoPvTiTVsgxnKzZNhgkbJXnAaP1',
-                  ).then((_) {});
-                },
-                child: CustomIcon(
-                  icon: R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
-                  height: 16.h,
-                  width: 16.w,
-                ),
-              ),
-            ],
-          ),
+              loading: () => const CircularProgressIndicator(),
+              error: (e, _) => 0.verticalSpace,
+            );
+          },
         ),
       ],
     ).padHorizontal;

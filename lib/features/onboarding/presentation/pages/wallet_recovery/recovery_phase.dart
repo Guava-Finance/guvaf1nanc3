@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
-import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/solana.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/dashboard/presentation/pages/loader.dart';
+import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
 
-class ImportRecoveryPhrase extends StatefulWidget {
+class ImportRecoveryPhrase extends ConsumerStatefulWidget {
   const ImportRecoveryPhrase({super.key});
 
   @override
-  State<ImportRecoveryPhrase> createState() => _ImportRecoveryPhraseState();
+  ConsumerState<ImportRecoveryPhrase> createState() =>
+      _ImportRecoveryPhraseState();
 }
 
-class _ImportRecoveryPhraseState extends State<ImportRecoveryPhrase> {
+class _ImportRecoveryPhraseState extends ConsumerState<ImportRecoveryPhrase> {
   late final TextEditingController controller;
 
   @override
@@ -41,6 +45,8 @@ class _ImportRecoveryPhraseState extends State<ImportRecoveryPhrase> {
 
   @override
   Widget build(BuildContext context) {
+    final on = ref.read(onboardingNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Import Wallet'),
@@ -61,27 +67,36 @@ class _ImportRecoveryPhraseState extends State<ImportRecoveryPhrase> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomButton(
-            disable: controller.text.isEmpty,
+            disable: controller.text.isEmpty ||
+                !ref
+                    .read(solanaServiceProvider)
+                    .isMnemonicValid(controller.text),
             title: 'Import',
             onTap: () {
               context.nav.push(
                 MaterialPageRoute(
                   builder: (_) => FullScreenLoader(
                     onLoading: () async {
-                      await Future.delayed(Duration(seconds: 3));
+                      await on.restoreAWallet(controller.text);
                     },
                     onSuccess: () {
-                      context.push(Strings.dashboard);
+                      // setup access code after restoring wallet
+                      navkey.currentContext!.go(pSetupPin);
                     },
                     onError: () {
                       context.pop();
                     },
                     subMessages: [
-                      'Generating secret phrase',
-                      'Creating SPL token accounts',
-                      'This may take a few minutes',
+                      'Initializing wallet restoration...',
+                      'Generating secure wallet keys...',
+                      'Encrypting private credentials...',
+                      'Saving wallet securely to device...',
+                      'Prefunding your wallet account...',
+                      'Verifying USDC token account...',
+                      'Enabling USDC support if needed...',
+                      'Finalizing wallet setup...',
                     ],
-                    title: 'Creating your wallet',
+                    title: 'Please wait',
                   ),
                 ),
               );

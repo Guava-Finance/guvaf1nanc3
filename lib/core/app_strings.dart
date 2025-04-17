@@ -3,8 +3,10 @@
 class Strings {
   Strings._();
 
+  // Keys
   static const String title = 'guava';
-  static const String mnemonics = 'my_wallet_mnemonics';
+  static const String mnemonics = 'my_wallet_mnemonic_';
+  static const String accessCode = 'my_access_code';
 
   // todo: Fetch from Config
   static String derivativePath = 'm/44\'/501\'/0\'/0\'';

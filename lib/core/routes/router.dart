@@ -44,7 +44,9 @@ final router = GoRouter(
     GoRoute(
       name: pSetupPin.pathToName,
       path: pSetupPin,
-      builder: (context, state) => const SetupPinPage(),
+      builder: (context, state) {
+        return SetupPinPage();
+      },
     ),
     GoRoute(
       name: pAddConnectWallet.pathToName,
