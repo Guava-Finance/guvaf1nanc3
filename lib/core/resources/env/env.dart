@@ -36,4 +36,7 @@ abstract class Env {
 
   @EnviedField(varName: 'PUB_NUB_PUBLISH_KEY')
   static String pubNubPublishKey = _Env.pubNubPublishKey;
+
+  @EnviedField(varName: 'APP_ID')
+  static String appId = _Env.appId;
 }

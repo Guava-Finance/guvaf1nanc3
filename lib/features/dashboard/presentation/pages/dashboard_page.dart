@@ -5,21 +5,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/pages/account_page.dart';
-import 'package:guava/features/dashboard/presentation/notifier/dashboard_notifier.dart';
+import 'package:guava/features/dashboard/presentation/notifier/bottom_nav_notifier.dart';
+import 'package:guava/features/dashboard/presentation/notifier/dashboard.notifier.dart';
 import 'package:guava/features/dashboard/presentation/widgets/bottom/nav.dart';
 import 'package:guava/features/home/presentation/pages/home_page.dart';
 
-class DashboardPage extends ConsumerWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(bottomNavProvider);
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+}
 
-    final screens = [
-      const HomePage(),
-      const AccountPage(),
-    ];
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // checks to prefund and create USDC SPLtoken account behind the scenes
+      ref.read(dashboardNotifierProvider).checkNCreateUSDCAccount();
+      // ref.read(dashboardNotifierProvider).initBalanceCheck();
+
+      // todo: request notification permission
+      // ignore: lines_longer_than_80_chars
+      // todo: save the user's account information check the country to know if the user has changed location then show a dialog that would call chnage country endpoint (because wallet balance would be fetched base on user's country)
+      ref.read(dashboardNotifierProvider).hasLocationChanged();
+    });
+  }
+
+  final screens = [
+    const HomePage(),
+    const AccountPage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(bottomNavProvider);
 
     return PopScope(
       canPop: false,

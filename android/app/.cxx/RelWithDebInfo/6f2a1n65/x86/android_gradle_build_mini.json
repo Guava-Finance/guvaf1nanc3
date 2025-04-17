@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/oghenekparobor/fvm/versions/stable/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/oghenekparobor/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/oghenekparobor/guavafinance/android/app/.cxx/RelWithDebInfo/6f2a1n65/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/oghenekparobor/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/oghenekparobor/guavafinance/android/app/.cxx/RelWithDebInfo/6f2a1n65/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

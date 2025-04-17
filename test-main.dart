@@ -1,4 +1,3 @@
-
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/services/encrypt.dart';
 
@@ -9,8 +8,7 @@ void main(List<String> args) {
   );
 
   final data = {
-    'address':
-        'MBs/iBX+Fr/fZdn5hAPG3AdYUgTOVMfSJky5lQHW2iSofwIHKctdvAAafQ4SGo0o'
+    'address': 'cCZv5KDIpZmY2kK5KXtm1itLET5ydtp7raWoK/VSXks=',
   };
 
   print('Decrytped message: ${encryptionService.decryptData(data)}');

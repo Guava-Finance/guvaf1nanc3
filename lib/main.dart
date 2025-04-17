@@ -15,7 +15,6 @@ import 'package:guava/core/styles/theme/theme.dart';
 import 'package:guava/firebase_options.dart';
 
 import 'core/resources/notification/wrapper/notification.wrapper.dart';
-import 'core/service_locator/injection_container.dart';
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -29,7 +28,7 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.light,
     ));
 
-    await configureDependencies();
+    // await configureDependencies();
 
     /// Init Firebase setup
     await Firebase.initializeApp(
