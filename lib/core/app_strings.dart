@@ -20,6 +20,9 @@ class Strings {
   static const importRecoveryPhrase = '/import-recovery-phrase';
   static const importPrivateKey = '/import-private-key';
   static const fullscreenLoader = '/fullscreen-loader';
+  static const transfer = '/transfer';
+  static const enterAmountWallet = '/enterAmountWallet';
+  static const enterAmountBank = '/enterAmountBank';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';
