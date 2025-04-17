@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart';
@@ -6,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
-import 'package:hashlib/hashlib.dart';
+import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
@@ -86,18 +88,25 @@ final class SolanaService {
   /// And it should be kept locally within the
   /// user's device to ensure decentralization
   Future<String> restoreAWalletPK(String privateKey) async {
-    /// Save correct mnemonics to a secure storage on User's device
-    // await storageService.writeToStorage(
-    //   key: Strings.mnemonics,
-    //   value: mnemonics,
-    // );
+    // Validate the private key format
+    if (!isValidPrivateKey(privateKey)) {
+      throw FormatException('Invalid private key format');
+    }
 
-    final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
-      seed: privateKeyToSeed(privateKey),
-      hdPath: Strings.derivativePath,
+    // Process the private key (works for both hex and base58)
+    final Uint8List seedBytes = processPrivateKey(privateKey);
+
+    // Create the wallet using the private key
+    final wallet = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      privateKey: seedBytes,
     );
 
-    /// Display the public address of user's wallet
+    await storageService.writeToStorage(
+      key: Strings.privateKey,
+      value: privateKey,
+    );
+
+    // Return the wallet's public address
     return wallet.address;
   }
 
@@ -127,7 +136,10 @@ final class SolanaService {
     final address = await _getTokenAddress();
 
     // Fetch the token account info
-    final accountInfo = await rpcClient.getAccountInfo(address.toBase58());
+    final accountInfo = await rpcClient.getAccountInfo(
+      address.toBase58(),
+      encoding: Encoding.base64,
+    );
 
     /// Check if the account exists and is initialized
     // todo: Cross check this implementation
@@ -291,20 +303,39 @@ final class SolanaService {
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
+    // First, try to get wallet from mnemonics
     final String? mnemonics = await storageService.readFromStorage(
       Strings.mnemonics,
     );
 
-    if (mnemonics != null) {
+    if (mnemonics != null && mnemonics.isNotEmpty) {
       final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
         seed: mnemonicToSeed(mnemonics),
         hdPath: Strings.derivativePath,
+      );
+      return wallet;
+    }
+
+    // If no mnemonics, try to get wallet from private key
+    final String? privateKey = await storageService.readFromStorage(
+      Strings.privateKey, 
+    );
+
+    if (privateKey != null && privateKey.isNotEmpty) {
+      // Process the private key based on format (hex or base58)
+      final Uint8List seedBytes = processPrivateKey(privateKey);
+
+      // Create wallet from private key
+      final Ed25519HDKeyPair wallet =
+          await Ed25519HDKeyPair.fromPrivateKeyBytes(
+        privateKey: seedBytes,
       );
 
       return wallet;
     }
 
-    throw Exception('No Wallet found');
+    // If we get here, no wallet information was found
+    throw Exception('No wallet found. Please create or import a wallet first.');
   }
 
   Future<Ed25519HDPublicKey> _getTokenAddress() async {
@@ -323,43 +354,99 @@ final class SolanaService {
     return address;
   }
 
-  Uint8List privateKeyToSeed(String privateKey) {
-    // Validate the private key format
-    if (!_isValidPrivateKey(privateKey)) {
-      throw FormatException('Invalid private key format');
+  /// Processes the private key into the format needed by Ed25519HDKeyPair
+  Uint8List processPrivateKey(String privateKey) {
+    // First, check if the private key is in hex format
+    if (isHexFormat(privateKey)) {
+      // Remove any '0x' prefix if present
+      if (privateKey.toLowerCase().startsWith('0x')) {
+        privateKey = privateKey.substring(2);
+      }
+      // Convert the hex string to bytes
+      return Uint8List.fromList(hex.decode(privateKey));
+    } else {
+      // Assume it's base58 encoded
+      return processBase58PrivateKey(privateKey);
     }
-
-    // Remove any '0x' prefix if present
-    if (privateKey.toLowerCase().startsWith('0x')) {
-      privateKey = privateKey.substring(2);
-    }
-
-    // Convert the hex string to bytes
-    final privateKeyBytes = hex.decode(privateKey);
-
-    // For Ed25519, we use SHA-512(privateKey) as the seed
-    // This follows the Ed25519 specification for deriving keys
-    final seedBytes = sha512.convert(privateKeyBytes).bytes;
-
-    return Uint8List.fromList(seedBytes);
   }
 
-  /// Validates if the provided string is a valid private key
-  bool _isValidPrivateKey(String privateKey) {
+  /// Checks if the private key is in hex format
+  bool isHexFormat(String privateKey) {
+    String sanitizedKey = privateKey;
     // Remove '0x' prefix if present
     if (privateKey.toLowerCase().startsWith('0x')) {
-      privateKey = privateKey.substring(2);
+      sanitizedKey = privateKey.substring(2);
     }
 
     // Check if the string contains only hex characters
     final hexRegExp = RegExp(r'^[0-9a-fA-F]+$');
-    if (!hexRegExp.hasMatch(privateKey)) {
-      return false;
+    return hexRegExp.hasMatch(sanitizedKey);
+  }
+
+  /// Processes a base58 encoded private key
+  Uint8List processBase58PrivateKey(String privateKey) {
+    // Decode base58 private key
+    final List<int> decodedKey = base58decode(privateKey);
+
+    // Ensure we have a 32-byte seed
+    Uint8List seedBytes;
+
+    if (decodedKey.length == 32) {
+      seedBytes = Uint8List.fromList(decodedKey);
+    } else if (decodedKey.length > 32) {
+      // If longer than 32 bytes, take the first 32 bytes
+      seedBytes = Uint8List.fromList(decodedKey.sublist(0, 32));
+    } else {
+      // If shorter than 32 bytes, pad with zeros
+      seedBytes = Uint8List(32);
+      for (int i = 0; i < decodedKey.length; i++) {
+        seedBytes[32 - decodedKey.length + i] = decodedKey[i];
+      }
     }
 
-    // Most ED25519 private keys are 32 bytes (64 hex characters)
-    // But we'll accept keys between 16 and 64 bytes (32-128 hex characters)
-    final length = privateKey.length;
-    return length >= 32 && length <= 128 && length % 2 == 0;
+    return seedBytes;
   }
+
+  /// Validates if the provided string is a valid private key
+  bool isValidPrivateKey(String privateKey) {
+    // For hex keys
+    if (isHexFormat(privateKey)) {
+      String sanitizedKey = privateKey;
+      if (privateKey.toLowerCase().startsWith('0x')) {
+        sanitizedKey = privateKey.substring(2);
+      }
+
+      // Check hex key length
+      final length = sanitizedKey.length;
+      return length >= 32 && length <= 128 && length % 2 == 0;
+    } else {
+      // For base58 keys, we'll do basic validation (non-empty)
+      // A more rigorous check would be to try to decode and check length
+      return privateKey.isNotEmpty;
+    }
+  }
+
+  // String _newMnemonicFromPrivateKey(Uint8List privateKeyBytes) {
+  //   // Note: This is a complex cryptographic operation that isn't truly reversible
+  //   // We're creating a new mnemonic that, when used with path m/44'/501'/0'/0',
+  //   // will hopefully result in a key that matches our original private key
+
+  //   // For proper mnemonic generation, we need entropy that's a multiple of 32 bits
+  //   // A standard BIP39 mnemonic uses either 128 or 256 bits of entropy
+
+  //   // Create entropy from the private key bytes (ensuring it's 16 bytes/128 bits)
+  //   final entropy = Uint8List(16);
+
+  //   // Use as much of the private key as fits, up to 16 bytes
+  //   final bytesToUse = min(privateKeyBytes.length, 16);
+  //   for (int i = 0; i < bytesToUse; i++) {
+  //     entropy[i] = privateKeyBytes[i];
+  //   }
+
+  //   // Convert entropy to hex string (required by entropyToMnemonic)
+  //   final entropyHex = hex.encode(entropy);
+
+  //   // Generate mnemonic from entropy
+  //   return entropyToMnemonic(entropyHex);
+  // }
 }

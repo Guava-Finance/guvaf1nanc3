@@ -1,20 +1,19 @@
+import 'package:intl/intl.dart';
+
 extension DoubleExtension on double {
-  /// Returns only the decimal part of a double as a double.
-  ///
-  /// Example:
-  /// - 3.142 returns 0.142
-  /// - 5.0 returns 0.0
-  /// - -7.25 returns 0.25 (ignores the sign)
-  String get decimalPart {
-    // Take the absolute value to handle negative numbers properly
-    final absoluteValue = abs();
+  String get formatDecimal {
+    return '.${toStringAsFixed(2).substring(toString().indexOf('.') + 1)}';
+  }
 
-    // Get the integer part
-    final integerPart = absoluteValue.toInt();
+  String formatAmount({bool round = true}) {
+    NumberFormat f;
 
-    // Subtract the integer part to get just the decimal part
-    return (absoluteValue - integerPart)
-        .toStringAsFixed(2)
-        .replaceFirst('0', '');
+    if (round) {
+      f = NumberFormat('#,##0', 'en_US');
+    } else {
+      f = NumberFormat('#,##0.00', 'en_US');
+    }
+
+    return f.format(this);
   }
 }

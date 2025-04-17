@@ -12,17 +12,17 @@ import 'package:guava/features/onboarding/data/repositories/repo.dart';
 import 'package:guava/features/onboarding/domain/repositories/repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final restoreAWalletMnemonicsUsecaseProvider =
-    Provider<RestoreAWalletMnemonicsUsecase>((ref) {
-  return RestoreAWalletMnemonicsUsecase(
+final restoreAWalletPKUsecaseProvider =
+    Provider<RestoreAWalletPKUsecase>((ref) {
+  return RestoreAWalletPKUsecase(
     repository: ref.watch(onboardingRepositoryProvider),
     solanaService: ref.watch(solanaServiceProvider),
     storageService: ref.watch(securedStorageServiceProvider),
   );
 });
 
-class RestoreAWalletMnemonicsUsecase extends UseCase<AppState, String> {
-  RestoreAWalletMnemonicsUsecase({
+class RestoreAWalletPKUsecase extends UseCase<AppState, String> {
+  RestoreAWalletPKUsecase({
     required this.repository,
     required this.solanaService,
     required this.storageService,
@@ -35,11 +35,7 @@ class RestoreAWalletMnemonicsUsecase extends UseCase<AppState, String> {
   @override
   Future<AppState> call({required String params}) async {
     try {
-      if (!solanaService.isMnemonicValid(params)) {
-        return ErrorState('Invalid mnemonic');
-      }
-
-      final wallet = await solanaService.restoreAWallet(params);
+      final wallet = await solanaService.restoreAWalletPK(params);
 
       AppState? account;
 
@@ -48,7 +44,6 @@ class RestoreAWalletMnemonicsUsecase extends UseCase<AppState, String> {
       if (!account.isError) {
         // true means the account does not exist
         if ((account as LoadedState).data['error'] == 'true') {
-          AppLogger.log(account.data);
           // then create the account on Guava system
           account = await repository.createWallet(wallet);
         }
@@ -81,6 +76,7 @@ class RestoreAWalletMnemonicsUsecase extends UseCase<AppState, String> {
 
       return ErrorState('Something went wrong');
     } catch (e) {
+      AppLogger.log(e);
       return ErrorState('Error restoring wallet: $e');
     }
   }

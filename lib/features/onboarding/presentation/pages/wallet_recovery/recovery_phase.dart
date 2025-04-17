@@ -77,7 +77,9 @@ class _ImportRecoveryPhraseState extends ConsumerState<ImportRecoveryPhrase> {
                 MaterialPageRoute(
                   builder: (_) => FullScreenLoader(
                     onLoading: () async {
+                      await Future.delayed(Durations.long4);
                       await on.restoreAWallet(controller.text);
+                      await Future.delayed(Durations.long4);
                     },
                     onSuccess: () {
                       // setup access code after restoring wallet
@@ -91,7 +93,7 @@ class _ImportRecoveryPhraseState extends ConsumerState<ImportRecoveryPhrase> {
                       'Generating secure wallet keys...',
                       'Encrypting private credentials...',
                       'Saving wallet securely to device...',
-                      'Prefunding your wallet account...',
+                      'Enabling gasless transaction support...',
                       'Verifying USDC token account...',
                       'Enabling USDC support if needed...',
                       'Finalizing wallet setup...',

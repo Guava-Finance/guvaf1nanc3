@@ -6,7 +6,11 @@ class Strings {
   // Keys
   static const String title = 'guava';
   static const String mnemonics = 'my_wallet_mnemonic_';
-  static const String accessCode = 'my_access_code';
+  static const String privateKey = 'my_wallet_private_';
+  static const String accessCode = 'my_access_code_';
+  static const String myAccount = 'my_account_';
+  static const String exchangeRate = 'exchange_rate_';
+  static const String showBalance = 'show_balance_';
 
   // todo: Fetch from Config
   static String derivativePath = 'm/44\'/501\'/0\'/0\'';

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/network/wrapper.dart';
+import 'package:guava/core/resources/services/ip.dart';
 import 'package:guava/features/onboarding/data/datasources/local/local.dart';
 import 'package:guava/features/onboarding/data/datasources/remote/remote.dart';
 import 'package:guava/features/onboarding/domain/repositories/repo.dart';
@@ -12,6 +13,7 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
     remoteDataSource: ref.watch(onboardingRemoteProvider),
     wrapper: ref.watch(networkExceptionWrapperProvider),
     localDatasource: ref.watch(localDatasourceProvider),
+    infoService: ref.watch(ipInfoServiceProvider),
   );
 });
 
@@ -20,11 +22,13 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
     required this.remoteDataSource,
     required this.wrapper,
     required this.localDatasource,
+    required this.infoService,
   });
 
   final OnboardingRemoteDataSource remoteDataSource;
   final NetworkExceptionWrapper wrapper;
   final LocalDatasource localDatasource;
+  final IpInfoService infoService;
 
   @override
   Future<AppState> prefundWallet(String walletAddress) async {
@@ -39,7 +43,7 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
   Future<AppState> createWallet(String walletAddress) async {
     Map<String, dynamic> data = {};
 
-    final ipInfo = await remoteDataSource.getIpAddress();
+    final ipInfo = await infoService.getIpAddress();
 
     var deviceInfo = await localDatasource.getDeviceInformation();
     deviceInfo.addAll(ipInfo.toJson());

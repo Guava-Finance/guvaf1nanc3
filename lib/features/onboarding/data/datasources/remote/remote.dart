@@ -1,7 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
-import 'package:guava/features/onboarding/data/models/ip_info.dart';
 
 final onboardingRemoteProvider = Provider<OnboardingRemoteDataSource>((ref) {
   return OnboardingRemoteDataSourceImpl(
@@ -13,7 +11,6 @@ abstract class OnboardingRemoteDataSource {
   Future<void> prefundWallet(String walletAddress);
   Future<void> createWallet(Map<String, dynamic> data);
   Future<void> walletExistenceCheck(Map<String, dynamic> data);
-  Future<IpInfo> getIpAddress();
 }
 
 class OnboardingRemoteDataSourceImpl implements OnboardingRemoteDataSource {
@@ -31,13 +28,6 @@ class OnboardingRemoteDataSourceImpl implements OnboardingRemoteDataSource {
         'wallet_address': walletAddress,
       },
     );
-  }
-
-  @override
-  Future<IpInfo> getIpAddress() async {
-    final data = await Dio().get('https://ipinfo.io/json');
-
-    return IpInfo.fromJson(data.data);
   }
 
   @override

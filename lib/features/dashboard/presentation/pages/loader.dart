@@ -62,7 +62,7 @@ class _FullScreenLoaderState extends State<FullScreenLoader> {
             left: 30.w,
             right: 30.w,
             child: AnimatedTextKit(
-              totalRepeatCount: 1,
+              totalRepeatCount: 2,
               animatedTexts: [
                 ...widget.subMessages.map(
                   (e) => RotateAnimatedText(e),

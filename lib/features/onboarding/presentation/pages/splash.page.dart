@@ -37,6 +37,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         AppLogger.log(e);
         context.push(pOnboarding);
       }
+
+      // FlutterSecureStorage().deleteAll();
     });
   }
 
