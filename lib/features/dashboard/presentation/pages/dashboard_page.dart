@@ -9,17 +9,30 @@ import 'package:guava/features/dashboard/presentation/notifier/dashboard_notifie
 import 'package:guava/features/dashboard/presentation/widgets/bottom/nav.dart';
 import 'package:guava/features/home/presentation/pages/home_page.dart';
 
-class DashboardPage extends ConsumerWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(bottomNavProvider);
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+}
 
-    final screens = [
-      const HomePage(),
-      const AccountPage(),
-    ];
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // todo: run a background check to check SPLtoken account is created
+    // todo: check balance for prefunding
+  }
+
+  final screens = [
+    const HomePage(),
+    const AccountPage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(bottomNavProvider);
 
     return PopScope(
       canPop: false,

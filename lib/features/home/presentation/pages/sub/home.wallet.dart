@@ -10,8 +10,22 @@ import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/widgets/app_icon.dart';
 
-class WalletDetails extends StatelessWidget {
+class WalletDetails extends ConsumerStatefulWidget {
   const WalletDetails({super.key});
+
+  @override
+  ConsumerState<WalletDetails> createState() => _WalletDetailsState();
+}
+
+class _WalletDetailsState extends ConsumerState<WalletDetails> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(walletAddressProvider);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

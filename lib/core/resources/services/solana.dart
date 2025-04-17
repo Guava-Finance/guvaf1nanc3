@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:bip39/bip39.dart';
-import 'package:bip39/bip39.dart' as bip39;
+import 'package:convert/convert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
+import 'package:hashlib/hashlib.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
@@ -71,6 +74,26 @@ final class SolanaService {
 
     final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
       seed: mnemonicToSeed(mnemonics),
+      hdPath: Strings.derivativePath,
+    );
+
+    /// Display the public address of user's wallet
+    return wallet.address;
+  }
+
+  /// The [privateKey] is reversed to generate the wallet private key
+  /// This mnemonics should be kept securely to avoid lost of money
+  /// And it should be kept locally within the
+  /// user's device to ensure decentralization
+  Future<String> restoreAWalletPK(String privateKey) async {
+    /// Save correct mnemonics to a secure storage on User's device
+    // await storageService.writeToStorage(
+    //   key: Strings.mnemonics,
+    //   value: mnemonics,
+    // );
+
+    final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+      seed: privateKeyToSeed(privateKey),
       hdPath: Strings.derivativePath,
     );
 
@@ -264,7 +287,7 @@ final class SolanaService {
   }
 
   bool isMnemonicValid(String mnemonic) {
-    return bip39.validateMnemonic(mnemonic);
+    return validateMnemonic(mnemonic);
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
@@ -298,5 +321,45 @@ final class SolanaService {
     );
 
     return address;
+  }
+
+  Uint8List privateKeyToSeed(String privateKey) {
+    // Validate the private key format
+    if (!_isValidPrivateKey(privateKey)) {
+      throw FormatException('Invalid private key format');
+    }
+
+    // Remove any '0x' prefix if present
+    if (privateKey.toLowerCase().startsWith('0x')) {
+      privateKey = privateKey.substring(2);
+    }
+
+    // Convert the hex string to bytes
+    final privateKeyBytes = hex.decode(privateKey);
+
+    // For Ed25519, we use SHA-512(privateKey) as the seed
+    // This follows the Ed25519 specification for deriving keys
+    final seedBytes = sha512.convert(privateKeyBytes).bytes;
+
+    return Uint8List.fromList(seedBytes);
+  }
+
+  /// Validates if the provided string is a valid private key
+  bool _isValidPrivateKey(String privateKey) {
+    // Remove '0x' prefix if present
+    if (privateKey.toLowerCase().startsWith('0x')) {
+      privateKey = privateKey.substring(2);
+    }
+
+    // Check if the string contains only hex characters
+    final hexRegExp = RegExp(r'^[0-9a-fA-F]+$');
+    if (!hexRegExp.hasMatch(privateKey)) {
+      return false;
+    }
+
+    // Most ED25519 private keys are 32 bytes (64 hex characters)
+    // But we'll accept keys between 16 and 64 bytes (32-128 hex characters)
+    final length = privateKey.length;
+    return length >= 32 && length <= 128 && length % 2 == 0;
   }
 }

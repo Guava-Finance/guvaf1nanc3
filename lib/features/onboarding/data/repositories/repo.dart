@@ -6,7 +6,6 @@ import 'package:guava/core/resources/network/wrapper.dart';
 import 'package:guava/features/onboarding/data/datasources/local/local.dart';
 import 'package:guava/features/onboarding/data/datasources/remote/remote.dart';
 import 'package:guava/features/onboarding/domain/repositories/repo.dart';
-import 'package:injectable/injectable.dart';
 
 final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
   return OnboardingRepositoryImpl(
@@ -16,7 +15,6 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
   );
 });
 
-@lazySingleton
 class OnboardingRepositoryImpl implements OnboardingRepository {
   OnboardingRepositoryImpl({
     required this.remoteDataSource,
