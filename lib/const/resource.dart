@@ -16,8 +16,17 @@ class R {
   static const String ASSETS_ICONS_ACCOUNT_INACTIVE_SVG =
       'assets/icons/account-inactive.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/add.svg)
+  static const String ASSETS_ICONS_ADD_SVG = 'assets/icons/add.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/biometric.svg)
+  static const String ASSETS_ICONS_BIOMETRIC_SVG = 'assets/icons/biometric.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/camera.svg)
   static const String ASSETS_ICONS_CAMERA_SVG = 'assets/icons/camera.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/clear.svg)
+  static const String ASSETS_ICONS_CLEAR_SVG = 'assets/icons/clear.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/copy-button-icon.svg)
   static const String ASSETS_ICONS_COPY_BUTTON_ICON_SVG =
@@ -26,6 +35,9 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/fast-transfer-floater.svg)
   static const String ASSETS_ICONS_FAST_TRANSFER_FLOATER_SVG =
       'assets/icons/fast-transfer-floater.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/hardware.svg)
+  static const String ASSETS_ICONS_HARDWARE_SVG = 'assets/icons/hardware.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/home-active-icon.svg)
   static const String ASSETS_ICONS_HOME_ACTIVE_ICON_SVG =
@@ -76,6 +88,13 @@ class R {
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/onboard-4.svg)
   static const String ASSETS_ICONS_ONBOARD_4_SVG = 'assets/icons/onboard-4.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/phrase.svg)
+  static const String ASSETS_ICONS_PHRASE_SVG = 'assets/icons/phrase.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/private-key.svg)
+  static const String ASSETS_ICONS_PRIVATE_KEY_SVG =
+      'assets/icons/private-key.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/qr-code-floater.svg)
   static const String ASSETS_ICONS_QR_CODE_FLOATER_SVG =

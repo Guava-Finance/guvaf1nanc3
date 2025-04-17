@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/dashboard/presentation/pages/loader.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
@@ -17,7 +20,71 @@ class Onboardingpage extends ConsumerStatefulWidget {
   ConsumerState<Onboardingpage> createState() => _OnboardingpageState();
 }
 
-class _OnboardingpageState extends ConsumerState<Onboardingpage> {
+class _OnboardingpageState extends ConsumerState<Onboardingpage>
+    with SingleTickerProviderStateMixin {
+  late final PageController controller;
+
+  Timer? _autoScrollTimer;
+  bool _isForward = true;
+
+  @override
+  initState() {
+    controller = PageController();
+    super.initState();
+
+    // Start auto-scrolling with a delay to allow UI to build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoScroll();
+    });
+  }
+
+  void _startAutoScroll() {
+    // Set a timer that triggers every 3 seconds
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (!mounted) return;
+
+      final on = ref.read(onboardingNotifierProvider);
+
+      if (_isForward) {
+        // Moving forward
+        if (on.slideIndex < on.slides.length - 1) {
+          controller.animateToPage(
+            on.slideIndex + 1,
+            duration: Durations.long2,
+            curve: Curves.linear,
+          );
+        } else {
+          // Reached the end, change direction
+          _isForward = false;
+          controller.animateToPage(
+            on.slideIndex - 1,
+            duration: Durations.long2,
+            curve: Curves.linear,
+          );
+        }
+      } else {
+        // Moving backward
+        if (on.slideIndex > 0) {
+          controller.animateToPage(
+            on.slideIndex - 1,
+            duration: Durations.long2,
+            curve: Curves.linear,
+          );
+        } else {
+          // Reached the beginning, change direction
+          _isForward = true;
+          controller.animateToPage(
+            on.slideIndex + 1,
+            duration: Durations.long2,
+            curve: Curves.linear,
+          );
+        }
+      }
+    });
+  }
+
+  bool iAgree = false;
+
   @override
   Widget build(BuildContext context) {
     final on = ref.watch(onboardingNotifierProvider);
@@ -56,84 +123,146 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage> {
                 ),
               ),
               Expanded(
-                child: PageView(
-                  physics: const ClampingScrollPhysics(),
-                  onPageChanged: (value) {
-                    setState(() {
-                      on.slideIndex = value;
-                    });
+                child: GestureDetector(
+                  onTap: () {
+                    // Cancel the current timer
+                    _autoScrollTimer?.cancel();
+                    // Restart the timer after user interaction
+                    _startAutoScroll();
                   },
-                  children:
-                      on.slides.map((e) => OnboardingSlide(e: e)).toList(),
+                  onPanDown: (_) {
+                    // Cancel auto-scrolling when user starts to manually scroll
+                    _autoScrollTimer?.cancel();
+                  },
+                  onPanEnd: (_) {
+                    // Restart auto-scrolling after user
+                    // finishes manual scrolling
+                    _startAutoScroll();
+                  },
+                  child: PageView(
+                    controller: controller,
+                    physics: const ClampingScrollPhysics(),
+                    onPageChanged: (value) {
+                      setState(() {
+                        on.slideIndex = value;
+                      });
+                    },
+                    children:
+                        on.slides.map((e) => OnboardingSlide(e: e)).toList(),
+                  ),
                 ),
               ),
               24.verticalSpace,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        iAgree = !iAgree;
+                      });
+                    },
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Radio<bool>(
-                          value: true,
-                          groupValue: false,
-                          onChanged: (value) {},
-                          activeColor: Colors.white,
-                          fillColor: WidgetStateProperty.all(Colors.white),
+                        AnimatedContainer(
+                          duration: Durations.short1,
+                          width: 18.w,
+                          height: 18.h,
+                          decoration: BoxDecoration(
+                            color: iAgree ? BrandColors.textColor : null,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: BrandColors.textColor,
+                              width: 1.w,
+                            ),
+                          ),
+                          child: iAgree
+                              ? Icon(
+                                  Icons.check,
+                                  size: 12.sp,
+                                  color: BrandColors.backgroundColor,
+                                  weight: 5.w,
+                                )
+                              : null,
                         ),
-                        Text(
-                          'I agree to the Terms of Service',
-                          style: context.medium.copyWith(
-                            color: BrandColors.textColor,
+                        6.horizontalSpace,
+                        Text.rich(
+                          TextSpan(
+                            text: 'I agree to the ',
+                            children: [
+                              TextSpan(
+                                text: 'Terms of Service',
+                                style: context.medium.copyWith(
+                                  color: BrandColors.barGreen,
+                                ),
+                              )
+                            ],
+                            style: context.medium.copyWith(
+                              color: BrandColors.textColor,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5.h),
-                    CustomButton(
-                      onTap: () {
-                        context.nav.push(
-                          MaterialPageRoute(
-                            builder: (_) => FullScreenLoader(
-                              onLoading: () async {
-                                await Future.delayed(Duration(seconds: 3));
-                              },
-                              onSuccess: () {
-                                context.push(Strings.dashboard);
-                              },
-                              onError: () {
-                                context.pop();
-                              },
-                              subMessages: [
-                                'Generating secret phrase',
-                                'Creating SPL token accounts',
-                                'This may take a few minutes',
-                              ],
-                              title: 'Creating your wallet',
-                            ),
+                  ),
+                  12.verticalSpace,
+                  CustomButton(
+                    disable: !iAgree,
+                    onTap: () {
+                      context.nav.push(
+                        MaterialPageRoute(
+                          builder: (_) => FullScreenLoader(
+                            onLoading: () async {
+                              await Future.delayed(Durations.long4);
+                              await on.createAWallet();
+                              await Future.delayed(Durations.long4);
+                            },
+                            onSuccess: () async {
+                              // setup access code after creating wallet
+                              navkey.currentContext!.go(pSetupPin);
+                            },
+                            onError: () {
+                              context.pop();
+                            },
+                            subMessages: [
+                              'Initializing wallet creation...',
+                              'Generating secure wallet keys...',
+                              'Encrypting private credentials...',
+                              'Saving wallet securely to device...',
+                              'Enabling gasless transaction support...',
+                              'Verifying USDC token account...',
+                              'Enabling USDC support if needed...',
+                              'Finalizing wallet setup...',
+                            ],
+                            title: 'Please wait...',
                           ),
-                        );
-                      },
-                      title: 'Create a new wallet',
-                    ),
-                    SizedBox(height: 5.h),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'I already have a wallet',
-                          style: context.medium.copyWith(
-                            fontSize: 14.sp,
-                            color: BrandColors.textColor,
-                          ),
+                        ),
+                      );
+                    },
+                    title: 'Create a new wallet',
+                  ),
+                  12.verticalSpace,
+                  Center(
+                    child: TextButton(
+                      onPressed: iAgree
+                          ? () {
+                              context.push(pAddConnectWallet);
+                            }
+                          : null,
+                      child: Text(
+                        'I already have a wallet',
+                        style: context.medium.copyWith(
+                          fontSize: 14.sp,
+                          color: iAgree
+                              ? BrandColors.textColor
+                              : BrandColors.washedTextColor,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              ).padHorizontal,
               10.verticalSpace,
             ],
           ),

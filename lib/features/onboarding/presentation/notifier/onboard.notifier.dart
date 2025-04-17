@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/extensions/state.dart';
+import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/services/storage.dart';
+import 'package:guava/features/onboarding/domain/usecases/create_a_wallet.dart';
+import 'package:guava/features/onboarding/domain/usecases/restore_a_wallet_mnemonics.dart';
+import 'package:guava/features/onboarding/domain/usecases/restore_a_wallet_pk.dart';
+import 'package:hashlib/hashlib.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboard.notifier.g.dart';
+
+final isAccessPinSetProovider = FutureProvider<bool>((ref) async {
+  final storage = ref.watch(securedStorageServiceProvider);
+
+  return await storage.doesExistInStorage(Strings.accessCode);
+});
 
 @riverpod
 class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
   @override
   OnboardingNotifier build() {
+    /// initialize usecases here
+
     _slideIndex = 0;
     // Initialize any state variables here
     // For example, you might want to track whether the user has completed onboarding
@@ -123,4 +140,55 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       ]
     }
   ];
+
+  Future<AppState> createAWallet() async {
+    final result = await ref.read(createAWalletUsecaseProvider).call(
+          params: null,
+        );
+
+    if (result.isError) {
+      // todo: show notification
+      AppLogger.log('Throwing notification');
+    }
+
+    return result;
+  }
+
+  String accessPin = '';
+
+  Future<void> savedAccessPin() async {
+    // gets the HashDigest and saved the base64 format
+    final pin = sha256.string(accessPin);
+
+    await ref.read(securedStorageServiceProvider).writeToStorage(
+          key: Strings.accessCode,
+          value: pin.base64(),
+        );
+  }
+
+  Future<AppState> restoreAWallet(String mnemonic) async {
+    final result = await ref
+        .read(restoreAWalletMnemonicsUsecaseProvider)
+        .call(params: mnemonic);
+
+    if (result.isError) {
+      // todo: show notification
+      AppLogger.log('Throwing mnemonic notification');
+    }
+
+    return result;
+  }
+
+  Future<AppState> restoreAWalletPK(String privateKey) async {
+    final result = await ref
+        .read(restoreAWalletPKUsecaseProvider)
+        .call(params: privateKey);
+
+    if (result.isError) {
+      // todo: show notification
+      AppLogger.log('Throwing pk notification');
+    }
+
+    return result;
+  }
 }

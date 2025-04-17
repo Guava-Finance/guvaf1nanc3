@@ -11,6 +11,16 @@ ThemeData theme(BuildContext context) => ThemeData(
       useMaterial3: true,
       appBarTheme: AppBarTheme(
         elevation: 0,
+        backgroundColor: BrandColors.backgroundColor,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          color: BrandColors.textColor,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'IBMPlexSans',
+          letterSpacing: -0.02,
+          height: 1.25,
+        ),
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarBrightness: Brightness.light,

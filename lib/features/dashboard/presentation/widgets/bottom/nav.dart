@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/dashboard/presentation/notifier/dashboard_notifier.dart';
+import 'package:guava/features/dashboard/presentation/notifier/bottom_nav_notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/utility_widget.dart';
 

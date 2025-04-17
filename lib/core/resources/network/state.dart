@@ -17,3 +17,9 @@ class NoInternetState extends AppState {
 
   NoInternetState(this.msg);
 }
+
+class RpcErrorState extends AppState {
+  final String msg;
+
+  RpcErrorState(this.msg);
+}

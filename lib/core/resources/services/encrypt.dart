@@ -1,9 +1,21 @@
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/env/env.dart';
 import 'dart:convert';
 
 import 'package:hashlib/hashlib.dart';
+
+final encryptionKeyProvider = Provider<String>((r) => Env.aesEncryptionKey);
+final encryptionIvProvider = Provider<String>((r) => Env.aesEncryptionKey);
+
+final encryptionServiceProvider = Provider<EncryptionService>((ref) {
+  return EncryptionService(
+    encryptionKey: ref.watch(encryptionKeyProvider),
+    iv: ref.watch(encryptionIvProvider),
+  );
+});
 
 class EncryptionService {
   final Key _key;
@@ -43,7 +55,7 @@ class EncryptionService {
     } else if (data is List<dynamic>) {
       return data.map((item) => decryptData(item)).toList();
     } else {
-      return encryptData(jsonDecode(data));
+      return jsonDecode(decryptData(data));
     }
   }
 
@@ -59,6 +71,7 @@ class EncryptionService {
     try {
       final encrypter = Encrypter(AES(_key, mode: AESMode.cbc));
       final decrypted = encrypter.decrypt64(encryptedText, iv: _iv);
+      
       return decrypted;
     } catch (e) {
       // If we can't decrypt it, return the original
