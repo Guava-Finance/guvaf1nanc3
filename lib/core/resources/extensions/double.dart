@@ -6,14 +6,8 @@ extension DoubleExtension on double {
   }
 
   String formatAmount({bool round = true}) {
-    NumberFormat f;
+    String amt = toString().split('.')[0];
 
-    if (round) {
-      f = NumberFormat('#,##0', 'en_US');
-    } else {
-      f = NumberFormat('#,##0.00', 'en_US');
-    }
-
-    return f.format(this);
+    return NumberFormat('#,##0', 'en_US').format(int.parse(amt));
   }
 }
