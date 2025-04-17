@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/transfer/presentation/widgets/transfer_option.dart';
+import 'package:guava/features/receive/presentation/widgets/recieve_option.dart';
 
-class TransferTypeSelector extends StatelessWidget {
+class RecieveTypeSelector extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onChanged;
 
-  const TransferTypeSelector({
+  const RecieveTypeSelector({
     required this.selected,
     required this.onChanged,
     super.key,
@@ -24,13 +24,13 @@ class TransferTypeSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TransferOption(
+          RecieveOption(
             onChanged: onChanged,
             selected: selected,
-            value: 'Transfer',
+            value: 'Code',
           ),
           4.horizontalSpace,
-          TransferOption(
+          RecieveOption(
             onChanged: onChanged,
             selected: selected,
             value: 'Bank',

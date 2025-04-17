@@ -7,6 +7,7 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:guava/widgets/custom_button.dart';
@@ -61,7 +62,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
               child: Text(
                 'Enter amount',
                 style: context.textTheme.bodyLarge?.copyWith(
-                  fontSize: 22,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                   color: BrandColors.textColor,
                 ),
@@ -132,18 +133,16 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
                     TextSpan(
                       text: currency.format(120000),
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.textColor,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600
-                      ),
+                          color: BrandColors.textColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600),
                     ),
                     TextSpan(
                       text: (120000.98).decimalPart,
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600
-                      ),
+                          color: BrandColors.washedTextColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600),
                     ),
                   ]),
                 ).padHorizontal,
@@ -216,7 +215,12 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
                   isAmountPad: true,
                 ),
                 40.verticalSpace,
-                CustomButton(onTap: () {}, title: 'Send'),
+                CustomButton(
+                  onTap: () {
+                    context.push(pReviewPayemet);
+                  },
+                  title: 'Send',
+                ),
                 40.verticalSpace,
               ],
             ).padHorizontal,

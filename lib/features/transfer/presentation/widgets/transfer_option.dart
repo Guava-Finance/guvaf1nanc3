@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 
-class BuildOption extends StatelessWidget {
-  const BuildOption(
+class TransferOption extends StatelessWidget {
+  const TransferOption(
       {required this.onChanged, required this.selected, required this.value, super.key});
 
   final ValueChanged<String> onChanged;

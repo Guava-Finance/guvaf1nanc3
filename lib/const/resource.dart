@@ -203,6 +203,9 @@ class R {
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/arrow.png)
   static const String ASSETS_IMAGES_ARROW_PNG = 'assets/images/arrow.png';
 
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/barcode.png)
+  static const String ASSETS_IMAGES_BARCODE_PNG = 'assets/images/barcode.png';
+
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/camera.png)
   static const String ASSETS_IMAGES_CAMERA_PNG = 'assets/images/camera.png';
 

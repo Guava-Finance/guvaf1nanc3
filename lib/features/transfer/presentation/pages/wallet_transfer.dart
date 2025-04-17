@@ -80,7 +80,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> {
               ),
             ),
           ),
-        ),
+        ).padHorizontal,
         20.verticalSpace,
         RecentTransfers(),
         20.verticalSpace,

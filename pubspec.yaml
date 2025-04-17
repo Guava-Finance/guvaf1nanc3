@@ -64,6 +64,7 @@ dependencies:
   flutter_svg: ^2.0.17
   dart_casing: ^3.0.1
   animated_text_kit: ^4.2.3
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:

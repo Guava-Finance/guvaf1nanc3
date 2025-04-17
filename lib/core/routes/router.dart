@@ -9,8 +9,10 @@ import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/add_connect_wallet.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/private_key.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/recovery_phase.dart';
+import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_bank.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_wallet.dart';
+import 'package:guava/features/transfer/presentation/pages/review_payment_page.dart';
 import 'package:guava/features/transfer/presentation/pages/transfer_page.dart';
 
 /// [p] suffix means path
@@ -22,8 +24,10 @@ const String pAddConnectWallet = Strings.addConnectWallet;
 const String pRecoveryPhrase = Strings.importRecoveryPhrase;
 const String pPrivateKey = Strings.importPrivateKey;
 const String pTransfer = Strings.transfer;
+const String pRecieve = Strings.recieve;
 const String pEnterAmountWallet = Strings.enterAmountWallet;
 const String pEnterAmountBank = Strings.enterAmountBank;
+const String pReviewPayemet = Strings.reviewPayment;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -73,6 +77,11 @@ final router = GoRouter(
       builder: (context, state) => const TransferPage(),
     ),
     GoRoute(
+      name: pRecieve.pathToName,
+      path: pRecieve,
+      builder: (context, state) => const RecievePage(),
+    ),
+    GoRoute(
       name: pEnterAmountWallet.pathToName,
       path: pEnterAmountWallet,
       builder: (context, state) => const EnterAmountWallet(),
@@ -81,6 +90,11 @@ final router = GoRouter(
       name: pEnterAmountBank.pathToName,
       path: pEnterAmountBank,
       builder: (context, state) => const EnterAmountBank(),
+    ),
+    GoRoute(
+      name: pReviewPayemet.pathToName,
+      path: pReviewPayemet,
+      builder: (context, state) => const ReviewPaymentPage(),
     ),
   ],
 );

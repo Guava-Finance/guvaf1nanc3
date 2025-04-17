@@ -61,7 +61,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank> {
               child: Text(
                 'Enter amount',
                 style: context.textTheme.bodyLarge?.copyWith(
-                  fontSize: 22,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                   color: BrandColors.textColor,
                 ),
