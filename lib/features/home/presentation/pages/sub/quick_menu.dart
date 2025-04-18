@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/presentation/widgets/icon_button.dart';
 
@@ -31,6 +33,7 @@ class QuickMenu extends StatelessWidget {
             action: 'Transfer',
             icon: R.ASSETS_ICONS_TRANSFER_ICON_SVG,
             color: BrandColors.washedRed,
+            onTap: () => context.push(pTransfer),
           ),
           CircularIconButton(
             action: 'Recieve',

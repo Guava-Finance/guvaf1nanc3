@@ -8,5 +8,11 @@
     "navkey",
     "riverpod"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/stable"
+  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  }
 }

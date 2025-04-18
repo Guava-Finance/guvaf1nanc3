@@ -126,11 +126,6 @@ class WalletBalance extends StatelessWidget {
                             ),
                           ]),
                         ),
-                        10.horizontalSpace,
-                        Icon(
-                          Icons.visibility,
-                          color: BrandColors.textColor,
-                        ),
                       ],
                     ),
                     Text.rich(
@@ -167,34 +162,36 @@ class WalletBalance extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text.rich(
-                          TextSpan(children: [
-                            TextSpan(
-                              text: isVisible
-                                  // ignore: lines_longer_than_80_chars
-                                  ? '${data.symbol}${data.localBalance.formatAmount()}'
-                                  : '****',
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color: BrandColors.textColor,
-                                fontSize: 36.sp,
-                                fontWeight: FontWeight.bold,
+                        IntrinsicWidth(
+                          child: Text.rich(
+                            TextSpan(children: [
+                              TextSpan(
+                                text: isVisible
+                                    // ignore: lines_longer_than_80_chars
+                                    ? '${data.symbol}${data.localBalance.formatAmount()}'
+                                    : '****',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: BrandColors.textColor,
+                                  fontSize: 36.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            // todo: fix decimal part
-                            TextSpan(
-                              text: isVisible
-                                  ? (data.localBalance).formatDecimal
-                                  : '.**',
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color: BrandColors.washedTextColor,
-                                fontSize: 36.sp,
+                              // todo: fix decimal part
+                              TextSpan(
+                                text: isVisible
+                                    ? (data.localBalance).formatDecimal
+                                    : '.**',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: BrandColors.washedTextColor,
+                                  fontSize: 36.sp,
+                                ),
                               ),
-                            ),
-                          ]),
+                            ]),
+                          ),
                         ),
                         10.horizontalSpace,
-                        GestureDetector(
-                          onTap: () {
+                        IconButton(
+                          onPressed: () {
                             ref.read(isBalanceVisibleProvider.notifier).state =
                                 !isVisible;
 
@@ -204,7 +201,7 @@ class WalletBalance extends StatelessWidget {
                             //       !isVisible,
                             //     );
                           },
-                          child: Icon(
+                          icon: Icon(
                             isVisible ? Icons.visibility_off : Icons.visibility,
                             color: BrandColors.textColor,
                           ),
@@ -231,7 +228,7 @@ class WalletBalance extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: ' USDC',
+                            text: isVisible ? ' USDC' : '',
                             style: context.textTheme.bodyMedium?.copyWith(
                               color: BrandColors.washedTextColor,
                             ),
