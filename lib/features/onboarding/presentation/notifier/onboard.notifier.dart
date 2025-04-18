@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/storage.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/onboarding/domain/usecases/create_a_wallet.dart';
 import 'package:guava/features/onboarding/domain/usecases/restore_a_wallet_mnemonics.dart';
 import 'package:guava/features/onboarding/domain/usecases/restore_a_wallet_pk.dart';
@@ -147,8 +149,12 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
         );
 
     if (result.isError) {
-      // todo: show notification
-      AppLogger.log('Throwing notification');
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          notificationType: NotificationType.error,
+          content: (result as ErrorState).msg,
+        ),
+      );
     }
 
     return result;
@@ -172,8 +178,12 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
         .call(params: mnemonic);
 
     if (result.isError) {
-      // todo: show notification
-      AppLogger.log('Throwing mnemonic notification');
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          notificationType: NotificationType.error,
+          content: (result as ErrorState).msg,
+        ),
+      );
     }
 
     return result;
@@ -185,8 +195,12 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
         .call(params: privateKey);
 
     if (result.isError) {
-      // todo: show notification
-      AppLogger.log('Throwing pk notification');
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          notificationType: NotificationType.error,
+          content: (result as ErrorState).msg,
+        ),
+      );
     }
 
     return result;

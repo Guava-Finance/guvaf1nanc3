@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/ip.dart';
@@ -66,9 +67,25 @@ class UserLocationMonitorUsecase extends UseCase<bool, Null> {
     final myAccount = AccountModel.fromJson(jsonDecode(myAccountData));
     final ipInfo = await infoService.getIpAddress();
 
-    // todo: automatically change the country
-
-    return (ipInfo.country.toLowerCase() !=
+    final result = (ipInfo.country.toLowerCase() !=
         myAccount.deviceInfo['country'].toString().toLowerCase());
+
+    if (result) {
+      myAccount.deviceInfo.addAll(ipInfo.toJson());
+
+      // todo: automatically change the country
+      final modifiedMyAccount = myAccount.copyWith(
+        deviceInfo: myAccount.deviceInfo,
+      );
+
+      AppLogger.log(modifiedMyAccount.toJson());
+
+      storageService.writeToStorage(
+        key: Strings.myAccount,
+        value: jsonEncode(modifiedMyAccount.toJson()),
+      );
+    }
+
+    return result;
   }
 }
