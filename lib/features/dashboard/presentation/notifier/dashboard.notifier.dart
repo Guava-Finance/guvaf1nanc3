@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/solana.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/dashboard/domain/usecases/user_location_monitor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,7 +36,14 @@ class DashboardNotifier extends _$DashboardNotifier {
 
   Future<void> hasLocationChanged() async {
     final result = await ref.read(userLocationMonitorUsecaseProvider.future);
-    // todo: if country has changed do something
+
+    if (result) {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          content: 'We noticed your location changed...',
+        ),
+      );
+    }
   }
 
   // Future<void> initBalanceCheck() async {

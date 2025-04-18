@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/solana.dart';
@@ -53,9 +54,7 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     );
 
     if (myAccountData == null) {
-      return ErrorState(
-        'Account data not found',
-      );
+      return ErrorState('Account data not found');
     }
 
     final account = AccountModel.fromJson(jsonDecode(myAccountData));
@@ -64,6 +63,7 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     // todo: get currency code from config using the [countryCode]
     // temp implementation
     final cc = (countryCode == 'ng' ? 'NGN' : 'USD').toUpperCase();
+    final currencySymbol = (countryCode == 'ng' ? '₦' : '\$');
 
     final rate = await repository.getExchangeRate(cc);
 
@@ -86,7 +86,7 @@ class BalanceUsecase extends UseCase<AppState, Null> {
       'usdcBalance': usdc,
       'exchangeRate': excRate,
       'localBalance': usdc / excRate,
-      'symbol': '₦',
+      'symbol': currencySymbol,
     }));
   }
 }

@@ -6,6 +6,7 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/widgets/app_icon.dart';
@@ -76,11 +77,19 @@ class _WalletDetailsState extends ConsumerState<WalletDetails> {
                         fontSize: 12.sp,
                       ),
                     ),
-                    4.horizontalSpace,
+                    6.horizontalSpace,
                     InkWell(
                       onTap: () {
                         Clipboard.getData(walletAddress).then((_) {
-                          // todo: copied notification
+                          if (mounted) {
+                            context.notify.addNotification(
+                              NotificationTile(
+                                notificationType: NotificationType.error,
+                                content:
+                                    'Wallet address copied successfully...',
+                              ),
+                            );
+                          }
                         });
                       },
                       child: CustomIcon(
