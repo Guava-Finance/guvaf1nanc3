@@ -15,7 +15,7 @@ class TransferAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final transferState = ref.watch(transferNotifierProvider);
     final notifier = ref.read(transferNotifierProvider.notifier);
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

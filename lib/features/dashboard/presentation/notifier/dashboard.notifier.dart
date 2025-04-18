@@ -22,6 +22,7 @@ class DashboardNotifier extends _$DashboardNotifier {
       Strings.usdcMintTokenAddress,
     );
 
+    // todo: check balance before calling prefund
     // // does prefunding behind the sceen
     // await ref.read(onboardingRepositoryProvider).prefundWallet(walletAddress);
 
