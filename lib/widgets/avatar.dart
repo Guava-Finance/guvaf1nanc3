@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,11 +14,21 @@ class AppAvatar extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final avatarAsync = ref.watch(avatarProvider);
-    
+
         return avatarAsync.when(
           data: (avatar) {
             return CircleAvatar(
-              child: SvgPicture.network(avatar),
+              maxRadius: 20.r,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.r),
+                child: SvgPicture.network(
+                  avatar,
+                  width: 38.w,
+                  height: 38.h,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                ),
+              ),
             );
           },
           error: (e, _) {
