@@ -148,7 +148,7 @@ PODS:
     - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
-  - PostHog (3.22.1)
+  - PostHog (3.24.0)
   - posthog_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -225,12 +225,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/posthog_flutter/ios"
 
 SPEC CHECKSUMS:
-  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Firebase: 1fe1c0a7d9aaea32efe01fbea5f0ebd8d70e53a2
-  firebase_core: 432718558359a8c08762151b5f49bb0f093eb6e0
-  firebase_crashlytics: f3b2649ae73f440895f285021bf70bdf4d36dec4
-  firebase_messaging: 3b99522baf7480dfb4b7683d2b34e842d577c362
-  firebase_performance: c047897b19a2e07c3b227efe4802c4646d30fdd5
+  firebase_core: 2d4534e7b489907dcede540c835b48981d890943
+  firebase_crashlytics: 961a0812ba79ed8f89a8d5d1e3763daa6267a87a
+  firebase_messaging: 75bc93a4df25faccad67f6662ae872ac9ae69b64
+  firebase_performance: 6d0028350e62b2aa7849667a2e05f0df8db2ffb9
   FirebaseABTesting: dfc10eb6cc08fe3b391ac9e5aa40396d43ea6675
   FirebaseCore: 8344daef5e2661eb004b177488d6f9f0f24251b7
   FirebaseCoreExtension: 6f357679327f3614e995dc7cf3f2d600bdc774ac
@@ -244,19 +244,19 @@ SPEC CHECKSUMS:
   FirebaseSessions: 9b3b30947b97a15370e0902ee7a90f50ef60ead6
   FirebaseSharedSwift: b1d32c3b29a911dc174bcf363f2f70bda9509d2f
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_inappwebview_ios: 6f63631e2c62a7c350263b13fa5427aedefe81d4
-  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
+  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
-  location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
+  location: 155caecf9da4f280ab5fe4a55f94ceccfab838f8
   Mixpanel-swift: 478ff46d19de4a251244a9c9a582070d4bb94cf9
-  mixpanel_flutter: c2e55a95a2ae23cf27c065115ecee6226e0e0718
+  mixpanel_flutter: fde04ecf0278ace477f3882cd3fa4a926858fc79
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  PostHog: 7e6fe1b90c75baea2469c38485e6da9217e809e2
-  posthog_flutter: 6d1041c7da77eb2032c27b72df103439af64cb8c
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  PostHog: 0ca23f487d0b90adca78389bdb716ce6e79da0b0
+  posthog_flutter: 631ab870f7daf1ed190deeb2414eb3e347445f37
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
 
