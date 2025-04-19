@@ -79,11 +79,10 @@ class _FullScreenLoaderState extends State<FullScreenLoader> {
   void _init() async {
     try {
       await widget.onLoading?.call();
+      widget.onSuccess.call();
     } catch (e) {
       widget.onError?.call();
       return;
-    } finally {
-      widget.onSuccess.call();
     }
   }
 }

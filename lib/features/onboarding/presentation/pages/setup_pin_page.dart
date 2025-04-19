@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/const/resource.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
-import 'package:guava/widgets/app_icon.dart';
 import 'package:pinput/pinput.dart';
 
+// todo: verify pin to access dashboard and verify pin on lifecylec resume
 class SetupPinPage extends ConsumerStatefulWidget {
   const SetupPinPage({
     this.onComplete,
@@ -28,16 +29,30 @@ class SetupPinPage extends ConsumerStatefulWidget {
 
 class _SetupPinPageState extends ConsumerState<SetupPinPage> {
   late final TextEditingController pinCtrl;
+  late final TextEditingController confirmPinCtrl;
+
+  bool isConfirmingPin = false;
 
   @override
   void initState() {
     pinCtrl = TextEditingController();
+    confirmPinCtrl = TextEditingController();
 
     super.initState();
   }
 
   @override
+  void dispose() {
+    pinCtrl.dispose();
+    confirmPinCtrl.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final on = ref.read(onboardingNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -45,7 +60,7 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
         children: [
           24.verticalSpace,
           Text(
-            widget.title ?? 'Enter PIN',
+            isConfirmingPin ? 'Confirm your Pin' : 'Set up your PIN',
             style: context.textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -65,7 +80,7 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
           ),
           48.verticalSpace,
           Pinput(
-            controller: pinCtrl,
+            controller: isConfirmingPin ? confirmPinCtrl : pinCtrl,
             length: 6,
             readOnly: true,
             pinAnimationType: PinAnimationType.scale,
@@ -89,14 +104,35 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
                 color: BrandColors.darkD9,
               ),
             ),
-            onCompleted: (value) {
-              widget.onComplete?.call(value);
+            onCompleted: (value) async {
+              if (isConfirmingPin) {
+                if (pinCtrl.text != confirmPinCtrl.text) {
+                  setState(() => isConfirmingPin = false);
+
+                  pinCtrl.clear();
+                  confirmPinCtrl.clear();
+
+                  // todo: show pin mismatch error
+                } else {
+                  await on.savedAccessPin();
+
+                  Future.microtask(() {
+                    if (mounted) {
+                      // ignore: use_build_context_synchronously
+                      context.go(pDashboard);
+                    }
+                  });
+                }
+                // submit pin
+              } else {
+                setState(() => isConfirmingPin = true);
+              }
             },
           ),
           24.verticalSpace,
           Spacer(),
           CustomNumberPad(
-            controller: pinCtrl,
+            controller: isConfirmingPin ? confirmPinCtrl : pinCtrl,
           ),
           40.verticalSpace,
         ],

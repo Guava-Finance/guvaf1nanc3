@@ -1,8 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/env/env.dart';
-import 'package:injectable/injectable.dart';
+import 'package:guava/core/resources/services/solana.dart';
 import 'package:pubnub/pubnub.dart';
 
-@lazySingleton
+final walletAddressProvider = FutureProvider<String>((ref) async {
+  final solana = ref.watch(solanaServiceProvider);
+  final walletAddress = await solana.walletAddress();
+
+  return walletAddress;
+});
+
+final pubSubServiceProvider = Provider<PubSubService>((ref) {
+  return PubSubService(
+    walletAddress: ref.watch(walletAddressProvider).value!,
+  );
+});
+
 class PubSubService {
   final String walletAddress;
 

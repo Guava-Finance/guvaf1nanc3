@@ -56,7 +56,7 @@ class BankTabBarView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               RecentBankTransfers(controller: controller),
-              Container()
+              RecentBankTransfers(controller: controller),
             ],
           ),
         )
@@ -64,4 +64,3 @@ class BankTabBarView extends StatelessWidget {
     );
   }
 }
-

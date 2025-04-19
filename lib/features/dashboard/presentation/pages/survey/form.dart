@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
+import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/features/dashboard/presentation/widgets/survey/tile.dart';
 
-class GuavafiSurvey extends StatefulWidget {
+class GuavafiSurvey extends ConsumerStatefulWidget {
   const GuavafiSurvey({super.key});
 
   @override
-  State<GuavafiSurvey> createState() => _GuavafiSurveyState();
+  ConsumerState<GuavafiSurvey> createState() => _GuavafiSurveyState();
 }
 
-class _GuavafiSurveyState extends State<GuavafiSurvey> {
+class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
   @override
   Widget build(BuildContext context) {
+    final mixpanel = ref.read(mixpanelProvider);
+
     // todo: implement global text style once available
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +46,7 @@ class _GuavafiSurveyState extends State<GuavafiSurvey> {
                       '''Save a certain percentage as you spend your money''',
                   isActive: true,
                   onTap: () {
-                    context.mixpanel.track(
+                    mixpanel.track(
                       MixPanelKeys.featureSurvey,
                       properties: {
                         'feature': 'spend_n_save',

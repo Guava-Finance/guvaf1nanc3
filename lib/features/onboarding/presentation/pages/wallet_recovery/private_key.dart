@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
-import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/solana.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/dashboard/presentation/pages/loader.dart';
+import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
 
-class ImportPrivateKey extends StatefulWidget {
+class ImportPrivateKey extends ConsumerStatefulWidget {
   const ImportPrivateKey({super.key});
 
   @override
-  State<ImportPrivateKey> createState() => _ImportPrivateKeyState();
+  ConsumerState<ImportPrivateKey> createState() => _ImportPrivateKeyState();
 }
 
-class _ImportPrivateKeyState extends State<ImportPrivateKey> {
+class _ImportPrivateKeyState extends ConsumerState<ImportPrivateKey> {
   late final TextEditingController controller;
 
   @override
@@ -61,27 +64,37 @@ class _ImportPrivateKeyState extends State<ImportPrivateKey> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomButton(
-            disable: controller.text.isEmpty,
+            disable: controller.text.isEmpty ||
+                !ref
+                    .read(solanaServiceProvider)
+                    .isValidPrivateKey(controller.text),
             title: 'Import',
             onTap: () {
               context.nav.push(
                 MaterialPageRoute(
                   builder: (_) => FullScreenLoader(
                     onLoading: () async {
-                      await Future.delayed(Duration(seconds: 3));
+                      await ref
+                          .read(onboardingNotifierProvider)
+                          .restoreAWalletPK(controller.text);
                     },
                     onSuccess: () {
-                      context.push(Strings.dashboard);
+                      navkey.currentContext!.go(pSetupPin);
                     },
                     onError: () {
                       context.pop();
                     },
                     subMessages: [
-                      'Generating secret phrase',
-                      'Creating SPL token accounts',
-                      'This may take a few minutes',
+                      'Initializing wallet restoration...',
+                      'Generating secure wallet keys...',
+                      'Encrypting private credentials...',
+                      'Saving wallet securely to device...',
+                      'Enabling gasless transaction support...',
+                      'Verifying USDC token account...',
+                      'Enabling USDC support if needed...',
+                      'Finalizing wallet setup...',
                     ],
-                    title: 'Creating your wallet',
+                    title: 'Please wait...',
                   ),
                 ),
               );

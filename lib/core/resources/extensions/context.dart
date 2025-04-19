@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/notification/wrapper/notification.wrapper.dart';
-import 'package:guava/core/service_locator/injection_container.dart';
 
 extension CxtExtension on BuildContext {
   // theme related
@@ -55,7 +53,7 @@ extension CxtExtension on BuildContext {
 
   Object get arg => ModalRoute.of(this)!.settings.arguments!;
 
-  MixPanel get mixpanel => sl<MixPanel>();
+  // MixPanel get mixpanel => sl<MixPanel>();
 }
 
 extension TextStylesExtension on BuildContext {

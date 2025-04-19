@@ -81,22 +81,31 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> {
             ),
           ),
         ).padHorizontal,
-        20.verticalSpace,
-        RecentTransfers(),
-        20.verticalSpace,
-        AddressBook(),
-        20.verticalSpace,
+        10.verticalSpace,
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                10.verticalSpace,
+                RecentTransfers(),
+                20.verticalSpace,
+                AddressBook(),
+                20.verticalSpace,
+              ],
+            ),
+          ),
+        ),
         Divider(
           color: BrandColors.washedTextColor.withValues(alpha: .3),
         ),
-        15.verticalSpace,
+        12.verticalSpace,
         CustomButton(
           onTap: () {
             context.push(pEnterAmountWallet);
           },
           title: 'Next',
         ).padHorizontal,
-        15.verticalSpace,
+        10.verticalSpace,
       ],
     );
   }

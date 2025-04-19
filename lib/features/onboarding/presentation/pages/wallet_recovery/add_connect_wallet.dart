@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
-import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
-import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/widgets/tile.dart';
-import 'package:guava/widgets/app_icon.dart';
 
 class WalletRecoveryOptions extends StatelessWidget {
   const WalletRecoveryOptions({super.key});
