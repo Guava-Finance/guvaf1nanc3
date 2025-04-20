@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/avatar.dart';
 

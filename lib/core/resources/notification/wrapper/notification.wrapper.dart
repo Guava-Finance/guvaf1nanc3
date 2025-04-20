@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InAppNotificationWrapper extends StatefulWidget {
   final Widget child;
@@ -28,6 +29,8 @@ class InAppNotificationWrapperState extends State<InAppNotificationWrapper> {
   }
 
   void addNotification(Widget notification, {int? howLong}) {
+    HapticFeedback.lightImpact();
+
     setState(() {
       _notificationStack.add(notification);
     });
