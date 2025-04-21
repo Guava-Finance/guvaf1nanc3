@@ -6,7 +6,7 @@ part of 'recieve.notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recieveNotifierHash() => r'4ccc66f5a8ed89e2a475a2a1e7ee0945422ad474';
+String _$recieveNotifierHash() => r'4e7459a6818e7d1d8e5256e6cffb90e239e14da7';
 
 /// See also [RecieveNotifier].
 @ProviderFor(RecieveNotifier)

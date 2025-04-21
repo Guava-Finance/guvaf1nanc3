@@ -5,7 +5,11 @@ import 'package:guava/core/styles/colors.dart';
 
 class CustomTextfield extends StatefulWidget {
   const CustomTextfield(
-      {required this.controller, this.hintText, this.preffixIcon, this.suffixIcon, super.key});
+      {required this.controller,
+      this.hintText,
+      this.preffixIcon,
+      this.suffixIcon,
+      super.key});
 
   final String? hintText;
   final Widget? preffixIcon;
@@ -17,7 +21,6 @@ class CustomTextfield extends StatefulWidget {
 }
 
 class _CustomTextfieldState extends State<CustomTextfield> {
-
   @override
   Widget build(BuildContext context) {
     return Container(

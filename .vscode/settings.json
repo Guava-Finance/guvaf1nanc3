@@ -14,5 +14,11 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false
-  }
+  },
+  "dart.lineLength": 80,
+  "[dart]": {
+    "editor.rulers": [
+      100
+    ],
+  },
 }

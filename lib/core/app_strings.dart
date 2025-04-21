@@ -31,6 +31,9 @@ class Strings {
   static const enterAmountWallet = '/enterAmountWallet';
   static const enterAmountBank = '/enterAmountBank';
   static const reviewPayment = '/reviewPayment';
+  static const paymentStatus = '/paymentStatus';
+  static const transaction = '/transaction';
+  static const transactionDetail = '/transactionDetail';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

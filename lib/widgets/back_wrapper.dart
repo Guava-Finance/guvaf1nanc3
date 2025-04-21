@@ -9,12 +9,17 @@ import 'package:guava/core/styles/colors.dart';
 
 class BackWrapper extends StatefulWidget {
   const BackWrapper(
-      {required this.title, required this.child, this.trailing,
-       this.onBackPressed, super.key});
+      {required this.title,
+      required this.child,
+      this.trailing,
+      this.onBackPressed,
+      this.hasBackButton = true,
+      super.key});
 
   final String title;
   final Widget? trailing;
   final Function? onBackPressed;
+  final bool? hasBackButton;
   final Widget child;
 
   @override
@@ -51,7 +56,8 @@ class _BackWrapperState extends State<BackWrapper> {
               ),
             ),
             widget.trailing != null
-                ? Positioned(top: 12.h, right: 0, child: widget.trailing!)
+                ? Positioned(
+                    top: 12.h, right: 0, child: widget.trailing!.padHorizontal)
                 : SizedBox.shrink(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,26 +66,27 @@ class _BackWrapperState extends State<BackWrapper> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    canPop
-                        ? GestureDetector(
-                            onTap: () {
-                              widget.onBackPressed == null
-                                  ? context.pop()
-                                  : widget.onBackPressed!();
-                            },
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                shape: CircleBorder(),
-                                color: BrandColors.containerColor,
+                    if (widget.hasBackButton ?? false)
+                      canPop
+                          ? GestureDetector(
+                              onTap: () {
+                                widget.onBackPressed == null
+                                    ? context.pop()
+                                    : widget.onBackPressed!();
+                              },
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                  shape: CircleBorder(),
+                                  color: BrandColors.containerColor,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: SvgPicture.asset(
+                                      R.ASSETS_ICONS_CLOSE_SVG),
+                                ),
                               ),
-                              child: Padding(
-                                padding: EdgeInsets.all(15),
-                                child: SvgPicture.
-                                asset(R.ASSETS_ICONS_CLOSE_SVG),
-                              ),
-                            ),
-                          )
-                        : SizedBox.shrink(),
+                            )
+                          : SizedBox.shrink(),
                   ],
                 ),
                 15.verticalSpace,

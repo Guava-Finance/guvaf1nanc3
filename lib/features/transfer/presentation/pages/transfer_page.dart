@@ -17,6 +17,7 @@ class TransferPage extends ConsumerWidget {
     final transferState = ref.watch(transferNotifierProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: TransferTypeSelector(
           selected: transferState.selectedTransferType,

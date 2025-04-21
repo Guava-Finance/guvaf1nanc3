@@ -5,7 +5,10 @@ import 'package:guava/core/styles/colors.dart';
 
 class RecieveOption extends StatelessWidget {
   const RecieveOption(
-      {required this.onChanged, required this.selected, required this.value, super.key});
+      {required this.onChanged,
+      required this.selected,
+      required this.value,
+      super.key});
 
   final ValueChanged<String> onChanged;
   final String selected;
@@ -26,7 +29,9 @@ class RecieveOption extends StatelessWidget {
         child: Text(
           value,
           style: context.textTheme.bodyMedium!.copyWith(
-            color: isSelected ? BrandColors.backgroundColor : BrandColors.washedTextColor,
+            color: isSelected
+                ? BrandColors.backgroundColor
+                : BrandColors.washedTextColor,
             fontWeight: FontWeight.w500,
             fontSize: 14.sp,
           ),
