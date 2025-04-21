@@ -11,6 +11,7 @@ class Strings {
   static const String myAccount = 'my_account_';
   static const String exchangeRate = 'exchange_rate_';
   static const String showBalance = 'show_balance_';
+  static const String myCachedBalance = 'my_cachec_balance';
 
   // todo: Fetch from Config
   static String derivativePath = 'm/44\'/501\'/0\'/0\'';

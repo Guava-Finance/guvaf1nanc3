@@ -84,7 +84,7 @@ class _WalletDetailsState extends ConsumerState<WalletDetails> {
                           if (mounted) {
                             context.notify.addNotification(
                               NotificationTile(
-                                notificationType: NotificationType.error,
+                                notificationType: NotificationType.success,
                                 content:
                                     'Wallet address copied successfully...',
                               ),
