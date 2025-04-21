@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
 import 'package:guava/widgets/utility_widget.dart';

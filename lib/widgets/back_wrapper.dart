@@ -57,7 +57,7 @@ class _BackWrapperState extends State<BackWrapper> {
             ),
             widget.trailing != null
                 ? Positioned(
-                    top: 12.h, right: 0, child: widget.trailing!.padHorizontal)
+                    top: 18.h, right: 0, child: widget.trailing!.padHorizontal)
                 : SizedBox.shrink(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

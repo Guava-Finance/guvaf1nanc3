@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/extensions/widget.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/home/presentation/widgets/txn_tile.dart';
+import 'package:guava/features/transaction/presentation/widgets/transaction_list.dart';
 
-class TransactionHistorySession extends StatelessWidget {
-  const TransactionHistorySession({
+class TransactionHistory extends StatelessWidget {
+  const TransactionHistory({
     super.key,
   });
 
@@ -17,27 +14,12 @@ class TransactionHistorySession extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Transaction history',
-              style: context.medium.copyWith(
-                color: BrandColors.textColor,
-                fontSize: 16.w,
-              ),
-            ),
-            GestureDetector(
-              onTap: () => context.push(pTransaction),
-              child: Text(
-                'View all',
-                style: context.medium.copyWith(
-                  color: BrandColors.washedTextColor,
-                  fontSize: 14.w,
-                ),
-              ),
-            ),
-          ],
+        Text(
+          'Today',
+          style: context.medium.copyWith(
+            color: BrandColors.washedTextColor,
+            fontSize: 12.w,
+          ),
         ),
         12.verticalSpace,
         Container(
@@ -62,11 +44,11 @@ class TransactionHistorySession extends StatelessWidget {
               ),
             ),
             itemBuilder: (ctx, i) {
-              return TransactionHistoryTile();
+              return TransactionListTile();
             },
           ),
         ),
       ],
-    ).padHorizontal;
+    );
   }
 }

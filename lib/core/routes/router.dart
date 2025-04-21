@@ -11,6 +11,7 @@ import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/pri
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/recovery_phase.dart';
 import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
 import 'package:guava/features/transaction/presentation/pages/transaction_detail_page.dart';
+import 'package:guava/features/transaction/presentation/pages/transaction_page.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_bank.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_wallet.dart';
 import 'package:guava/features/transfer/presentation/pages/payment_status_page.dart';
@@ -31,7 +32,9 @@ const String pEnterAmountWallet = Strings.enterAmountWallet;
 const String pEnterAmountBank = Strings.enterAmountBank;
 const String pReviewPayemet = Strings.reviewPayment;
 const String pPaymentStatus = Strings.paymentStatus;
+const String pTransaction = Strings.transaction;
 const String pTransactionDetail = Strings.transactionDetail;
+const String pTransactionFilter = Strings.transactionFilter;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -106,6 +109,11 @@ final router = GoRouter(
       name: pPaymentStatus.pathToName,
       path: pPaymentStatus,
       builder: (context, state) => const PaymentStatusPage(),
+    ),
+    GoRoute(
+      name: pTransaction.pathToName,
+      path: pTransaction,
+      builder: (context, state) => const TransactionPage(),
     ),
     GoRoute(
       name: pTransactionDetail.pathToName,

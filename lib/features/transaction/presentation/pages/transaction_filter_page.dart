@@ -8,21 +8,13 @@ import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transaction/presentation/pages/sub/transaction_history.dart';
 import 'package:guava/widgets/back_wrapper.dart';
 
-class TransactionPage extends ConsumerWidget {
-  const TransactionPage({super.key});
+class TransactionFilterPage extends ConsumerWidget {
+  const TransactionFilterPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BackWrapper(
-      title: 'Transactions',
-      trailing: Text(
-        'Download',
-        style: context.textTheme.bodyMedium!.copyWith(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w600,
-          color: BrandColors.washedTextColor,
-        ),
-      ),
+      title: 'Filter',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
