@@ -12,6 +12,7 @@ final isBalanceVisibleProvider = StateProvider<bool>((ref) {
 
 final avatarProvider = FutureProvider<String>((ref) async {
   final wallet = await ref.watch(solanaServiceProvider).walletAddress();
+  // todo: download svg avatar to memory and pull from memory unless not found
 
   return wallet.avatar;
 });
