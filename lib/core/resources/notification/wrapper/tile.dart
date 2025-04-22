@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
@@ -109,11 +108,6 @@ class _NotificationTileState extends State<NotificationTile>
     return SlideInDown(
       controller: (ctrl) {
         controller = ctrl;
-      },
-      onFinish: (direction) {
-        // Animation is now complete, but we don't auto-dismiss here
-        // Auto-dismissal is handled by the timer set in initState
-        AppLogger.log('entrance animation finished');
       },
       child: Dismissible(
         key: Key(

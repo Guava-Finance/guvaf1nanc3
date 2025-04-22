@@ -1,13 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 
 class AppAvatar extends StatelessWidget {
   const AppAvatar({
     super.key,
+    this.radius = 20,
   });
+
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +23,14 @@ class AppAvatar extends StatelessWidget {
         return avatarAsync.when(
           data: (avatar) {
             return CircleAvatar(
-              maxRadius: 20.r,
+              maxRadius: radius.r,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(radius.r),
                 child: SvgPicture.network(
                   avatar,
-                  width: 38.w,
-                  height: 38.h,
-                  fit: BoxFit.contain,
+                  width: (radius * 2).w,
+                  height: (radius * 2).h,
+                  fit: BoxFit.cover,
                   alignment: Alignment.center,
                 ),
               ),
@@ -35,7 +40,10 @@ class AppAvatar extends StatelessWidget {
             return 0.verticalSpace;
           },
           loading: () {
-            return CircularProgressIndicator();
+            return CupertinoActivityIndicator(
+              color: BrandColors.primary,
+              radius: 12.r,
+            );
           },
         );
       },

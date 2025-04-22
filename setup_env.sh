@@ -13,6 +13,7 @@ read -p "Enter DOJAH_PUBLIC_KEY: " DOJAH_PUBLIC_KEY
 read -p "Enter DOJAH_WIDGET_ID: " DOJAH_WIDGET_ID
 read -p "Enter PUB_NUB_SUBCRIBE_KEY: " PUB_NUB_SUBCRIBE_KEY
 read -p "Enter PUB_NUB_PUBLISH_KEY: " PUB_NUB_PUBLISH_KEY
+read -p "Enter AMPLITUDE_API_KEY: " AMPLITUDE_API_KEY
 
 # Create the .env file
 echo "BASE_URL=$BASE_URL" > .env
@@ -26,5 +27,6 @@ echo "DOJAH_WIDGET_ID=$DOJAH_WIDGET_ID" >> .env
 echo "PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY" >> .env
 echo "PUB_NUB_PUBLISH_KEY=$PUB_NUB_PUBLISH_KEY" >> .env
 echo "APP_ID=$APP_ID" >> .env
+echo "AMPLITUDE_API_KEY=$AMPLITUDE_API_KEY" >> .env
 
 echo ".env file created successfully!"
