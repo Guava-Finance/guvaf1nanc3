@@ -75,27 +75,32 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
                 color: BrandColors.washedTextColor,
               ),
             ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                usernameCtrl.clear();
-                HapticFeedback.lightImpact();
-              },
-              child: CircleAvatar(
-                maxRadius: 10.r,
-                backgroundColor: BrandColors.washedTextColor.withValues(
-                  alpha: .1,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(7.0.sp),
-                  child: CustomIcon(icon: R.ASSETS_ICONS_CLOSE_SVG),
-                ),
-              ),
-            ),
+            suffixIcon: usernameCtrl.value.text.isEmpty
+                ? null
+                : GestureDetector(
+                    onTap: () {
+                      usernameCtrl.clear();
+                      HapticFeedback.lightImpact();
+                    },
+                    child: CircleAvatar(
+                      maxRadius: 10.r,
+                      backgroundColor: BrandColors.washedTextColor.withValues(
+                        alpha: .1,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(7.0.sp),
+                        child: CustomIcon(icon: R.ASSETS_ICONS_CLOSE_SVG),
+                      ),
+                    ),
+                  ),
             onChanged: (p0) {
+              setState(() {});
+
               ref.read(isUsernameAvailableProvider.notifier).state = null;
 
               debounce.run(() async {
                 if ((p0 ?? '').isNotEmpty &&
+                    (p0 ?? '').length >= 3 &&
                     RegExp(r'^[a-z0-9_.]+$').hasMatch(p0 ?? '')) {
                   withLoading(() async {
                     await hn.checkUsername(p0 ?? '');

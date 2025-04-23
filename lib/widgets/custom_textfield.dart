@@ -86,6 +86,10 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                   hintStyle: context.textTheme.bodyMedium?.copyWith(
                     color: BrandColors.washedTextColor,
                   ),
+                  errorStyle: context.textTheme.bodyMedium?.copyWith(
+                    fontSize: 10.sp,
+                    color: BrandColors.washedRed,
+                  ),
                   border: InputBorder.none,
                 ),
                 style: context.textTheme.bodyMedium,
