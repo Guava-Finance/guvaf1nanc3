@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/home/presentation/widgets/action_banner.dart';
 
 class ActionTasks extends StatelessWidget {
@@ -23,6 +25,7 @@ class ActionTasks extends StatelessWidget {
             bannerKey: Strings.createUsername,
             icon: R.ASSETS_ICONS_USERNAME_ICON_SVG,
             onTap: () {
+              context.push(pSetUsername);
               HapticFeedback.lightImpact();
             },
           ),

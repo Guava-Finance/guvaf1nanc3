@@ -22,7 +22,7 @@ class BrandColors {
   static Color lightGreen = hexColor('A8E6A0');
 
   static const kDarColor = Color(0XFF000000);
-  static const red = Color(0xFFED1B23);
+  static const red = Color(0xFFD64B4B);
   static const bc1C1939 = Color(0xFF1C1939);
   static const bc010F2E = Color(0xFF010F2E);
   static const bcB6B6C6 = Color(0xFFB6B6C6);

@@ -68,6 +68,7 @@ class _WalletDetailsState extends ConsumerState<WalletDetails> {
                       NotificationTile(
                         notificationType: NotificationType.success,
                         content: 'Wallet address copied successfully...',
+                        duration: 2,
                       ),
                     );
                   });
