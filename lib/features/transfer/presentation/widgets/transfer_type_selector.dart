@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/transfer/presentation/widgets/build_option.dart';
+import 'package:guava/features/transfer/presentation/widgets/transfer_option.dart';
 
 class TransferTypeSelector extends StatelessWidget {
   final String selected;
@@ -26,13 +26,13 @@ class TransferTypeSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          BuildOption(
+          TransferOption(
             onChanged: onChanged,
             selected: selected,
             value: 'Wallet',
           ),
           4.horizontalSpace,
-          BuildOption(
+          TransferOption(
             onChanged: onChanged,
             selected: selected,
             value: 'Bank',

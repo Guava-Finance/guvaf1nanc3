@@ -39,6 +39,7 @@ class QuickMenu extends StatelessWidget {
             action: 'Recieve',
             icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
             color: BrandColors.washedGreen,
+            onTap: () => context.push(pRecieve),
           ),
           CircularIconButton(
             action: 'Guava Pay',

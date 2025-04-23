@@ -37,6 +37,9 @@ class R {
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/icons/camera.svg)
   static const String ASSETS_ICONS_CAMERA_SVG = 'assets/icons/camera.svg';
 
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/icons/checkmark.svg)
+  static const String ASSETS_ICONS_CHECKMARK_SVG = 'assets/icons/checkmark.svg';
+
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/icons/clear.svg)
   static const String ASSETS_ICONS_CLEAR_SVG = 'assets/icons/clear.svg';
 
@@ -203,8 +206,15 @@ class R {
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/arrow.png)
   static const String ASSETS_IMAGES_ARROW_PNG = 'assets/images/arrow.png';
 
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/barcode.png)
+  static const String ASSETS_IMAGES_BARCODE_PNG = 'assets/images/barcode.png';
+
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/camera.png)
   static const String ASSETS_IMAGES_CAMERA_PNG = 'assets/images/camera.png';
+
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/checkmark.png)
+  static const String ASSETS_IMAGES_CHECKMARK_PNG =
+      'assets/images/checkmark.png';
 
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/images/close.png)
   static const String ASSETS_IMAGES_CLOSE_PNG = 'assets/images/close.png';

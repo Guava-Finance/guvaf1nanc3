@@ -8,6 +8,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:guava/features/transfer/presentation/widgets/balance_text.dart';
@@ -59,7 +60,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
         title: Text(
           'Enter amount',
           style: context.textTheme.bodyLarge?.copyWith(
-            fontSize: 22,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w600,
             color: BrandColors.textColor,
           ),
@@ -180,7 +181,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
                 ),
                 40.verticalSpace,
                 CustomButton(
-                  onTap: () {},
+                  onTap: () => context.push(pReviewPayemet),
                   title: 'Send',
                 ),
                 10.verticalSpace,

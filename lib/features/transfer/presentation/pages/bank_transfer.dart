@@ -16,7 +16,8 @@ class BankTransfer extends StatefulWidget {
   State<BankTransfer> createState() => _BankTransferState();
 }
 
-class _BankTransferState extends State<BankTransfer> with TickerProviderStateMixin {
+class _BankTransferState extends State<BankTransfer>
+    with TickerProviderStateMixin {
   late final TextEditingController controller;
   TabController? _tabController;
 
@@ -44,39 +45,47 @@ class _BankTransferState extends State<BankTransfer> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomTextfield(
-          hintText: 'Select Country',
-          controller: controller,
-          suffixIcon: SvgPicture.asset(R.ASSETS_ICONS_ARROW_FORWARD_SVG),
-        ).padHorizontal,
-        10.verticalSpace,
-        CustomTextfield(
-          hintText: 'Select Bank',
-          controller: controller,
-          suffixIcon: SvgPicture.asset(R.ASSETS_ICONS_ARROW_FORWARD_SVG),
-        ).padHorizontal,
-        10.verticalSpace,
-        CustomTextfield(
-          hintText: 'Enter 10 digit account number',
-          controller: controller,
-        ).padHorizontal,
-        10.verticalSpace,
-        CustomTextfield(
-          hintText: 'Enter amount',
-          controller: controller,
-        ).padHorizontal,
-        10.verticalSpace,
-        CustomTextfield(
-          hintText: 'Purpose of transaction',
-          controller: controller,
-          suffixIcon: SvgPicture.asset(R.ASSETS_ICONS_ADD_CIRCLE_SVG),
-        ).padHorizontal,
-        20.verticalSpace,
-        CustomButton(
-          onTap: () => context.push(pEnterAmountBank),
-          title: 'Continue',
-        ).padHorizontal,
-        10.verticalSpace,
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomTextfield(
+                hintText: 'Select Country',
+                controller: controller,
+                suffixIcon:
+                    SvgPicture.asset(R.ASSETS_ICONS_ARROW_FORWARD_SVG),
+              ).padHorizontal,
+              10.verticalSpace,
+              CustomTextfield(
+                hintText: 'Select Bank',
+                controller: controller,
+                suffixIcon:
+                    SvgPicture.asset(R.ASSETS_ICONS_ARROW_FORWARD_SVG),
+              ).padHorizontal,
+              10.verticalSpace,
+              CustomTextfield(
+                hintText: 'Enter 10 digit account number',
+                controller: controller,
+              ).padHorizontal,
+              10.verticalSpace,
+              CustomTextfield(
+                hintText: 'Enter amount',
+                controller: controller,
+              ).padHorizontal,
+              10.verticalSpace,
+              CustomTextfield(
+                hintText: 'Purpose of transaction',
+                controller: controller,
+                suffixIcon: SvgPicture.asset(R.ASSETS_ICONS_ADD_CIRCLE_SVG),
+              ).padHorizontal,
+              20.verticalSpace,
+              CustomButton(
+                onTap: () => context.push(pEnterAmountBank),
+                title: 'Continue',
+              ).padHorizontal,
+              10.verticalSpace,
+            ],
+          ),
+        ),
         Expanded(
           child: BankTabBarView(
             tabController: _tabController,

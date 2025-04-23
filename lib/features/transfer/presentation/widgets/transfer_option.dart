@@ -3,9 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 
-class BuildOption extends StatelessWidget {
-  const BuildOption(
-      {required this.onChanged, required this.selected, required this.value, super.key});
+class TransferOption extends StatelessWidget {
+  const TransferOption(
+      {required this.onChanged,
+      required this.selected,
+      required this.value,
+      super.key});
 
   final ValueChanged<String> onChanged;
   final String selected;
@@ -26,7 +29,9 @@ class BuildOption extends StatelessWidget {
         child: Text(
           value,
           style: context.textTheme.bodyMedium!.copyWith(
-            color: isSelected ? BrandColors.backgroundColor : BrandColors.washedTextColor,
+            color: isSelected
+                ? BrandColors.backgroundColor
+                : BrandColors.washedTextColor,
             fontWeight: FontWeight.w500,
             fontSize: 14.sp,
           ),

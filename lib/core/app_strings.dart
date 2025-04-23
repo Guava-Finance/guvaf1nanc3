@@ -24,8 +24,13 @@ class Strings {
   static const importPrivateKey = '/import-private-key';
   static const fullscreenLoader = '/fullscreen-loader';
   static const transfer = '/transfer';
+  static const recieve = '/recieve';
   static const enterAmountWallet = '/enterAmountWallet';
   static const enterAmountBank = '/enterAmountBank';
+  static const reviewPayment = '/reviewPayment';
+  static const paymentStatus = '/paymentStatus';
+  static const transaction = '/transaction';
+  static const transactionDetail = '/transactionDetail';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

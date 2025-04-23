@@ -8,7 +8,8 @@ import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/presentation/widgets/recents_bt_tile.dart';
 
 class TabView extends StatelessWidget {
-  const TabView({required this.controller, required this.tabController, super.key});
+  const TabView(
+      {required this.controller, required this.tabController, super.key});
 
   final TextEditingController controller;
   final TabController? tabController;
@@ -68,7 +69,8 @@ class TabView extends StatelessWidget {
                     separatorBuilder: (ctx, i) => Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Divider(
-                        color: BrandColors.washedTextColor.withValues(alpha: 0.3),
+                        color:
+                            BrandColors.washedTextColor.withValues(alpha: 0.3),
                       ),
                     ),
                     itemBuilder: (ctx, i) {
