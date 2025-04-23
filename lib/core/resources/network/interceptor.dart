@@ -155,6 +155,7 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
     String? baseUrl,
+    Map<String, dynamic>? header,
   }) async {
     HttpMetric metric = performance.newHttpMetric(
       endpoint,
@@ -172,6 +173,7 @@ class NetworkInterceptor {
       options: Options(headers: {
         // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+        if (header != null) ...header,
       }),
     );
 
@@ -186,6 +188,7 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
     String? baseUrl,
+    Map<String, dynamic>? header,
   }) async {
     HttpMetric metric = performance.newHttpMetric(
       endpoint,
@@ -203,6 +206,7 @@ class NetworkInterceptor {
       options: Options(headers: {
         // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+        if (header != null) ...header,
       }),
     );
 
@@ -272,10 +276,10 @@ class NetworkInterceptor {
   }
 
   setToken(RequestOptions options) {
-    // todo: get token from secured storage
     options.headers = {
       'Content-Type': 'application/json',
       'X-App-ID': Env.appId,
+      ...options.headers,
     };
   }
 }

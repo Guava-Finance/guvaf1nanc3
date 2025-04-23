@@ -10,6 +10,8 @@ final homeRemoteDatasourceProvider = Provider<HomeRemoteDatasource>((ref) {
 abstract class HomeRemoteDatasource {
   Future<dynamic> getBalance(String address);
   Future<dynamic> getExchangeRate(String currencyCode);
+  Future<dynamic> checkUsername(String username);
+  Future<dynamic> setUsername(String wallet, String username);
 }
 
 class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
@@ -30,6 +32,22 @@ class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
   Future getExchangeRate(String currencyCode) async {
     return await networkInterceptor.get(
       '/account/rate/${currencyCode.toUpperCase()}/',
+    );
+  }
+
+  @override
+  Future checkUsername(String username) async {
+    return await networkInterceptor.get(
+      '/account/username/$username/',
+    );
+  }
+
+  @override
+  Future setUsername(String wallet, String username) async {
+    return await networkInterceptor.post(
+      '/account/username/',
+      data: {'username': username},
+      header: {'X-Wallet-Public-Key': wallet},
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/core/styles/theme/theme.dart';
@@ -65,21 +66,26 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, snapshot) {
-        return MaterialApp.router(
-          title: 'Guava Finance',
-          theme: theme(context),
-          debugShowCheckedModeBanner: false,
-          // darkTheme: themeDark(context),
-          routerConfig: router,
-          builder: (context, child) {
-            final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1),
-            );
-            return MediaQuery(
-              data: mediaQuery,
-              child: InAppNotificationWrapper(child: child!),
-            );
+        return GestureDetector(
+          onTap: () {
+            context.focusScope.unfocus();
           },
+          child: MaterialApp.router(
+            title: 'Guava Finance',
+            theme: theme(context),
+            debugShowCheckedModeBanner: false,
+            // darkTheme: themeDark(context),
+            routerConfig: router,
+            builder: (context, child) {
+              final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1),
+              );
+              return MediaQuery(
+                data: mediaQuery,
+                child: InAppNotificationWrapper(child: child!),
+              );
+            },
+          ),
         );
       },
     );

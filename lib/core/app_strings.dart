@@ -13,6 +13,7 @@ class Strings {
   static const String showBalance = 'show_balance_';
   static const String myCachedBalance = 'my_cachec_balance';
   static const String myConfig = 'my_config_';
+  static const String myUsername = 'my_username_';
 
   //Pages
   static const root = '/';
@@ -32,6 +33,7 @@ class Strings {
   static const transaction = '/transaction';
   static const transactionDetail = '/transactionDetail';
   static const transactionFilter = '/transactionFilter';
+  static const setUsername = '/set-username';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

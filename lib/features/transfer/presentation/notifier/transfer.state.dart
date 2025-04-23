@@ -4,7 +4,7 @@ class TransferState {
 
   const TransferState({
     this.currentPage = 0,
-    this.selectedTransferType = 'Transfer',
+    this.selectedTransferType = 'Wallet',
   });
 
   TransferState copyWith({

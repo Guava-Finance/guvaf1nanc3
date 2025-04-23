@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,7 @@ class CustomButton extends StatelessWidget {
   final Widget? child;
   final bool showBorder;
   final TextStyle? textStyle;
+  final bool isLoading;
 
   const CustomButton({
     required this.onTap,
@@ -34,6 +36,7 @@ class CustomButton extends StatelessWidget {
     this.child,
     this.showBorder = false,
     this.textStyle,
+    this.isLoading = false,
   });
 
   @override
@@ -42,12 +45,14 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius ?? 15.r),
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          if (!disable) {
-            HapticFeedback.lightImpact();
-            onTap();
-          }
-        },
+        onTap: isLoading
+            ? null
+            : () {
+                if (!disable) {
+                  HapticFeedback.lightImpact();
+                  onTap();
+                }
+              },
         borderRadius: BorderRadius.circular(18.r),
         child: Container(
           padding: height != null
@@ -79,20 +84,27 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius ?? 50.r),
           ),
           child: Center(
-            child: child ??
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    '$title',
-                    style: textStyle ??
-                        context.semiBold.copyWith(
-                          fontSize: textSize ?? 14.sp,
-                          color: textColor ?? BrandColors.backgroundColor,
-                          height: 1.875,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            child: isLoading
+                ? CupertinoActivityIndicator(
+                    radius: 8.r,
+                    color: !disable
+                        ? BrandColors.backgroundColor
+                        : BrandColors.primary,
+                  )
+                : child ??
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '$title',
+                        style: textStyle ??
+                            context.semiBold.copyWith(
+                              fontSize: textSize ?? 14.sp,
+                              color: textColor ?? BrandColors.backgroundColor,
+                              height: 1.875,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
           ),
         ),
       ),
