@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/usecase/usecase.dart';
 import 'package:guava/features/home/data/models/balance.param.dart';
 import 'package:guava/features/home/data/repositories/repo.dart';
@@ -20,11 +24,31 @@ final balanceUsecaseProvider = FutureProvider<BalanceParam>((ref) async {
   );
 
   try {
-    return ((await balUsecase.call(params: null)) as LoadedState).data
-        as BalanceParam;
+    final result = await balUsecase.call(params: null);
+    return (result as LoadedState).data as BalanceParam;
   } catch (e) {
-    rethrow;
+    navkey.currentContext!.notify.addNotification(
+      NotificationTile(
+        title: 'Balance Update Failed',
+        content:
+            '''Could not retrieve your latest balance. Showing your last known balance.''',
+        notificationType: NotificationType.error,
+      ),
+    );
+
+    throw Exception(e.toString());
   }
+});
+
+final cachedBalanceProivder =
+    FutureProvider<Map<String, dynamic>?>((ref) async {
+  final data = await ref
+      .read(securedStorageServiceProvider)
+      .readFromStorage(Strings.myCachedBalance);
+
+  if (data != null) return jsonDecode(data);
+
+  return null;
 });
 
 class BalanceUsecase extends UseCase<AppState, Null> {
@@ -75,11 +99,15 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     final excRate =
         double.tryParse((rate as LoadedState).data['data'][cc]) ?? 0.0;
 
-    // save the exgchange rate to storage
-    await storageService.writeToStorage(
-      key: Strings.exchangeRate,
-      value: jsonEncode(rate.data['data']),
-    );
+    // save local balance & usdc balance incase there's an error fetching
+    // operation runs on background
+    // Run storage operations in the background using Future.wait
+    // This won't block the UI since we're not awaiting the result
+    unawaited(_performBackgroundStorageOperations(
+      usdc: usdc,
+      excRate: excRate,
+      currencySymbol: currencySymbol,
+    ));
 
     return LoadedState(BalanceParam.fromJson({
       'usdcBalance': usdc,
@@ -87,5 +115,29 @@ class BalanceUsecase extends UseCase<AppState, Null> {
       'localBalance': usdc / excRate,
       'symbol': currencySymbol,
     }));
+  }
+
+  // Helper method to perform background storage operations
+  Future<void> _performBackgroundStorageOperations({
+    required double usdc,
+    required double excRate,
+    required String currencySymbol,
+  }) async {
+    // Save the exchange rate to storage to be used on other sessions
+    await storageService.writeToStorage(
+      key: Strings.exchangeRate,
+      value: excRate.toString(),
+    );
+
+    // Save local balance & usdc balance in case there's an error fetching
+    await storageService.writeToStorage(
+      key: Strings.myCachedBalance,
+      value: jsonEncode({
+        'localBalance': (usdc / excRate),
+        'usdcBalance': usdc,
+        'symbol': currencySymbol,
+        'exchangeRate': currencySymbol,
+      }),
+    );
   }
 }

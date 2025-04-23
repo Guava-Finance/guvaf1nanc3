@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/dashboard/domain/usecases/user_location_monitor.dart';
@@ -18,11 +18,13 @@ class DashboardNotifier extends _$DashboardNotifier {
   }
 
   Future<void> checkNCreateUSDCAccount() async {
+    final config = await (ref.read(configServiceProvider)).getConfig();
+
     // final walletAddress = await ref.read(walletAddressProvider.future);
     final solanaService = ref.read(solanaServiceProvider);
 
     final tokenAccount = await solanaService.doesSPLTokenAccountExist(
-      Strings.usdcMintTokenAddress,
+      config!.walletSettings.usdcMintAddress,
     );
 
     // todo: check balance before calling prefund

@@ -5,14 +5,14 @@ import 'package:guava/features/onboarding/domain/entities/config/country.entity.
 import 'package:guava/features/onboarding/domain/entities/config/guava_pay.entity.dart';
 import 'package:guava/features/onboarding/domain/entities/config/wallet_settings.entity.dart';
 
-class AppConfigEntity extends Equatable {
+class AppConfig extends Equatable {
   final String appName;
   final WalletSettingsEntity walletSettings;
   final CompanySettingsEntity companySettings;
   final GuavaPayEntity guavaPay;
   final List<CountryEntity> countries;
 
-  const AppConfigEntity({
+  const AppConfig({
     required this.appName,
     required this.walletSettings,
     required this.companySettings,

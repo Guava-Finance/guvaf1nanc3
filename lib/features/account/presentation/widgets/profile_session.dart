@@ -4,6 +4,7 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/widgets/app_icon.dart';
+import 'package:guava/widgets/avatar.dart';
 
 class AccountProfileSession extends StatelessWidget {
   const AccountProfileSession({
@@ -21,7 +22,7 @@ class AccountProfileSession extends StatelessWidget {
               height: 60.h,
               width: 100.w,
               color: Colors.transparent,
-              child: CircleAvatar(maxRadius: 30.r),
+              child: AppAvatar(radius: 30),
             ),
             Positioned(
               bottom: 0,

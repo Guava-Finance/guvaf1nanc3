@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
@@ -24,6 +25,7 @@ final solanaServiceProvider = Provider<SolanaService>((ref) {
     rpcClient: ref.watch(rpcClientProvider),
     storageService: ref.watch(securedStorageServiceProvider),
     networkInterceptor: ref.watch(networkInterceptorProvider),
+    configService: ref.watch(configServiceProvider),
   );
 });
 
@@ -32,16 +34,20 @@ final class SolanaService {
     required this.rpcClient,
     required this.storageService,
     required this.networkInterceptor,
+    required this.configService,
   });
 
   final RpcClient rpcClient;
   final SecuredStorageService storageService;
   final NetworkInterceptor networkInterceptor;
+  final ConfigService configService;
 
   /// Using [bip39] either 12 or 24 secret phrases is generated
   /// The secret phrase i.e. [mnemonics] would be kept
   /// securely within the device
   Future<String> createANewWallet({int walletStrength = 256}) async {
+    final config = await configService.getConfig();
+
     /// [walletStrength = 128] generates 12 phrases secret words
     /// [walletStrength = 256] generates 24 phrases secret words
     final String mnemonic = generateMnemonic(strength: walletStrength);
@@ -51,12 +57,11 @@ final class SolanaService {
       key: Strings.mnemonics,
       value: mnemonic,
     );
-
     /// Generate a standard wallet address that can be used on various
     /// Wallet app such as Phantom e.t.c.
     final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
       seed: mnemonicToSeed(mnemonic),
-      hdPath: Strings.derivativePath,
+      hdPath: config!.walletSettings.derivativePath,
     );
 
     /// return wallets public key for display
@@ -68,15 +73,16 @@ final class SolanaService {
   /// And it should be kept locally within the
   /// user's device to ensure decentralization
   Future<String> restoreAWallet(String mnemonics) async {
+    final config = await configService.getConfig();
+
     /// Save correct mnemonics to a secure storage on User's device
     await storageService.writeToStorage(
       key: Strings.mnemonics,
       value: mnemonics,
     );
-
     final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
       seed: mnemonicToSeed(mnemonics),
-      hdPath: Strings.derivativePath,
+      hdPath: config!.walletSettings.derivativePath,
     );
 
     /// Display the public address of user's wallet
@@ -155,10 +161,11 @@ final class SolanaService {
   /// wallet create the USDC SPL Token account on the blockchain
   /// ANd it return the transactionId after creating
   Future<String> enableUSDCForWallet() async {
+    final config = await configService.getConfig();
     final wallet = await _getWallet();
 
     final usdcMint = Ed25519HDPublicKey.fromBase58(
-      Strings.usdcMintTokenAddress,
+      config!.walletSettings.usdcMintAddress,
     );
 
     /// This get the associated wallet address for that token mint
@@ -233,25 +240,34 @@ final class SolanaService {
     double? transactionFee,
     String? narration,
   }) async {
+    final config = await configService.getConfig();
+
     final Ed25519HDKeyPair wallet = await _getWallet();
 
     final Ed25519HDPublicKey senderUSDCWallet =
         await findAssociatedTokenAddress(
       owner: wallet.publicKey,
-      mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
+      mint: Ed25519HDPublicKey.fromBase58(
+        config!.walletSettings.usdcMintAddress,
+      ),
     );
 
     final Ed25519HDPublicKey recipientUSDCWallet =
         await findAssociatedTokenAddress(
       owner: Ed25519HDPublicKey.fromBase58(receiverAddress),
-      mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
+      mint: Ed25519HDPublicKey.fromBase58(
+        config.walletSettings.usdcMintAddress,
+      ),
     );
 
     final Ed25519HDPublicKey companyUSDCWallet =
         await findAssociatedTokenAddress(
-      // todo: fetch companies wallet from Config
-      owner: Ed25519HDPublicKey.fromBase58(''),
-      mint: Ed25519HDPublicKey.fromBase58(Strings.usdcMintTokenAddress),
+      owner: Ed25519HDPublicKey.fromBase58(
+        config.companySettings.companyWalletAddress,
+      ),
+      mint: Ed25519HDPublicKey.fromBase58(
+        config.walletSettings.usdcMintAddress,
+      ),
     );
 
     // Transfer to Recipient
@@ -303,6 +319,8 @@ final class SolanaService {
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
+    final config = await configService.getConfig();
+
     // First, try to get wallet from mnemonics
     final String? mnemonics = await storageService.readFromStorage(
       Strings.mnemonics,
@@ -311,14 +329,14 @@ final class SolanaService {
     if (mnemonics != null && mnemonics.isNotEmpty) {
       final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
         seed: mnemonicToSeed(mnemonics),
-        hdPath: Strings.derivativePath,
+        hdPath: config!.walletSettings.derivativePath,
       );
       return wallet;
     }
 
     // If no mnemonics, try to get wallet from private key
     final String? privateKey = await storageService.readFromStorage(
-      Strings.privateKey, 
+      Strings.privateKey,
     );
 
     if (privateKey != null && privateKey.isNotEmpty) {
@@ -339,10 +357,12 @@ final class SolanaService {
   }
 
   Future<Ed25519HDPublicKey> _getTokenAddress() async {
+    final config = await configService.getConfig();
+
     final Ed25519HDKeyPair wallet = await _getWallet();
 
     final Ed25519HDPublicKey usdcMint = Ed25519HDPublicKey.fromBase58(
-      Strings.usdcMintTokenAddress,
+      config!.walletSettings.usdcMintAddress,
     );
 
     /// This get the associated wallet address for that token mint

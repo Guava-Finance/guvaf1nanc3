@@ -18,10 +18,10 @@ class RecieveNotifier extends _$RecieveNotifier {
   void updateRecieveType(String type) {
     state = state.copyWith(selectedRecieveType: type);
 
-    if (type == 'Code') {
-      pageController.jumpToPage(0); 
+    if (type.toLowerCase().contains('wallet')) {
+      pageController.jumpToPage(0);
       state = state.copyWith(currentPage: 0);
-    } else if (type == 'Bank') {
+    } else if (type.toLowerCase().contains('bank')) {
       pageController.jumpToPage(1);
       state = state.copyWith(currentPage: 1);
     }

@@ -11,11 +11,8 @@ class Strings {
   static const String myAccount = 'my_account_';
   static const String exchangeRate = 'exchange_rate_';
   static const String showBalance = 'show_balance_';
-
-  // todo: Fetch from Config
-  static String derivativePath = 'm/44\'/501\'/0\'/0\'';
-  static String usdcMintTokenAddress =
-      '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
+  static const String myCachedBalance = 'my_cachec_balance';
+  static const String myConfig = 'my_config_';
 
   //Pages
   static const root = '/';

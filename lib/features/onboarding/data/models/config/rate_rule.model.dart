@@ -1,5 +1,3 @@
-
-
 import 'package:guava/features/onboarding/domain/entities/config/rate_rule.entity.dart';
 
 class RateRuleModel extends RateRuleEntity {
@@ -15,13 +13,14 @@ class RateRuleModel extends RateRuleEntity {
 
   factory RateRuleModel.fromJson(Map<String, dynamic> json) {
     return RateRuleModel(
-      min: json['min'].toDouble(),
-      max: json['max'].toDouble(),
-      percentageCharge: json['percentage_charge'].toDouble(),
-      cappedAmount: json['capped_amount'].toDouble(),
-      isCapped: json['is_capped'],
+      min: num.parse(json['min'].toString()).toDouble(),
+      max: num.parse(json['max'].toString()).toDouble(),
+      percentageCharge:
+          num.parse(json['percentage_charge'].toString()).toDouble(),
+      cappedAmount: num.parse(json['capped_amount'].toString()).toDouble(),
+      isCapped: json['is_capped'].toString() == 'true' ? true : false,
       rule: json['rule'],
-      isUsdc: json['is_usdc'],
+      isUsdc: json['is_usdc'].toString() == 'true' ? true : false,
     );
   }
 

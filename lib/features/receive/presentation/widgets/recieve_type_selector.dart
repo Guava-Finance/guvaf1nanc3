@@ -27,7 +27,7 @@ class RecieveTypeSelector extends StatelessWidget {
           RecieveOption(
             onChanged: onChanged,
             selected: selected,
-            value: 'Code',
+            value: 'Wallet',
           ),
           4.horizontalSpace,
           RecieveOption(
