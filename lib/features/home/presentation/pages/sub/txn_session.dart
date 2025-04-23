@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
@@ -28,7 +29,10 @@ class TransactionHistorySession extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => context.push(pTransaction),
+              onTap: () {
+                context.push(pTransaction);
+                HapticFeedback.lightImpact();
+              },
               child: Text(
                 'View all',
                 style: context.medium.copyWith(

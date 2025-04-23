@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -85,7 +86,12 @@ class ScanBarcode extends ConsumerWidget {
           ),
         ),
         10.verticalSpace,
-        CustomButton(onTap: () {}, title: 'Share')
+        CustomButton(
+          onTap: () {
+            HapticFeedback.lightImpact();
+          },
+          title: 'Share',
+        )
       ],
     );
   }

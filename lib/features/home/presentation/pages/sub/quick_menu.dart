@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
@@ -33,13 +33,19 @@ class QuickMenu extends StatelessWidget {
             action: 'Transfer',
             icon: R.ASSETS_ICONS_TRANSFER_ICON_SVG,
             color: BrandColors.washedRed,
-            onTap: () => context.push(pTransfer),
+            onTap: () {
+              context.push(pTransfer);
+              HapticFeedback.lightImpact();
+            },
           ),
           CircularIconButton(
             action: 'Recieve',
             icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
             color: BrandColors.washedGreen,
-            onTap: () => context.push(pRecieve),
+            onTap: () {
+              context.push(pRecieve);
+              HapticFeedback.lightImpact();
+            },
           ),
           CircularIconButton(
             action: 'Guava Pay',

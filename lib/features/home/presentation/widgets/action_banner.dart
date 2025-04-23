@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -84,7 +85,9 @@ class ActionBanners extends StatelessWidget {
               right: 0.w,
               top: 0.h,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                },
                 child: CircleAvatar(
                   maxRadius: 10.r,
                   backgroundColor:
