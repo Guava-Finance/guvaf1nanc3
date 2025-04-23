@@ -60,16 +60,16 @@ class _WalletDetailsState extends ConsumerState<WalletDetails> {
 
             return walletAsync.when(
               data: (walletAddress) => InkWell(
+                borderRadius: BorderRadius.circular(8.r),
                 onTap: () {
-                  Clipboard.getData(walletAddress).then((_) {
-                    if (mounted) {
-                      navkey.currentContext!.notify.addNotification(
-                        NotificationTile(
-                          notificationType: NotificationType.success,
-                          content: 'Wallet address copied successfully...',
-                        ),
-                      );
-                    }
+                  Clipboard.setData(ClipboardData(text: walletAddress))
+                      .then((_) {
+                    navkey.currentContext!.notify.addNotification(
+                      NotificationTile(
+                        notificationType: NotificationType.success,
+                        content: 'Wallet address copied successfully...',
+                      ),
+                    );
                   });
                 },
                 child: Container(
