@@ -4,32 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transaction/presentation/pages/sub/transaction_history.dart';
 import 'package:guava/widgets/back_wrapper.dart';
 
-class TransactionPage extends ConsumerWidget {
-  const TransactionPage({super.key});
+class TransactionFilterPage extends ConsumerWidget {
+  const TransactionFilterPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Transactions'),
-        actions: [
-          Text(
-            'Download',
-            style: context.textTheme.bodyMedium!.copyWith(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: BrandColors.washedTextColor,
-            ),
-          ),
-          16.horizontalSpace,
-        ],
-      ),
-      body: Column(
+    return BackWrapper(
+      title: 'Filter',
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           10.verticalSpace,
@@ -45,6 +31,7 @@ class TransactionPage extends ConsumerWidget {
                     ),
                   ),
                   child: TextFormField(
+                    // controller: controller,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       fillColor: BrandColors.containerColor,
@@ -83,12 +70,10 @@ class TransactionPage extends ConsumerWidget {
               )
             ],
           ),
-          8.verticalSpace,
-          Expanded(
-            child: TransactionHistory(),
-          ),
+          20.verticalSpace,
+          TransactionHistory()
         ],
-      ).padHorizontal,
+      ),
     );
   }
 }

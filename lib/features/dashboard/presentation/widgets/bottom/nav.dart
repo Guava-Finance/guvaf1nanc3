@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
@@ -28,7 +29,10 @@ class BottomNavigator extends ConsumerWidget {
       selectedItemColor: Colors.white,
       unselectedItemColor: hexColor('#B0B7B1'),
       currentIndex: selectedIndex,
-      onTap: (index) => ref.read(bottomNavProvider.notifier).setIndex(index),
+      onTap: (index) {
+        ref.read(bottomNavProvider.notifier).setIndex(index);
+        HapticFeedback.lightImpact();
+      },
       items: [
         BottomNavigationBarItem(
           label: 'Home',

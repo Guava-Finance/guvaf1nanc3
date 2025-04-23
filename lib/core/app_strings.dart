@@ -31,6 +31,7 @@ class Strings {
   static const paymentStatus = '/paymentStatus';
   static const transaction = '/transaction';
   static const transactionDetail = '/transactionDetail';
+  static const transactionFilter = '/transactionFilter';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

@@ -45,9 +45,10 @@ class TransactionFee extends StatelessWidget {
                 TextSpan(
                   text: (5000.89).formatDecimal,
                   style: context.textTheme.bodyMedium?.copyWith(
-                      color: BrandColors.washedTextColor,
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.w600),
+                    color: BrandColors.washedTextColor,
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -77,15 +78,9 @@ class TransactionFee extends StatelessWidget {
             ),
           ),
           15.verticalSpace,
-          PaymentItem(
-            title: 'Country',
-            value: 'Nigeria'
-          ),
+          PaymentItem(title: 'Country', value: 'Nigeria'),
           15.verticalSpace,
-          PaymentItem(
-            title: 'Bank',
-            value: 'Guaranty Trust Bank'
-          ),
+          PaymentItem(title: 'Bank', value: 'Guaranty Trust Bank'),
           15.verticalSpace,
           PaymentItem(
             title: 'Equivalent to',

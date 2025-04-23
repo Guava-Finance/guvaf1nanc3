@@ -44,7 +44,7 @@ class CustomButton extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (!disable) {
-            HapticFeedback.mediumImpact();
+            HapticFeedback.lightImpact();
             onTap();
           }
         },

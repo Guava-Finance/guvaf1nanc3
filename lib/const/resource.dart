@@ -57,6 +57,9 @@ class R {
   static const String ASSETS_ICONS_FAST_TRANSFER_FLOATER_SVG =
       'assets/icons/fast-transfer-floater.svg';
 
+  /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/icons/filter.svg)
+  static const String ASSETS_ICONS_FILTER_SVG = 'assets/icons/filter.svg';
+
   /// ![preview](file:///Users/michael.olatunji/Documents/Flutter Projects/guavafinance/assets/icons/hardware.svg)
   static const String ASSETS_ICONS_HARDWARE_SVG = 'assets/icons/hardware.svg';
 

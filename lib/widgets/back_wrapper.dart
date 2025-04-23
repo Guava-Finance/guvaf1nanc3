@@ -38,6 +38,7 @@ class _BackWrapperState extends State<BackWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Stack(
           children: [
