@@ -4,7 +4,7 @@ class RecieveState {
 
   const RecieveState({
     this.currentPage = 0,
-    this.selectedRecieveType = 'Code',
+    this.selectedRecieveType = 'Wallet',
   });
 
   RecieveState copyWith({

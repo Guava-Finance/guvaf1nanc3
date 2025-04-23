@@ -31,7 +31,7 @@ class ScanBarcode extends ConsumerWidget {
             child: Image.asset(R.ASSETS_IMAGES_BARCODE_PNG, height: 270.w),
           ),
         ),
-        10.verticalSpace,
+        24.verticalSpace,
         Text(
           'oghenevwegba05',
           style: context.textTheme.bodyMedium!.copyWith(
@@ -40,7 +40,7 @@ class ScanBarcode extends ConsumerWidget {
             color: BrandColors.textColor,
           ),
         ),
-        5.verticalSpace,
+        6.verticalSpace,
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -85,7 +85,11 @@ class ScanBarcode extends ConsumerWidget {
           ),
         ),
         10.verticalSpace,
-        CustomButton(onTap: () {}, title: 'Share')
+        CustomButton(
+          onTap: () {},
+          title: 'Share',
+        ),
+        20.verticalSpace,
       ],
     );
   }

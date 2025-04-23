@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
 import 'package:guava/widgets/custom_button.dart';
@@ -16,23 +17,23 @@ class BankRecieve extends ConsumerStatefulWidget {
 }
 
 class _BankRecieveState extends ConsumerState<BankRecieve> {
-  late final TextEditingController controller;
+  late final MoneyMaskedTextController amountCtrl;
+  late final MoneyMaskedTextController receiveCtrl;
+
   bool isSwitched = false;
 
   @override
   void initState() {
-    controller = TextEditingController();
+    amountCtrl = MoneyMaskedTextController();
+    receiveCtrl = MoneyMaskedTextController();
 
     super.initState();
-
-    controller.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    amountCtrl.dispose();
+    receiveCtrl.dispose();
 
     super.dispose();
   }
@@ -43,7 +44,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'How much are you funding your wallet?',
+          'How much are you funding?',
           style: context.textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.w500,
             color: BrandColors.textColor,
@@ -53,7 +54,10 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
         15.verticalSpace,
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 16.h,
+          ),
           decoration: ShapeDecoration(
             color: BrandColors.textColor.withValues(alpha: .05),
             shape: RoundedRectangleBorder(
@@ -68,7 +72,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: controller,
+                controller: amountCtrl,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                   labelText: 'You will send',
@@ -87,7 +91,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
                     onTap: () {},
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        vertical: 3.h,
+                        vertical: 6.h,
                         horizontal: 10.w,
                       ),
                       decoration: ShapeDecoration(
@@ -117,7 +121,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
                 color: BrandColors.washedTextColor.withValues(alpha: .3),
               ),
               TextFormField(
-                controller: controller,
+                controller: receiveCtrl,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                   labelText: 'Wallet will recieve',
@@ -136,7 +140,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
                     onTap: () {},
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        vertical: 3.h,
+                        vertical: 6.h,
                         horizontal: 10.w,
                       ),
                       decoration: ShapeDecoration(
@@ -146,7 +150,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
                         ),
                       ),
                       child: Text(
-                        'NGN',
+                        'USDC',
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: BrandColors.textColor,
                           fontWeight: FontWeight.w500,
@@ -165,60 +169,60 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
             ],
           ),
         ),
-        10.verticalSpace,
+        // 16.verticalSpace,
+        // Container(
+        //   width: double.infinity,
+        //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        //   decoration: ShapeDecoration(
+        //     color: BrandColors.textColor.withValues(alpha: .05),
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(12.r),
+        //       side: BorderSide(
+        //         width: 1,
+        //         color: BrandColors.textColor.withValues(alpha: 0.1),
+        //       ),
+        //     ),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(
+        //         'Include fee',
+        //         style: context.textTheme.bodyMedium!.copyWith(
+        //           fontSize: 14.sp,
+        //           fontWeight: FontWeight.w500,
+        //           color: BrandColors.textColor,
+        //         ),
+        //       ),
+        //       Container(
+        //         width: 35.w,
+        //         height: 20.w,
+        //         decoration: ShapeDecoration(
+        //           color: hexColor('7A7A7A'),
+        //           shape: RoundedRectangleBorder(
+        //             borderRadius: BorderRadius.circular(5.r),
+        //           ),
+        //         ),
+        //         child: FlutterSwitch(
+        //           borderRadius: 5.r,
+        //           toggleSize: 15,
+        //           padding: 3,
+        //           activeColor: BrandColors.washedGreen,
+        //           value: isSwitched,
+        //           onToggle: (val) => setState(
+        //             () {
+        //               isSwitched = val;
+        //             },
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        40.verticalSpace,
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-          decoration: ShapeDecoration(
-            color: BrandColors.textColor.withValues(alpha: .05),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              side: BorderSide(
-                width: 1,
-                color: BrandColors.textColor.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Include fee',
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: BrandColors.textColor,
-                ),
-              ),
-              Container(
-                width: 35.w,
-                height: 20.w,
-                decoration: ShapeDecoration(
-                  color: hexColor('7A7A7A'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.r),
-                  ),
-                ),
-                child: FlutterSwitch(
-                  borderRadius: 5.r,
-                  toggleSize: 15,
-                  padding: 3,
-                  activeColor: BrandColors.washedGreen,
-                  value: isSwitched,
-                  onToggle: (val) => setState(
-                    () {
-                      isSwitched = val;
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        60.verticalSpace,
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           decoration: ShapeDecoration(
             color: BrandColors.textColor.withValues(alpha: .05),
             shape: RoundedRectangleBorder(
@@ -245,7 +249,10 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
           ),
         ),
         Spacer(),
-        CustomButton(onTap: () {}, title: 'Continue')
+        CustomButton(
+          onTap: () {},
+          title: 'Continue',
+        )
       ],
     );
   }
