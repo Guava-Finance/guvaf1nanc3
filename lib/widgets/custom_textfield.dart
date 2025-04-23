@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -12,6 +13,8 @@ class CustomTextfield extends StatefulWidget {
     this.label,
     this.onChanged,
     this.capitalization,
+    this.validator,
+    this.inputFormatters,
     super.key,
   });
 
@@ -22,6 +25,8 @@ class CustomTextfield extends StatefulWidget {
   final String? label;
   final Function(String?)? onChanged;
   final TextCapitalization? capitalization;
+  final String? Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -64,6 +69,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                 onChanged: widget.onChanged,
                 textCapitalization:
                     widget.capitalization ?? TextCapitalization.none,
+                validator: widget.validator,
+                inputFormatters: widget.inputFormatters,
                 decoration: InputDecoration(
                   suffixIconConstraints: BoxConstraints(
                     minWidth: 0,

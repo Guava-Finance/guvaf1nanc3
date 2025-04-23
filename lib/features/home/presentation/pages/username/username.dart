@@ -95,12 +95,33 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
               ref.read(isUsernameAvailableProvider.notifier).state = null;
 
               debounce.run(() async {
-                if ((p0 ?? '').isNotEmpty) {
+                if ((p0 ?? '').isNotEmpty &&
+                    RegExp(r'^[a-z0-9_.]+$').hasMatch(p0 ?? '')) {
                   withLoading(() async {
                     await hn.checkUsername(p0 ?? '');
                   });
                 }
               });
+            },
+            inputFormatters: [
+              // Lowercase transformation
+              TextInputFormatter.withFunction((oldValue, newValue) {
+                return TextEditingValue(
+                  text: newValue.text.toLowerCase(),
+                  selection: newValue.selection,
+                );
+              }),
+              // Only allow lowercase letters, underscore and period
+              FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9_.]')),
+            ],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Username cannot be empty';
+              }
+              if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(value)) {
+                return '''Only lowercase letters, numbers, underscore and period allowed''';
+              }
+              return null;
             },
           ),
           8.verticalSpace,
