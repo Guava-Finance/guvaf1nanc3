@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InAppNotificationWrapper extends StatefulWidget {
   final Widget child;
@@ -17,8 +18,21 @@ class InAppNotificationWrapper extends StatefulWidget {
       InAppNotificationWrapperState();
 }
 
+class NotificationEntry {
+  final Widget notification;
+  final String id;
+  final DateTime addedTime;
+
+  NotificationEntry({
+    required this.notification,
+    required this.id,
+    required this.addedTime,
+  });
+}
+
 class InAppNotificationWrapperState extends State<InAppNotificationWrapper> {
-  late List<Widget> _notificationStack;
+  late List<NotificationEntry> _notificationStack;
+  final int _maxVisibleNotifications = 3;
 
   @override
   void initState() {
@@ -27,12 +41,26 @@ class InAppNotificationWrapperState extends State<InAppNotificationWrapper> {
     _notificationStack = [];
   }
 
-  void addNotification(Widget notification, {int? howLong}) {
+  void addNotification(Widget notification) {
+    HapticFeedback.lightImpact();
+
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+
     setState(() {
-      _notificationStack.add(notification);
+      // Add new notification to the beginning of the list (FIFO)
+      _notificationStack.insert(
+        0,
+        NotificationEntry(
+          notification: notification,
+          id: id,
+          addedTime: DateTime.now(),
+        ),
+      );
     });
 
-    Future.delayed(Duration(seconds: howLong ?? 7), removeNotification);
+    while (_notificationStack.length > _maxVisibleNotifications) {
+      _notificationStack.removeLast();
+    }
   }
 
   void removeNotification() {
@@ -48,7 +76,15 @@ class InAppNotificationWrapperState extends State<InAppNotificationWrapper> {
     return Stack(
       children: [
         widget.child,
-        ..._notificationStack,
+        ...(_notificationStack.reversed.toList()).asMap().entries.map((entry) {
+          // final index = entry.key;
+          final notificationEntry = entry.value;
+
+          return KeyedSubtree(
+            key: Key('notification_${notificationEntry.id}'),
+            child: notificationEntry.notification,
+          );
+        }),
       ],
     );
   }

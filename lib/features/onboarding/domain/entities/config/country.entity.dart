@@ -10,7 +10,8 @@ class CountryEntity extends Equatable {
   final String currencySymbol;
   final String callingCode;
   final List<int> phoneLength;
-  final List<String> kycPartners;
+  final List<String>? kycPartners;
+  final List<String>? kybPartners;
   final RatesEntity rates;
 
   const CountryEntity({
@@ -22,6 +23,7 @@ class CountryEntity extends Equatable {
     required this.callingCode,
     required this.phoneLength,
     required this.kycPartners,
+    required this.kybPartners,
     required this.rates,
   });
 

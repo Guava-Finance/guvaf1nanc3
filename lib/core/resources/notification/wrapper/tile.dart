@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 
 enum NotificationType { success, warning, error, information }
@@ -40,6 +43,7 @@ class NotificationTile extends StatefulWidget {
     this.content,
     this.notificationType = NotificationType.information,
     this.actions,
+    this.duration = 7,
     super.key,
   });
 
@@ -47,21 +51,73 @@ class NotificationTile extends StatefulWidget {
   final String? content;
   final NotificationType notificationType;
   final List<Widget>? actions;
+  final int duration;
 
   @override
   State<NotificationTile> createState() => _NotificationTileState();
 }
 
-class _NotificationTileState extends State<NotificationTile> {
+class _NotificationTileState extends State<NotificationTile>
+    with SingleTickerProviderStateMixin {
+  AnimationController? controller;
+  Timer? _autoHideTimer;
+  bool _dismissing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start auto-hide timer after widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoHideTimer();
+    });
+  }
+
+  void _startAutoHideTimer() {
+    _autoHideTimer = Timer(Duration(seconds: widget.duration), () {
+      dismissNotification();
+    });
+  }
+
+  void dismissNotification() {
+    // Prevent multiple dismissal attempts
+    if (_dismissing || controller == null) return;
+
+    _dismissing = true;
+
+    // First reverse the animation
+    controller!.reverse().then((_) {
+      // Then remove the notification after animation completes
+      if (mounted) {
+        if (navkey.currentContext != null) {
+          navkey.currentContext!.notify.removeNotification();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoHideTimer?.cancel();
+    // Ensure controller is properly disposed
+    // controller?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SlideInDown(
+      controller: (ctrl) {
+        controller = ctrl;
+      },
       child: Dismissible(
         key: Key(
           widget.title ?? widget.content ?? DateTime.now().toIso8601String(),
         ),
         onDismissed: (direction) {
-          context.notify.removeNotification();
+          // Direct dismissal by user gesture
+          if (navkey.currentContext != null) {
+            navkey.currentContext!.notify.removeNotification();
+          }
         },
         direction: DismissDirection.up,
         child: Container(
@@ -134,9 +190,7 @@ class _NotificationTileState extends State<NotificationTile> {
                 ),
                 8.horizontalSpace,
                 InkWell(
-                  onTap: () {
-                    context.notify.removeNotification();
-                  },
+                  onTap: dismissNotification,
                   child: Icon(
                     Icons.close,
                     color: BrandColors.washedTextColor.withValues(alpha: .5),

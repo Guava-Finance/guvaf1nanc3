@@ -1,5 +1,3 @@
-
-
 import 'package:guava/features/onboarding/data/models/config/rates.model.dart';
 import 'package:guava/features/onboarding/domain/entities/config/country.entity.dart';
 import 'package:guava/features/onboarding/domain/entities/config/rate.entity.dart';
@@ -14,6 +12,7 @@ class CountryModel extends CountryEntity {
     required super.callingCode,
     required super.phoneLength,
     required super.kycPartners,
+    required super.kybPartners,
     required super.rates,
   });
 
@@ -25,8 +24,15 @@ class CountryModel extends CountryEntity {
       currencyCode: json['currency_code'],
       currencySymbol: json['currency_symbol'],
       callingCode: json['calling_code'],
-      phoneLength: List<int>.from(json['phone_length']),
-      kycPartners: List<String>.from(json['kyc_partners']),
+      phoneLength: List<int>.from((json['phone_length'] as List)
+          .map((e) => int.parse(e.toString()))
+          .toList()),
+      kycPartners: json['kyc_partners'] == null
+          ? null
+          : List<String>.from(json['kyc_partners']),
+      kybPartners: json['kyb_partners'] == null
+          ? null
+          : List<String>.from(json['kyb_partners']),
       rates: RatesModel.fromJson(json['rates']),
     );
   }
@@ -54,6 +60,7 @@ class CountryModel extends CountryEntity {
     String? callingCode,
     List<int>? phoneLength,
     List<String>? kycPartners,
+    List<String>? kybPartners,
     RatesEntity? rates,
   }) {
     return CountryModel(
@@ -65,6 +72,7 @@ class CountryModel extends CountryEntity {
       callingCode: callingCode ?? this.callingCode,
       phoneLength: phoneLength ?? this.phoneLength,
       kycPartners: kycPartners ?? this.kycPartners,
+      kybPartners: kybPartners ?? this.kybPartners,
       rates: rates ?? this.rates,
     );
   }

@@ -18,10 +18,10 @@ class TransferNotifier extends _$TransferNotifier {
   void updateTransferType(String type) {
     state = state.copyWith(selectedTransferType: type);
 
-    if (type == 'Transfer') {
-      pageController.jumpToPage(0); 
+    if (type.toLowerCase().contains('wallet')) {
+      pageController.jumpToPage(0);
       state = state.copyWith(currentPage: 0);
-    } else if (type == 'Bank') {
+    } else if (type.toLowerCase().contains('bank')) {
       pageController.jumpToPage(1);
       state = state.copyWith(currentPage: 1);
     }
@@ -47,5 +47,4 @@ class TransferNotifier extends _$TransferNotifier {
     pageController.jumpToPage(page);
     state = state.copyWith(currentPage: page);
   }
-
 }

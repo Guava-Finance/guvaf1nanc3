@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
@@ -22,6 +23,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
     Future.delayed(const Duration(seconds: 2), () async {
       try {
+        await (ref.read(configServiceProvider)).fetchConfig();
         // Wait for wallet address to be available
         await ref.read(walletAddressProvider.future);
 
