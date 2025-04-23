@@ -154,8 +154,7 @@
                         },
                         {
                             "providers": [
-                                "paystack",
-                                "flutterwave"
+                                "korapay"
                             ],
                             "min": 1000,
                             "max": 10000,
@@ -165,8 +164,7 @@
                     "off_ramp": [
                         {
                             "providers": [
-                                "korapay",
-                                "fincra"
+                                "korapay"
                             ],
                             "min": 0,
                             "max": 1000,
@@ -174,8 +172,7 @@
                         },
                         {
                             "providers": [
-                                "paystack",
-                                "flutterwave"
+                                "korapay"
                             ],
                             "min": 1000,
                             "max": 10000,

@@ -10,7 +10,7 @@ import 'package:guava/features/onboarding/domain/entities/config/country.entity.
 import 'package:guava/features/onboarding/domain/entities/config/guava_pay.entity.dart';
 import 'package:guava/features/onboarding/domain/entities/config/wallet_settings.entity.dart';
 
-class AppConfigModel extends AppConfigEntity {
+class AppConfigModel extends AppConfig {
   const AppConfigModel({
     required super.appName,
     required super.walletSettings,

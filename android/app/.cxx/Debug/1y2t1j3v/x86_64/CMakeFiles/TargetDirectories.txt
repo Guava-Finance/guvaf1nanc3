@@ -1,0 +1,2 @@
+/Users/oghenekparobor/guavafinance/android/app/.cxx/Debug/1y2t1j3v/x86_64/CMakeFiles/edit_cache.dir
+/Users/oghenekparobor/guavafinance/android/app/.cxx/Debug/1y2t1j3v/x86_64/CMakeFiles/rebuild_cache.dir

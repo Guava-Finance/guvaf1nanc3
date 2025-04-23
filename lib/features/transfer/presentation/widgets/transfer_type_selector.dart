@@ -15,7 +15,9 @@ class TransferTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    // todo: chnage to ios Segemented controller
+    return AnimatedContainer(
+      duration: Durations.extralong1,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: BrandColors.containerColor,
@@ -27,7 +29,7 @@ class TransferTypeSelector extends StatelessWidget {
           BuildOption(
             onChanged: onChanged,
             selected: selected,
-            value: 'Transfer',
+            value: 'Wallet',
           ),
           4.horizontalSpace,
           BuildOption(

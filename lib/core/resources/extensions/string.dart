@@ -48,4 +48,7 @@ extension StringExt on String {
     // Return everything from the decimal point onwards
     return numStr.substring(decimalPointIndex);
   }
+
+  String get avatar =>
+      'https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=$this?radius=50';
 }

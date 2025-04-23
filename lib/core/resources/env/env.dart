@@ -39,4 +39,7 @@ abstract class Env {
 
   @EnviedField(varName: 'APP_ID')
   static String appId = _Env.appId;
+
+    @EnviedField(varName: 'AMPLITUDE_API_KEY')
+  static String amplitudeApiKey = _Env.amplitudeApiKey;
 }

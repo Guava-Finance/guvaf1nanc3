@@ -22,7 +22,7 @@ class AccountProfileSession extends StatelessWidget {
               height: 60.h,
               width: 100.w,
               color: Colors.transparent,
-              child:  AppAvatar(),
+              child: AppAvatar(radius: 30),
             ),
             Positioned(
               bottom: 0,
