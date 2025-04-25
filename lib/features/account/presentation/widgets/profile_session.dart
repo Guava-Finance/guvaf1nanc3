@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/avatar.dart';
 
@@ -58,12 +61,27 @@ class AccountProfileSession extends StatelessWidget {
           ),
         ),
         3.verticalSpace,
-        Text(
-          '@johndoe',
-          style: context.medium.copyWith(
-            color: BrandColors.washedTextColor,
-            fontSize: 14.sp,
-          ),
+        Consumer(
+          builder: (context, ref, child) {
+            final username = ref.watch(myUsernameProvider);
+
+            return username.when(
+              data: (data) {
+                return Text(
+                  '@$data',
+                  style: context.medium.copyWith(
+                    color: BrandColors.washedTextColor,
+                    fontSize: 14.sp,
+                  ),
+                );
+              },
+              error: (_, __) => 0.verticalSpace,
+              loading: () => CupertinoActivityIndicator(
+                color: BrandColors.primary,
+                radius: 12.r,
+              ),
+            );
+          },
         ),
       ],
     );

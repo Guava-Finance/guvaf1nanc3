@@ -163,17 +163,17 @@ class AccountPage extends ConsumerWidget {
                     ),
                     100.verticalSpace,
                     Text(
-                      'Version 2.4.2345 (7654)',
+                      'Version 2.4.2345 (764)',
                       style: context.medium.copyWith(
-                        color: hexColor('#B0B7B1'),
+                        color: BrandColors.washedTextColor,
                         fontSize: 12.sp,
                       ),
                     ),
                     12.verticalSpace,
                     Text(
-                      'Copyright @Guavafi 2025. All rights reserved.',
+                      'Copyright @Guava 2025. All rights reserved.',
                       style: context.medium.copyWith(
-                        color: hexColor('#B0B7B1'),
+                        color: BrandColors.washedTextColor,
                         fontSize: 10.sp,
                       ),
                     ),
