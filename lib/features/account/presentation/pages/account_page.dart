@@ -8,7 +8,6 @@ import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/widgets/profile_session.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});

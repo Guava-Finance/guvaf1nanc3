@@ -7,7 +7,6 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transaction/presentation/pages/sub/transaction_history.dart';
-import 'package:guava/widgets/back_wrapper.dart';
 
 class TransactionPage extends ConsumerWidget {
   const TransactionPage({super.key});

@@ -6,7 +6,6 @@ import 'package:guava/features/receive/presentation/notifier/recieve.notifier.da
 import 'package:guava/features/receive/presentation/pages/bank_recieve.dart';
 import 'package:guava/features/receive/presentation/pages/scan_barcode.dart';
 import 'package:guava/features/receive/presentation/widgets/recieve_type_selector.dart';
-import 'package:guava/widgets/back_wrapper.dart';
 
 class RecievePage extends ConsumerWidget {
   const RecievePage({super.key});

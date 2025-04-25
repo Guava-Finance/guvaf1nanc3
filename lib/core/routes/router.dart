@@ -4,6 +4,8 @@ import 'package:guava/core/app_strings.dart';
 import 'package:guava/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/features/home/presentation/pages/username/username.dart';
+import 'package:guava/features/kyc/presentation/pages/kyc_dart.dart';
+import 'package:guava/features/kyc/presentation/pages/kyc_done.dart';
 import 'package:guava/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:guava/features/onboarding/presentation/pages/setup_pin_page.dart';
 import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
@@ -37,6 +39,8 @@ const String pTransaction = Strings.transaction;
 const String pTransactionDetail = Strings.transactionDetail;
 const String pTransactionFilter = Strings.transactionFilter;
 const String pSetUsername = Strings.setUsername;
+const String pKyc = Strings.kycPage;
+const String pKycDone = Strings.kycDonePage;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -126,6 +130,16 @@ final router = GoRouter(
       name: pSetUsername.pathToName,
       path: pSetUsername,
       builder: (context, state) => const SetUsername(),
+    ),
+    GoRoute(
+      name: pKyc.pathToName,
+      path: pKyc,
+      builder: (context, state) => const KycPage(),
+    ),
+    GoRoute(
+      name: pKycDone.pathToName,
+      path: pKycDone,
+      builder: (context, state) => const KycDonePage(),
     ),
   ],
 );

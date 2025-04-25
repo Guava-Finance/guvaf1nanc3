@@ -34,6 +34,8 @@ class Strings {
   static const transactionDetail = '/transactionDetail';
   static const transactionFilter = '/transactionFilter';
   static const setUsername = '/set-username';
+  static const kycPage = '/kyc-page';
+  static const kycDonePage = '/kyc-done-page';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
 import 'package:guava/widgets/custom_button.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class BankRecieve extends ConsumerStatefulWidget {
   const BankRecieve({super.key});
