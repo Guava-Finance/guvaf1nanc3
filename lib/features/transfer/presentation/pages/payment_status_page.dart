@@ -9,7 +9,6 @@ import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/payment_detail.dart';
-import 'package:guava/widgets/back_wrapper.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/utility_widget.dart';
 

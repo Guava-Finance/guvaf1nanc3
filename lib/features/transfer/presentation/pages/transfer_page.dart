@@ -13,55 +13,66 @@ class TransferPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.watch(transferNotifierProvider.notifier);
-    final transferState = ref.watch(transferNotifierProvider);
+    return Consumer(
+      builder: (context, ref, child) {
+        final notifier = ref.watch(transferNotifierProvider.notifier);
+        final tabState = ref.watch(activeTabState.notifier);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: TransferTypeSelector(
-          selected: transferState.selectedTransferType,
-          onChanged: (value) {
-            notifier.updateTransferType(value);
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              R.ASSETS_ICONS_SCAN_ICON_SVG,
-              width: 20.w,
-              height: 20.h,
-            ),
-          ),
-          6.horizontalSpace,
-        ],
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  12.verticalSpace,
-                  Expanded(
-                    child: PageView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: notifier.pageController,
-                      children: const [
-                        WalletTransfer(),
-                        BankTransfer(),
-                      ],
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                title: TransferTypeSelector(
+                  selected: tabState.state,
+                  onChanged: (value) {
+                    setState(() {
+                      tabState.state = (value);
+                      notifier.jumpTo(value);
+                    });
+                  },
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      R.ASSETS_ICONS_SCAN_ICON_SVG,
+                      width: 20.w,
+                      height: 20.h,
                     ),
-                  )
+                  ),
+                  6.horizontalSpace,
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+              body: SafeArea(
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          12.verticalSpace,
+                          Expanded(
+                            child: PageView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              controller: notifier.pageController,
+                              children: const [
+                                WalletTransfer(),
+                                BankTransfer(),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

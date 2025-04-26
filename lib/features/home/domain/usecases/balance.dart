@@ -6,6 +6,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
@@ -21,6 +22,7 @@ final balanceUsecaseProvider = FutureProvider<BalanceParam>((ref) async {
     repository: ref.watch(homeRepositoryProvider),
     solanaService: ref.watch(solanaServiceProvider),
     storageService: ref.watch(securedStorageServiceProvider),
+    configService: ref.watch(configServiceProvider),
   );
 
   try {
@@ -56,15 +58,18 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     required this.repository,
     required this.solanaService,
     required this.storageService,
+    required this.configService,
   });
 
   final HomeRepository repository;
   final SolanaService solanaService;
   final SecuredStorageService storageService;
+  final ConfigService configService;
 
   @override
   Future<AppState> call({required Null params}) async {
     final wallet = await solanaService.walletAddress();
+    final config = await configService.getConfig();
 
     final balance = await repository.getBalance(wallet);
 
@@ -83,10 +88,13 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     final account = AccountModel.fromJson(jsonDecode(myAccountData));
     final countryCode = account.deviceInfo['country'].toString().toLowerCase();
 
-    // todo: get currency code from config using the [countryCode]
-    // temp implementation
-    final cc = (countryCode == 'ng' ? 'NGN' : 'USD').toUpperCase();
-    final currencySymbol = (countryCode == 'ng' ? '₦' : '\$');
+    final country = config?.countries.firstWhere(
+      (e) => e.countryCode.toLowerCase() == countryCode,
+    );
+
+    // fetch country code and currency from the config file
+    final currencySymbol = country?.currencySymbol ?? '\$';
+    final cc = country?.currencyCode.toUpperCase() ?? 'USD';
 
     final rate = await repository.getExchangeRate(cc);
 

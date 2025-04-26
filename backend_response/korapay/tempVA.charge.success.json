@@ -1,7 +1,7 @@
 {
     "event": "charge.success",
     "data": {
-        "reference": "90c0f03a-ad22-4fea-8de9-533ahdc203c5",
+        "reference": "Gogy5hQ7pcC3iQKzhYhUeoU9Xo15RBpYkTFCZuXMjeMs~90c0f03a-ad22-4fea-8de9-533adac203b2",
         "payment_reference": "90c0f03a-ad22-4fea-8de9-533ahdc203c5",
         "currency": "NGN",
         "amount": 100,

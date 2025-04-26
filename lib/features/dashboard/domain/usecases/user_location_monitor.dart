@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/ip.dart';
@@ -77,8 +76,6 @@ class UserLocationMonitorUsecase extends UseCase<bool, Null> {
       final modifiedMyAccount = myAccount.copyWith(
         deviceInfo: myAccount.deviceInfo,
       );
-
-      AppLogger.log(modifiedMyAccount.toJson());
 
       storageService.writeToStorage(
         key: Strings.myAccount,

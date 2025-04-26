@@ -7,10 +7,14 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/mixins/loading.dart';
+import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
+import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
+import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/balance_text.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/custom_textfield.dart';
@@ -33,7 +37,10 @@ class EnterAmountWallet extends ConsumerStatefulWidget {
       _EnterAmountWalletState();
 }
 
-class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
+class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
+    with Loader {
+  final debounce = Debouncer(duration: Durations.extralong4);
+
   late final MoneyMaskedTextController amountCtrl;
   late final TextEditingController controller;
 
@@ -41,6 +48,12 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
   void initState() {
     amountCtrl = MoneyMaskedTextController();
     controller = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.value = TextEditingValue(
+        text: ref.read(receipentAddressProvider.notifier).state ?? '',
+      );
+    });
 
     super.initState();
   }
@@ -51,6 +64,8 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
     controller.dispose();
     super.dispose();
   }
+
+  bool readOnly = true;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +90,26 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
               children: [
                 24.verticalSpace,
                 CustomTextfield(
-                  hintText: 'To: username or address',
+                  readOnly: readOnly,
                   controller: controller,
+                  onChanged: (p0) {
+                    ref.read(receipentAddressProvider.notifier).state = null;
+
+                    if ((p0 ?? '').length > 2) {
+                      debounce.run(() {
+                        withLoading(() async {
+                          await ref
+                              .read(transferNotifierProvider)
+                              .resolveAddress(p0 ?? '');
+                        });
+                      });
+                    }
+                  },
                   suffixIcon: GestureDetector(
                     onTap: () {
+                      // setState(() {
+                      //   readOnly = !readOnly;
+                      // });
                       context.pop();
                     },
                     child: Container(
@@ -93,7 +124,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
                         ),
                       ),
                       child: Text(
-                        'Edit',
+                        readOnly ? 'Edit' : 'Okay',
                         style: context.textTheme.bodyMedium!.copyWith(
                           color: BrandColors.textColor,
                           fontWeight: FontWeight.w500,
@@ -180,9 +211,26 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet> {
                   isAmountPad: true,
                 ),
                 40.verticalSpace,
-                CustomButton(
-                  onTap: () => context.push(pReviewPayemet),
-                  title: 'Send',
+
+                ValueListenableBuilder<bool>(
+                  valueListenable: isLoading,
+                  builder: (context, snapshot, child) {
+                    return Consumer(
+                      builder: (context, ref, child) {
+                        final result =
+                            ref.watch(receipentAddressProvider.notifier).state;
+
+                        return CustomButton(
+                          onTap: () {
+                            context.push(pReviewPayemet);
+                          },
+                          title: 'Next',
+                          disable: result == null,
+                          isLoading: snapshot,
+                        ).padHorizontal;
+                      },
+                    );
+                  },
                 ),
                 10.verticalSpace,
               ],

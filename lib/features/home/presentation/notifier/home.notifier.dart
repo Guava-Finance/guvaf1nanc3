@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/solana.dart';
+import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/home/domain/usecases/check_username.dart';
 import 'package:guava/features/home/domain/usecases/set_username.dart';
@@ -26,6 +28,14 @@ final avatarProvider = FutureProvider<String>((ref) async {
   // todo: download svg avatar to memory and pull from memory unless not found
 
   return wallet.avatar;
+});
+
+final myUsernameProvider = FutureProvider<String>((ref) async {
+  final username = (await ref
+      .read(securedStorageServiceProvider)
+      .readFromStorage(Strings.myUsername));
+
+  return username ?? '';
 });
 
 @riverpod

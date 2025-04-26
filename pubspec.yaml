@@ -64,10 +64,12 @@ dependencies:
   animated_text_kit: ^4.2.3
   device_info_plus: ^11.3.3
   convert: ^3.1.2
-  bs58: ^1.0.2
   animate_do: ^4.2.0
   flutter_switch: ^0.3.2
   amplitude_flutter: ^4.3.1
+  pretty_qr_code: ^3.4.0
+  share_plus: ^11.0.0
+  permission_handler: ^11.4.0
 
 dev_dependencies:
   flutter_test:

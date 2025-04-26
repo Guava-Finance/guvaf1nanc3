@@ -44,6 +44,7 @@ class ActionTasks extends StatelessWidget {
             bannerKey: Strings.kycVerification,
             icon: R.ASSETS_ICONS_KYC_ICON_SVG,
             onTap: () {
+              context.push(pKyc);
               HapticFeedback.lightImpact();
             },
           ),

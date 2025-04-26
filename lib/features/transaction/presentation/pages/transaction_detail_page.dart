@@ -8,7 +8,6 @@ import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transaction/presentation/pages/sub/transaction_detail.dart';
 import 'package:guava/features/transaction/presentation/pages/sub/transaction_fee.dart';
-import 'package:guava/widgets/back_wrapper.dart';
 import 'package:guava/widgets/custom_button.dart';
 
 class TransactionDetailPage extends ConsumerWidget {

@@ -8,7 +8,6 @@ import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/widgets/profile_session.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});
@@ -163,17 +162,17 @@ class AccountPage extends ConsumerWidget {
                     ),
                     100.verticalSpace,
                     Text(
-                      'Version 2.4.2345 (7654)',
+                      'Version 2.4.2345 (764)',
                       style: context.medium.copyWith(
-                        color: hexColor('#B0B7B1'),
+                        color: BrandColors.washedTextColor,
                         fontSize: 12.sp,
                       ),
                     ),
                     12.verticalSpace,
                     Text(
-                      'Copyright @Guavafi 2025. All rights reserved.',
+                      'Copyright @Guava 2025. All rights reserved.',
                       style: context.medium.copyWith(
-                        color: hexColor('#B0B7B1'),
+                        color: BrandColors.washedTextColor,
                         fontSize: 10.sp,
                       ),
                     ),

@@ -57,6 +57,7 @@ final class SolanaService {
       key: Strings.mnemonics,
       value: mnemonic,
     );
+
     /// Generate a standard wallet address that can be used on various
     /// Wallet app such as Phantom e.t.c.
     final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
@@ -138,21 +139,50 @@ final class SolanaService {
   /// This method check whether user has already created SPLToken account
   /// To avoid trying to recreate it
   /// SPLToken account is created only once
+  // Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
+  //   final address = await _getTokenAddress();
+
+  //   // Fetch the token account info
+  //   final accountInfo = await rpcClient.getAccountInfo(
+  //     address.toBase58(),
+  //     encoding: Encoding.base64,
+  //   );
+
+  //   /// Check if the account exists and is initialized
+  //   // todo: Cross check this implementation
+  //   if (accountInfo.value != null && accountInfo.value?.data != null) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
   Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
-    final address = await _getTokenAddress();
+    try {
+      // Get the associated token account address for this mint and owner
+      final address = await _getTokenAddress();
 
-    // Fetch the token account info
-    final accountInfo = await rpcClient.getAccountInfo(
-      address.toBase58(),
-      encoding: Encoding.base64,
-    );
+      // Fetch the token account info
+      final accountInfo = await rpcClient.getAccountInfo(
+        address.toBase58(),
+        encoding: Encoding.jsonParsed, // Use jsonParsed for structured data
+      );
 
-    /// Check if the account exists and is initialized
-    // todo: Cross check this implementation
-    if (accountInfo.value != null && accountInfo.value?.data != null) {
-      return true;
-    } else {
+      // Check if the account exists and is initialized
+      if (accountInfo.value != null) {
+        // For additional safety, verify it's an SPL token account with correct programs
+        final accountProgram = accountInfo.value?.owner;
+
+        return accountProgram != null;
+      }
+
       return false;
+    } catch (e) {
+      // Depending on your error handling strategy:
+      // Option 1: Return false on any error (account lookup failed)
+      return false;
+      // Option 2: Rethrow for upstream handling
+      // rethrow;
     }
   }
 
@@ -316,6 +346,18 @@ final class SolanaService {
 
   bool isMnemonicValid(String mnemonic) {
     return validateMnemonic(mnemonic);
+  }
+
+  bool isValidAddress(String address) {
+    try {
+      // Attempt to create a PublicKey from the address string
+      // This will throw an exception if the address is invalid
+      Ed25519HDPublicKey.fromBase58(address);
+      return true;
+    } catch (e) {
+      // If an exception occurs, the address is invalid
+      return false;
+    }
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
