@@ -15,6 +15,7 @@ class CustomTextfield extends StatefulWidget {
     this.capitalization,
     this.validator,
     this.inputFormatters,
+    this.readOnly = false,
     super.key,
   });
 
@@ -27,6 +28,7 @@ class CustomTextfield extends StatefulWidget {
   final TextCapitalization? capitalization;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -64,6 +66,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
+                readOnly: widget.readOnly,
                 controller: widget.controller,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: widget.onChanged,

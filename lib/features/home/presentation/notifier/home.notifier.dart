@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/extensions/string.dart';
@@ -35,8 +34,6 @@ final myUsernameProvider = FutureProvider<String>((ref) async {
   final username = (await ref
       .read(securedStorageServiceProvider)
       .readFromStorage(Strings.myUsername));
-
-  AppLogger.log(username);
 
   return username ?? '';
 });

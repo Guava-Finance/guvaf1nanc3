@@ -348,6 +348,18 @@ final class SolanaService {
     return validateMnemonic(mnemonic);
   }
 
+  bool isValidAddress(String address) {
+    try {
+      // Attempt to create a PublicKey from the address string
+      // This will throw an exception if the address is invalid
+      Ed25519HDPublicKey.fromBase58(address);
+      return true;
+    } catch (e) {
+      // If an exception occurs, the address is invalid
+      return false;
+    }
+  }
+
   Future<Ed25519HDKeyPair> _getWallet() async {
     final config = await configService.getConfig();
 

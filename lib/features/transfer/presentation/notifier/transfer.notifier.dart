@@ -1,50 +1,31 @@
 import 'package:flutter/widgets.dart';
-import 'package:guava/features/transfer/presentation/notifier/transfer.state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transfer.notifier.g.dart';
 
+final activeTabState = StateProvider<int>((ref) {
+  return 0;
+});
+
 @riverpod
 class TransferNotifier extends _$TransferNotifier {
   @override
-  TransferState build() {
+  TransferNotifier build() {
     pageController = PageController();
     ref.onDispose(() => pageController.dispose());
-    return const TransferState();
+    return this;
   }
 
   late PageController pageController;
 
-  void updateTransferType(String type) {
-    state = state.copyWith(selectedTransferType: type);
-
-    if (type.toLowerCase().contains('wallet')) {
-      pageController.jumpToPage(0);
-      state = state.copyWith(currentPage: 0);
-    } else if (type.toLowerCase().contains('bank')) {
-      pageController.jumpToPage(1);
-      state = state.copyWith(currentPage: 1);
-    }
-  }
-
-  void forward() {
-    pageController.nextPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeIn,
-    );
-    state = state.copyWith(currentPage: state.currentPage + 1);
-  }
-
-  void backward() {
-    pageController.previousPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOut,
-    );
-    state = state.copyWith(currentPage: state.currentPage - 1);
-  }
 
   void jumpTo(int page) {
     pageController.jumpToPage(page);
-    state = state.copyWith(currentPage: page);
+  }
+
+  Future<void> resolveAddress(String address) async {
+    await ref.read(resolveAddressUsecaseProvider).call(params: address);
   }
 }
