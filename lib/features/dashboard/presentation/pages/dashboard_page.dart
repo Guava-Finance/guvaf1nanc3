@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/util/permission.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/pages/account_page.dart';
 import 'package:guava/features/dashboard/presentation/notifier/bottom_nav_notifier.dart';
@@ -27,9 +28,13 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       ref.read(dashboardNotifierProvider).checkNCreateUSDCAccount();
       // ref.read(dashboardNotifierProvider).initBalanceCheck();
 
-      // todo: request notification permission
+      Future.delayed(Durations.extralong4, () {
+        ref
+            .read(permissionManagerProvider)
+            .requestCameraAndNotificationPermissions();
+      });
+
       // ignore: lines_longer_than_80_chars
-      // todo: save the user's account information check the country to know if the user has changed location then show a dialog that would call chnage country endpoint (because wallet balance would be fetched base on user's country)
       ref.read(dashboardNotifierProvider).hasLocationChanged();
     });
   }

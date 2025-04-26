@@ -168,7 +168,6 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.get(
-      // todo: Call baseURL from enviroment
       endpoint,
       options: Options(headers: {
         // if (isProtected) 'Authorization': 'Bearer $token',

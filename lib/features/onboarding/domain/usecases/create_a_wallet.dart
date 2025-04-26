@@ -60,8 +60,8 @@ class CreateAWalletUsecase extends UseCase<AppState, Null> {
         // prefunds the wallet
         await repository.prefundWallet(wallet);
 
+        // todo: remove the snippet once create wallet has been tested thorougly
         // checks the SPLtoken account
-        // todo: fetch mint from config
         // final tokenAccount = await solanaService.doesSPLTokenAccountExist(
         //   Strings.usdcMintTokenAddress,
         // );

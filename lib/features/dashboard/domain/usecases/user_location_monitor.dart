@@ -78,8 +78,6 @@ class UserLocationMonitorUsecase extends UseCase<bool, Null> {
         deviceInfo: myAccount.deviceInfo,
       );
 
-      AppLogger.log(modifiedMyAccount.toJson());
-
       storageService.writeToStorage(
         key: Strings.myAccount,
         value: jsonEncode(modifiedMyAccount.toJson()),

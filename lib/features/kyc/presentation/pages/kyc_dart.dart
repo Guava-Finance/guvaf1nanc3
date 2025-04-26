@@ -27,7 +27,6 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +68,7 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
               ),
             ),
           ),
-          20.verticalSpace,
+          10.verticalSpace,
           ListTile(
             leading: CustomIcon(icon: R.ASSETS_ICONS_CAMERA_OUTLINED_SVG),
             title: Text(
