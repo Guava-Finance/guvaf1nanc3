@@ -8,6 +8,7 @@ import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
 import 'package:guava/widgets/utility_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends ConsumerWidget {
   const PaymentDetail({
@@ -21,6 +22,7 @@ class PaymentDetail extends ConsumerWidget {
     final purpose = ref.watch(transferPurpose.notifier).state;
     final acctDetail = ref.watch(accountDetail.notifier).state;
     final country = ref.watch(selectedCountry.notifier).state;
+    final txnId = ref.watch(transactionId.notifier).state;
 
     return Container(
       width: double.infinity,
@@ -99,7 +101,12 @@ class PaymentDetail extends ConsumerWidget {
           },
           Divider(color: BrandColors.light.withValues(alpha: 0.1)),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              launchUrl(
+                Uri.parse('https://solscan.io/tx/$txnId?cluster=devnet'),
+                mode: LaunchMode.externalApplication,
+              );
+            },
             child: Text(
               'View on Solscan',
               style: context.textTheme.bodyMedium!.copyWith(

@@ -6,18 +6,51 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
+import 'package:guava/features/home/domain/usecases/history.dart';
+import 'package:guava/features/transfer/domain/usecases/bank_beneficiary.dart';
+import 'package:guava/features/transfer/domain/usecases/recent_bank_transfer.dart';
+import 'package:guava/features/transfer/domain/usecases/recent_wallet_transfer.dart';
+import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
+import 'package:guava/features/transfer/presentation/pages/sub/address-book_new.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/payment_detail.dart';
 import 'package:guava/widgets/custom_button.dart';
+import 'package:share_plus/share_plus.dart';
 
-class PaymentStatusPage extends ConsumerWidget {
+class PaymentStatusPage extends ConsumerStatefulWidget {
   const PaymentStatusPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PaymentStatusPage> createState() => _PaymentStatusPageState();
+}
+
+class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // refresh the balance
+      ref.invalidate(balanceUsecaseProvider);
+      ref.invalidate(walletAddressProvider);
+      ref.invalidate(myTransactionHistory);
+
+      // refetch the recent transfer addresses
+      ref.invalidate(recentWalletTransfers);
+      ref.invalidate(recentBankTransfersProvider);
+      ref.invalidate(addressBookProvider);
+      ref.invalidate(bankBeneficiaryProvider);
+    });
+  }
+
+  bool isSavedToAddresBook = false;
+
+  @override
+  Widget build(BuildContext context) {
     final activeState = ref.read(activeTabState.notifier).state;
 
     return Scaffold(
@@ -109,18 +142,41 @@ class PaymentStatusPage extends ConsumerWidget {
             PaymentDetail(),
             20.verticalSpace,
             Spacer(),
-            CustomButton(
-              title: activeState == 0
-                  ? 'Save to Address Book'
-                  : 'Add to beneficiary',
-              onTap: () {},
-              backgroundColor: BrandColors.containerColor,
-              textColor: BrandColors.washedTextColor,
-            ),
-            10.verticalSpace,
+            if (!isSavedToAddresBook) ...{
+              CustomButton(
+                title: activeState == 0
+                    ? 'Save to Address Book'
+                    : 'Add to beneficiary',
+                onTap: () {
+                  if (activeState == 0) {
+                    AddToAddressBook(
+                      onSaved: (p0) {
+                        setState(() => isSavedToAddresBook = p0);
+
+                        ref.invalidate(addressBookProvider);
+                      },
+                    ).bottomSheet;
+                  }
+                  // todo: go to a new page that calls the profile
+                  // from wallet address endpoint then the user give's
+                  // his own name to remember the address
+                },
+                backgroundColor: BrandColors.containerColor,
+                textColor: BrandColors.washedTextColor,
+              ),
+              10.verticalSpace,
+            },
             CustomButton(
               title: 'Share receipt',
-              onTap: () {},
+              onTap: () {
+                final txnId = ref.read(transactionId.notifier).state;
+
+                SharePlus.instance.share(
+                  ShareParams(
+                    text: 'https://solscan.io/tx/$txnId?cluster=devnet',
+                  ),
+                );
+              },
             )
           ],
         ).padHorizontal,

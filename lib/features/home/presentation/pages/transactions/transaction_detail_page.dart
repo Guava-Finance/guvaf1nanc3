@@ -6,9 +6,11 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/transaction/presentation/pages/sub/transaction_detail.dart';
-import 'package:guava/features/transaction/presentation/pages/sub/transaction_fee.dart';
+import 'package:guava/features/home/presentation/pages/sub/transaction_detail.dart';
+import 'package:guava/features/home/presentation/pages/sub/transaction_fee.dart';
+import 'package:guava/features/home/presentation/widgets/txn_tile.dart';
 import 'package:guava/widgets/custom_button.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TransactionDetailPage extends ConsumerWidget {
   const TransactionDetailPage({super.key});
@@ -41,8 +43,11 @@ class TransactionDetailPage extends ConsumerWidget {
                 children: [
                   40.verticalSpace,
                   TransactionFee(),
-                  20.verticalSpace,
-                  TransactionDetail(),
+                  if (ref.read(selectedTransactionHistory)?.bankDetails !=
+                      null) ...{
+                    20.verticalSpace,
+                    TransactionDetail(),
+                  },
                   20.verticalSpace,
                 ],
               ),
@@ -62,11 +67,18 @@ class TransactionDetailPage extends ConsumerWidget {
           5.verticalSpace,
           CustomButton(
             title: 'Share receipt',
-            onTap: () => context.push(
-              pPaymentStatus,
-            ),
+            onTap: () {
+              final txnId =
+                  ref.read(selectedTransactionHistory)?.explorerTransactionId;
+
+              SharePlus.instance.share(
+                ShareParams(
+                  text: 'https://solscan.io/tx/$txnId?cluster=devnet',
+                ),
+              );
+            },
           ),
-          20.verticalSpace,
+          30.verticalSpace,
         ],
       ).padHorizontal,
     );

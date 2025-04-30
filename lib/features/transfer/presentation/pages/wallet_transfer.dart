@@ -25,7 +25,7 @@ class WalletTransfer extends ConsumerStatefulWidget {
 }
 
 class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
-  final debounce = Debouncer(duration: Duration(seconds: 3));
+  final debounce = Debouncer(duration: Duration(seconds: 2));
   late final TextEditingController controller;
 
   @override

@@ -42,7 +42,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
               valueListenable: isLoading,
               builder: (_, data, child) {
                 return CustomButton(
-                  title: 'Complete transaction',
+                  title: 'Complete Transfer',
                   onTap: () async {
                     await withLoading(() async {
                       final result = await ref
@@ -50,7 +50,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                           .makeWalletTransfer();
 
                       if (result) {
-                        navkey.currentContext!.push(pPaymentStatus);
+                        navkey.currentContext!.go(pPaymentStatus);
                       }
                     });
                   },

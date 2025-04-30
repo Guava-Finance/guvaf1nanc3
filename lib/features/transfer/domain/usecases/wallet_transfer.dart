@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/rate_rule.dart';
+import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/ip.dart';
@@ -97,9 +98,13 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
       final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
       final txFee = await ref.watch(calcTransactionFee.future);
 
+      if (params.recipientAddress == null) {
+        throw Exception('Recipient address not found');
+      }
+
       final signedTx = await solanaService.transferUSDC(
         amount: usdcAmount,
-        receiverAddress: config.companySettings.companyWalletAddress,
+        receiverAddress: params.recipientAddress!,
         transactionFee: txFee,
         narration: 'Transfer of USDC ${DateTime.now().toIso8601String()}',
       );
@@ -113,9 +118,18 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
         senderAddress: wallet,
       );
 
-      AppLogger.log(newParam);
+      final result = await repository.initWalletTransfer(
+        wallet,
+        newParam.toJson(),
+      );
 
-      return await repository.initWalletTransfer(wallet, newParam.toJson());
+      if (!result.isError) {
+        return LoadedState<Map<String, dynamic>>(
+          (result as LoadedState).data['data'],
+        );
+      }
+
+      return result;
     } catch (e) {
       return ErrorState(e.toString());
     }

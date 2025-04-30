@@ -92,9 +92,9 @@ class NetworkInterceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) async {
-    final resTime = DateTime.now().difference(
-      responsesTime[response.requestOptions.path] as DateTime,
-    );
+    // final resTime = DateTime.now().difference(
+    //   responsesTime[response.requestOptions.path] as DateTime,
+    // );
 
     Map<String, dynamic> logData = {};
 
@@ -109,7 +109,7 @@ class NetworkInterceptor {
     logData['ENDPOINT'] = response.requestOptions.path;
     logData['HEADERS'] = response.headers;
     logData['RESPONSE_DATA'] = response.data;
-    logData['ENCRYPTED_RESPONSE_TIME'] = resTime;
+    // logData['ENCRYPTED_RESPONSE_TIME'] = resTime;
 
     responsesTime.remove(response.requestOptions.path);
 

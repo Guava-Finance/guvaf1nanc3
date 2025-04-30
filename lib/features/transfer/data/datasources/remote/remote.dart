@@ -115,7 +115,7 @@ class TransferRemoteImpl extends TransferRemote {
   @override
   Future saveAddress(String wallet, Map<String, dynamic> data) async {
     return await interceptor.post(
-      '/transfer/wallet/addressbook/',
+      '/transfer/wallet/addressbook/$wallet/',
       data: data,
       header: {
         'X-Wallet-Public-Key': wallet,

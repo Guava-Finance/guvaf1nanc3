@@ -1,26 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/domain/entities/transaction_history.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:intl/intl.dart';
 
-class TransactionHistoryTile extends StatelessWidget {
+final selectedTransactionHistory = StateProvider<TransactionsHistory?>((ref) {
+  return null;
+});
+
+class TransactionHistoryTile extends ConsumerWidget {
   const TransactionHistoryTile({
+    required this.data,
     super.key,
   });
 
+  final TransactionsHistory data;
+
   @override
-  Widget build(BuildContext context) {
-    final currency = NumberFormat.currency(symbol: '₦', decimalDigits: 2);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currency = NumberFormat.currency(
+      symbol: data.currency == 'USDC' ? '' : data.currency,
+      decimalDigits: 2,
+    );
+    final hn = ref.watch(homeNotifierProvider);
 
     return GestureDetector(
       onTap: () {
-        context.push(pTransactionDetail);
+        ref.read(selectedTransactionHistory.notifier).state = data;
+
+        context.push(pTransactionDetail, extra: data);
         HapticFeedback.lightImpact();
       },
       child: Row(
@@ -40,7 +57,9 @@ class TransactionHistoryTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Transfer to UGfGbfh...',
+                  data.category == 'debit'
+                      ? 'Transfer to ${data.recipient?.toMaskedFormat()}'
+                      : 'Transfer from ${data.sender?.toMaskedFormat()}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.medium.copyWith(
@@ -53,7 +72,8 @@ class TransactionHistoryTile extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      DateFormat('MMM dd').format(DateTime.now()),
+                      DateFormat('MMM dd')
+                          .format(data.timestamp ?? DateTime.now()),
                       style: context.medium.copyWith(
                         color: BrandColors.washedTextColor,
                         fontSize: 12.w,
@@ -66,7 +86,7 @@ class TransactionHistoryTile extends StatelessWidget {
                       margin: EdgeInsets.symmetric(horizontal: 8.w),
                     ),
                     Text(
-                      DateFormat.jmv().format(DateTime.now()),
+                      DateFormat.jmv().format(data.timestamp ?? DateTime.now()),
                       style: context.medium.copyWith(
                         color: BrandColors.washedTextColor,
                         fontSize: 12.w,
@@ -79,10 +99,10 @@ class TransactionHistoryTile extends StatelessWidget {
                       margin: EdgeInsets.symmetric(horizontal: 8.w),
                     ),
                     Text(
-                      'Wallet',
+                      (data.type ?? '').toUpperCase(),
                       style: context.medium.copyWith(
                         color: BrandColors.washedTextColor,
-                        fontSize: 12.w,
+                        fontSize: 11.w,
                       ),
                     ),
                   ],
@@ -94,7 +114,7 @@ class TransactionHistoryTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                currency.format(91000.89),
+                '''${currency.format(data.amount)} ${data.currency == 'USDC' ? 'USDC' : ''}''',
                 style: context.medium.copyWith(
                   color: Colors.white,
                   fontSize: 16.w,
@@ -107,18 +127,18 @@ class TransactionHistoryTile extends StatelessWidget {
                   horizontal: 8.w,
                 ),
                 decoration: ShapeDecoration(
-                  color: BrandColors.washedYellow.withValues(alpha: 0.05),
+                  color: hn.txnColor(data.status).withValues(alpha: 0.05),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                     side: BorderSide(
-                      color: BrandColors.washedYellow.withValues(alpha: 0.3),
+                      color: hn.txnColor(data.status).withValues(alpha: 0.3),
                     ),
                   ),
                 ),
                 child: Text(
-                  'Pending',
+                  data.status ?? '',
                   style: context.medium.copyWith(
-                    color: BrandColors.washedYellow,
+                    color: hn.txnColor(data.status),
                     fontSize: 10.sp,
                   ),
                 ),

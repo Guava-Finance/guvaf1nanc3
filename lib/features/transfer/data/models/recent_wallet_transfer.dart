@@ -10,7 +10,7 @@ class RecentTransferWalletModel extends RecentWalletTransfer {
   factory RecentTransferWalletModel.fromJson(Map<String, dynamic> json) {
     return RecentTransferWalletModel(
       address: json['address'] ?? '',
-      username: json['username'] ?? '',
+      username: json['username'] == 'null' ? '' : json['username'] ?? '',
       lastTransferAt: DateTime.parse(json['last_transfer_at']),
     );
   }

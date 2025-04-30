@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
+import 'package:guava/features/home/domain/usecases/history.dart';
 import 'package:guava/features/home/presentation/pages/sub/actions.dart';
 import 'package:guava/features/home/presentation/pages/sub/category.dart';
 import 'package:guava/features/home/presentation/pages/sub/home.wallet.dart';
@@ -22,6 +23,7 @@ class HomePage extends ConsumerWidget {
           onRefresh: () async {
             ref.invalidate(balanceUsecaseProvider);
             ref.invalidate(walletAddressProvider);
+            ref.invalidate(myTransactionHistory);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

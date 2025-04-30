@@ -12,6 +12,7 @@ import 'package:guava/features/transfer/domain/entities/account_detail.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_account.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
+import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,6 +29,9 @@ final accountDetail = StateProvider<AccountDetail?>((ref) {
 final localAountTransfer = StateProvider<double>((ref) => 0.0);
 final usdcAountTransfer = StateProvider<double>((ref) => 0.0);
 final transferPurpose = StateProvider<String>((ref) => '');
+
+final transactionId = StateProvider<String>((ref) => '');
+final addressLabel = StateProvider<String>((ref) => '');
 
 @riverpod
 class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
@@ -116,7 +120,35 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
       return false;
     } else {
-      AppLogger.log((result as LoadedState).data);
+      ref.read(transactionId.notifier).state =
+          (result as LoadedState<Map<String, dynamic>>).data['transaction_id'];
+      return true;
+    }
+  }
+
+  Future<bool> saveToAddressBook() async {
+    final result = await ref.read(addressBookProvider).call(params: {
+      'address': ref.read(receipentAddressProvider.notifier).state,
+      'label': ref.read(addressLabel.notifier).state,
+    });
+
+    if (result.isError) {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          notificationType: NotificationType.error,
+          content: result.errorMessage,
+        ),
+      );
+
+      return false;
+    } else {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          notificationType: NotificationType.success,
+          content: (result as LoadedState).data['message'] ??
+              'Address saved to your address book',
+        ),
+      );
 
       return true;
     }

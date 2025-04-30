@@ -9,6 +9,7 @@ import 'package:guava/features/account/presentation/pages/account_page.dart';
 import 'package:guava/features/dashboard/presentation/notifier/bottom_nav_notifier.dart';
 import 'package:guava/features/dashboard/presentation/notifier/dashboard.notifier.dart';
 import 'package:guava/features/dashboard/presentation/widgets/bottom/nav.dart';
+import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/presentation/pages/home_page.dart';
 
 class DashboardPage extends ConsumerStatefulWidget {
@@ -24,6 +25,8 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(balanceUsecaseProvider);
+
       // checks to prefund and create USDC SPLtoken account behind the scenes
       ref.read(dashboardNotifierProvider).checkNCreateUSDCAccount();
       // ref.read(dashboardNotifierProvider).initBalanceCheck();
