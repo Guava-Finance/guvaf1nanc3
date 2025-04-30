@@ -28,6 +28,9 @@ class NetworkExceptionWrapper {
       try {
         return LoadedState(await function.call());
       } on DioException catch (e, s) {
+        AppLogger.log(e);
+        AppLogger.log(s);
+
         FirebaseCrashlytics.instance.recordError(
           e,
           s,

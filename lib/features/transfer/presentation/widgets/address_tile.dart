@@ -3,11 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/transfer/domain/entities/address_book.dart';
 
 class AddressTile extends StatelessWidget {
   const AddressTile({
+    required this.data,
     super.key,
   });
+
+  final WalletAddressBook data;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class AddressTile extends StatelessWidget {
           backgroundColor: BrandColors.lightGreen,
           child: Center(
             child: Text(
-              'MF',
+              data.username.split('').first.toUpperCase(),
               style: context.textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.sp,
@@ -33,7 +37,7 @@ class AddressTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '@moneymanforever',
+                '@${data.username}',
                 style: context.medium.copyWith(
                   color: BrandColors.light,
                   fontSize: 14.sp,
@@ -41,7 +45,7 @@ class AddressTile extends StatelessWidget {
               ),
               5.verticalSpace,
               Text(
-                '9Cu6uYFinFz6wd3iJPoPvTiTVsgxnKzZNhgkbJXnAaP1'.toMaskedFormat(),
+                data.address.toMaskedFormat(),
                 style: context.medium.copyWith(
                   color: BrandColors.washedTextColor,
                   fontSize: 12.w,

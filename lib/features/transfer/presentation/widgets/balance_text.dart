@@ -1,4 +1,3 @@
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +31,7 @@ class BalanceText extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '₦${data.localBalance.formatAmount()}',
+                    text: '${data.symbol}${data.localBalance.formatAmount()}',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: BrandColors.textColor,
                       fontSize: 12.sp,

@@ -162,7 +162,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank> {
                 40.verticalSpace,
                 CustomButton(
                   onTap: () {
-                    context.pop();
+                    context.pop(amountCtrl.text);
                   },
                   title: 'Continue',
                 ),

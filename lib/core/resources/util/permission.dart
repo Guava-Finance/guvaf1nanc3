@@ -41,11 +41,15 @@ class PermissionManager {
     return await requestPermission(Permission.notification);
   }
 
+  // todo: do a fallback permission check
   /// Request both camera and notification permissions
   Future<Map<Permission, PermissionStatus>>
       requestCameraAndNotificationPermissions() async {
     return await requestPermissions([
       Permission.camera,
+      Permission.photos,
+      Permission.videos,
+      Permission.mediaLibrary,
       Permission.notification,
     ]);
   }

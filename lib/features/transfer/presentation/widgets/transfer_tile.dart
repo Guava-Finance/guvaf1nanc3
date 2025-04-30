@@ -4,12 +4,17 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/transfer/domain/entities/recent_wallet_transfer.dart';
 import 'package:guava/widgets/app_icon.dart';
+import 'package:intl/intl.dart';
 
 class TransferTile extends StatelessWidget {
   const TransferTile({
+    required this.data,
     super.key,
   });
+
+  final RecentWalletTransfer data;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,9 @@ class TransferTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '9Cu6uYFinFz6wd3iJPoPvTiTVsgxnKzZNhgkbJXnAaP1'.toMaskedFormat(),
+                data.username.isEmpty
+                    ? data.address.toMaskedFormat()
+                    : data.username,
                 style: context.medium.copyWith(
                   color: BrandColors.light,
                   fontSize: 12.sp,
@@ -37,7 +44,7 @@ class TransferTile extends StatelessWidget {
               ),
               5.verticalSpace,
               Text(
-                'Used 12:55pm',
+                '''Used ${DateFormat.yMMMEd().add_jmv().format(data.lastTransferAt)}''',
                 style: context.medium.copyWith(
                   color: BrandColors.washedTextColor,
                   fontSize: 12.w,

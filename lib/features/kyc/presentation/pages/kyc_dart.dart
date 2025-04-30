@@ -116,6 +116,15 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
                         ),
                       );
                     },
+                    onClose: (p0) {
+                      navkey.currentContext!.notify.addNotification(
+                        NotificationTile(
+                          notificationType: NotificationType.information,
+                          title: 'KYC Closed',
+                          content: p0.toString(),
+                        ),
+                      );
+                    },
                   );
             },
             title: 'Get started',
