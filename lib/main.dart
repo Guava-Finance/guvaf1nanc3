@@ -9,20 +9,27 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/routes/router.dart';
-import 'package:guava/core/theme/theme.dark.dart';
-import 'package:guava/core/theme/theme.dart';
+import 'package:guava/core/styles/colors.dart';
+import 'package:guava/core/styles/theme/theme.dart';
 import 'package:guava/firebase_options.dart';
 
 import 'core/resources/notification/wrapper/notification.wrapper.dart';
-import 'core/service_locator/injection_container.dart';
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: BrandColors.scaffoldColor,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
 
-    await configureDependencies();
+    // await configureDependencies();
 
     /// Init Firebase setup
     await Firebase.initializeApp(
@@ -35,7 +42,7 @@ void main() async {
     );
 
     if (kDebugMode) {
-      debugRepaintRainbowEnabled = true;
+      debugRepaintRainbowEnabled = false;
     }
 
     runApp(const ProviderScope(child: MyApp()));
@@ -59,22 +66,26 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, snapshot) {
-        return MaterialApp.router(
-          title: 'Guava Finance',
-          theme: theme(context),
-          debugShowCheckedModeBanner: false,
-          darkTheme: themeDark(context),
-          routerConfig: router,
-          builder: (context, child) {
-            final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1),
-            );
-
-            return MediaQuery(
-              data: mediaQuery,
-              child: InAppNotificationWrapper(child: child!),
-            );
+        return GestureDetector(
+          onTap: () {
+            context.focusScope.unfocus();
           },
+          child: MaterialApp.router(
+            title: 'Guava Finance',
+            theme: theme(context),
+            debugShowCheckedModeBanner: false,
+            // darkTheme: themeDark(context),
+            routerConfig: router,
+            builder: (context, child) {
+              final MediaQueryData mediaQuery = MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1),
+              );
+              return MediaQuery(
+                data: mediaQuery,
+                child: InAppNotificationWrapper(child: child!),
+              );
+            },
+          ),
         );
       },
     );

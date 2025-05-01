@@ -2,12 +2,25 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/encrypt.dart';
 import 'package:guava/core/resources/env/env.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+final dioProvider = Provider<Dio>(
+  (context) => Dio(
+    BaseOptions(
+      baseUrl: Env.baseUrl,
+    ),
+  ),
+);
+
+final networkInterceptorProvider = Provider<NetworkInterceptor>(
+  (ref) => NetworkInterceptor(
+    dio: ref.read(dioProvider),
+  ),
+);
+
 class NetworkInterceptor {
   late EncryptionService encryptionService;
 
@@ -28,6 +41,7 @@ class NetworkInterceptor {
 
     encryptionService = EncryptionService(
       encryptionKey: Env.aesEncryptionKey,
+      iv: Env.aesEncryptionIv,
     );
   }
 
@@ -56,7 +70,7 @@ class NetworkInterceptor {
     Map<String, dynamic> logData = {};
 
     await setToken(options);
-    logData['REQUEST_DATA'] = options.data;
+    logData['UNENCRYPTED_REQUEST_DATA'] = options.data;
 
     // Encrypt request data if it exists
     if (options.data != null) {
@@ -64,6 +78,7 @@ class NetworkInterceptor {
     }
 
     logData['METHOD'] = options.method;
+    logData['HEADERS'] = options.headers;
     logData['URL'] = '${options.baseUrl}${options.path}';
     logData['EXTRA'] = options.extra;
     logData['ENCRYPTED_REQUEST_DATA'] = options.data;
@@ -77,9 +92,9 @@ class NetworkInterceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) async {
-    final resTime = DateTime.now().difference(
-      responsesTime[response.requestOptions.path] as DateTime,
-    );
+    // final resTime = DateTime.now().difference(
+    //   responsesTime[response.requestOptions.path] as DateTime,
+    // );
 
     Map<String, dynamic> logData = {};
 
@@ -92,8 +107,9 @@ class NetworkInterceptor {
 
     logData['BASEURL'] = response.requestOptions.baseUrl;
     logData['ENDPOINT'] = response.requestOptions.path;
+    logData['HEADERS'] = response.headers;
     logData['RESPONSE_DATA'] = response.data;
-    logData['ENCRYPTED_RESPONSE_TIME'] = resTime;
+    // logData['ENCRYPTED_RESPONSE_TIME'] = resTime;
 
     responsesTime.remove(response.requestOptions.path);
 
@@ -123,6 +139,7 @@ class NetworkInterceptor {
     errorLogs['BASE_URL'] = e.requestOptions.baseUrl;
     errorLogs['MESSAGE'] = e.message;
     errorLogs['ERROR'] = e.error;
+    errorLogs['ERROR_CODE'] = e.response?.statusCode;
     errorLogs['ENCRYPTION_RESPONSE_DATA'] = e.response?.data;
     errorLogs['RESPONSE_TIME'] = resTime;
 
@@ -138,11 +155,10 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
     String? baseUrl,
+    Map<String, dynamic>? header,
   }) async {
-    String bUrl = baseUrl ?? Env.baseUrl;
-
     HttpMetric metric = performance.newHttpMetric(
-      '$bUrl$endpoint',
+      endpoint,
       HttpMethod.Get,
     );
 
@@ -152,11 +168,11 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.get(
-      // todo: Call baseURL from enviroment
-      '$bUrl$endpoint',
+      endpoint,
       options: Options(headers: {
-        if (isProtected) 'Authorization': 'Bearer $token',
+        // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+        if (header != null) ...header,
       }),
     );
 
@@ -171,11 +187,10 @@ class NetworkInterceptor {
     bool isProtected = true,
     bool isFormData = false,
     String? baseUrl,
+    Map<String, dynamic>? header,
   }) async {
-    String bUrl = baseUrl ?? Env.baseUrl;
-
     HttpMetric metric = performance.newHttpMetric(
-      '$bUrl$endpoint',
+      endpoint,
       HttpMethod.Post,
     );
 
@@ -185,11 +200,12 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.post(
-      '$bUrl$endpoint',
+      endpoint,
       data: isFormData ? FormData.fromMap(data) : data,
       options: Options(headers: {
-        if (isProtected) 'Authorization': 'Bearer $token',
+        // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+        if (header != null) ...header,
       }),
     );
 
@@ -205,10 +221,8 @@ class NetworkInterceptor {
     bool isFormData = false,
     String? baseUrl,
   }) async {
-    String bUrl = baseUrl ?? Env.baseUrl;
-
     HttpMetric metric = performance.newHttpMetric(
-      '$bUrl$endpoint',
+      endpoint,
       HttpMethod.Patch,
     );
 
@@ -218,10 +232,10 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.patch(
-      '$bUrl$endpoint',
+      endpoint,
       data: isFormData ? FormData.fromMap(data) : data,
       options: Options(headers: {
-        if (isProtected) 'Authorization': 'Bearer $token',
+        // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
       }),
     );
@@ -237,10 +251,8 @@ class NetworkInterceptor {
     bool isFormData = false,
     String? baseUrl,
   }) async {
-    String bUrl = baseUrl ?? Env.baseUrl;
-
     HttpMetric metric = performance.newHttpMetric(
-      '$bUrl$endpoint',
+      endpoint,
       HttpMethod.Delete,
     );
 
@@ -250,9 +262,9 @@ class NetworkInterceptor {
     await metric.start();
 
     Response response = await dio.delete(
-      '$bUrl$endpoint',
+      endpoint,
       options: Options(headers: {
-        if (isProtected) 'Authorization': 'Bearer $token',
+        // if (isProtected) 'Authorization': 'Bearer $token',
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
       }),
     );
@@ -263,8 +275,11 @@ class NetworkInterceptor {
   }
 
   setToken(RequestOptions options) {
-    // todo: get token from secured storage
-    options.headers = {};
+    options.headers = {
+      'Content-Type': 'application/json',
+      'X-App-ID': Env.appId,
+      ...options.headers,
+    };
   }
 }
 

@@ -1,11 +1,24 @@
 {
-    "cSpell.words": [
-        "appbar",
-        "Blockhash",
-        "Encrypter",
-        "guavafi",
-        "Mnemomic",
-        "navkey",
-        "riverpod"
-    ]
+  "cSpell.words": [
+    "appbar",
+    "Blockhash",
+    "Encrypter",
+    "guavafi",
+    "Mnemomic",
+    "navkey",
+    "riverpod"
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "dart.lineLength": 80,
+  "[dart]": {
+    "editor.rulers": [
+      100
+    ],
+  },
 }

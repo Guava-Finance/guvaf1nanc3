@@ -1,0 +1,2 @@
+/Users/oghenekparobor/guavafinance/android/app/.cxx/RelWithDebInfo/5n511h5s/x86_64/CMakeFiles/edit_cache.dir
+/Users/oghenekparobor/guavafinance/android/app/.cxx/RelWithDebInfo/5n511h5s/x86_64/CMakeFiles/rebuild_cache.dir

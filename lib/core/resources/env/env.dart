@@ -19,6 +19,9 @@ abstract class Env {
   @EnviedField(varName: 'AES_ENCRYPTION_KEY')
   static String aesEncryptionKey = _Env.aesEncryptionKey;
 
+  @EnviedField(varName: 'AES_ENCRYPTION_IV')
+  static String aesEncryptionIv = _Env.aesEncryptionIv;
+
   @EnviedField(varName: 'DOJAH_API_ID')
   static String dojahApiId = _Env.dojahApiId;
 
@@ -33,4 +36,10 @@ abstract class Env {
 
   @EnviedField(varName: 'PUB_NUB_PUBLISH_KEY')
   static String pubNubPublishKey = _Env.pubNubPublishKey;
+
+  @EnviedField(varName: 'APP_ID')
+  static String appId = _Env.appId;
+
+    @EnviedField(varName: 'AMPLITUDE_API_KEY')
+  static String amplitudeApiKey = _Env.amplitudeApiKey;
 }

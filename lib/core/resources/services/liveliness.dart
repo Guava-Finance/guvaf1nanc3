@@ -1,18 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dojah_kyc/flutter_dojah_kyc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/routes/router.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+final livelinessServiceProvider = Provider<LivelinessService>((ref) {
+  return LivelinessService();
+});
+
 class LivelinessService {
-  late final DojahKYC _dojahKYC;
+  DojahKYC? _dojahKYC;
 
   Future<void> initKyc({
     required String walletAddress,
     Function(dynamic)? onSuccess,
     Function(dynamic)? onError,
+    Function(dynamic)? onClose,
   }) async {
     final BuildContext context = navkey.currentState!.context;
 
@@ -31,7 +35,7 @@ class LivelinessService {
       },
     );
 
-    await _dojahKYC.open(
+    await _dojahKYC?.open(
       context,
       onSuccess: (result) {
         /// after a successful kyc session close the Dojah widget
@@ -40,7 +44,9 @@ class LivelinessService {
         /// use to carry out extra functionality on success of the KYC
         onSuccess?.call(result);
       },
-      onClose: (close) {},
+      onClose: (close) {
+        onClose?.call(close);
+      },
       onError: (error) {
         /// call the notification tile widget to display the error to the user
         //  context.notify.addNotification();

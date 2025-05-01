@@ -1,7 +1,7 @@
 sealed class AppState {}
 
-class LoadedState extends AppState {
-  final dynamic data;
+class LoadedState<T> extends AppState {
+  final T data;
 
   LoadedState(this.data);
 }
@@ -16,4 +16,10 @@ class NoInternetState extends AppState {
   final String msg;
 
   NoInternetState(this.msg);
+}
+
+class RpcErrorState extends AppState {
+  final String msg;
+
+  RpcErrorState(this.msg);
 }
