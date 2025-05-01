@@ -46,16 +46,16 @@ class RecentTransfers extends StatelessWidget {
                     horizontal: 15.w,
                   ),
                   decoration: ShapeDecoration(
-                    color: BrandColors.containerColor,
+                    // color: BrandColors.containerColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                   ),
                   child: (data ?? []).isEmpty
                       ? Text(
-                          'No recent transfers',
+                          'No activity',
                           style: context.textTheme.bodyMedium?.copyWith(
-                            fontSize: 12.sp,
+                            fontSize: 10.sp,
                             color: BrandColors.washedTextColor,
                           ),
                           textAlign: TextAlign.center,

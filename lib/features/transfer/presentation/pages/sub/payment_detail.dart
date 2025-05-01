@@ -43,7 +43,7 @@ class PaymentDetail extends ConsumerWidget {
           10.verticalSpace,
           PaymentItem(
             title: 'Equivalent to',
-            value: currencyFormatter().format(120000.98),
+            value: '',
           ),
           15.verticalSpace,
           PaymentItem(

@@ -47,7 +47,7 @@ class ResolveAddressUsecase extends UseCase<AppState, String> {
           NotificationTile(
             notificationType: NotificationType.error,
             content:
-                '''Failed to resolve username. Please check username and try again''',
+                '''Failed to resolve. Please check username or wallet address and try again''',
           ),
         );
 

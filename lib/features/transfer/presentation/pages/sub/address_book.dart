@@ -46,7 +46,7 @@ class AddressBook extends StatelessWidget {
                     horizontal: 15.w,
                   ),
                   decoration: ShapeDecoration(
-                    color: BrandColors.containerColor,
+                    // color: BrandColors.containerColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),

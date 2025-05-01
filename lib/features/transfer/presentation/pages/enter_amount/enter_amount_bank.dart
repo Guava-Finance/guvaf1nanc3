@@ -88,6 +88,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank> {
                 40.verticalSpace,
                 TextFormField(
                   controller: amountCtrl,
+                  readOnly: true,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     hintText: currency.format(0.00),

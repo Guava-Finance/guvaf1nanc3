@@ -30,7 +30,7 @@ class AddressTile extends ConsumerWidget {
           children: [
             CircleAvatar(
               maxRadius: 20.r,
-              backgroundColor: BrandColors.lightGreen,
+              backgroundColor: BrandColors.lightGreen.withValues(alpha: .7),
               child: Center(
                 child: Text(
                   data.username.split('').first.toUpperCase(),

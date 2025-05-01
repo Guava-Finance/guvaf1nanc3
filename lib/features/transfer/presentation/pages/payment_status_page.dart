@@ -58,10 +58,16 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              context.go(pDashboard);
+              final txnId = ref.read(transactionId.notifier).state;
+
+              SharePlus.instance.share(
+                ShareParams(
+                  text: 'https://solscan.io/tx/$txnId?cluster=devnet',
+                ),
+              );
             },
             child: Text(
-              'Done',
+              'Share reciept',
               style: context.textTheme.bodyMedium!.copyWith(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -167,15 +173,9 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
               10.verticalSpace,
             },
             CustomButton(
-              title: 'Share receipt',
+              title: 'Done',
               onTap: () {
-                final txnId = ref.read(transactionId.notifier).state;
-
-                SharePlus.instance.share(
-                  ShareParams(
-                    text: 'https://solscan.io/tx/$txnId?cluster=devnet',
-                  ),
-                );
+                context.go(pDashboard);
               },
             )
           ],

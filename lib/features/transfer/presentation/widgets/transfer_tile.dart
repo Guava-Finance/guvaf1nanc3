@@ -33,7 +33,7 @@ class TransferTile extends ConsumerWidget {
           children: [
             CircleAvatar(
               maxRadius: 20.r,
-              backgroundColor: BrandColors.lightGreen,
+              backgroundColor: BrandColors.lightGreen.withValues(alpha: .7),
               child: CustomIcon(
                 icon: R.ASSETS_ICONS_WALLET_ICON_SVG,
                 color: BrandColors.backgroundColor,
@@ -59,7 +59,7 @@ class TransferTile extends ConsumerWidget {
                   ),
                   5.verticalSpace,
                   Text(
-                    '''Used ${DateFormat.yMMMEd().add_jmv().format(data.lastTransferAt)}''',
+                    DateFormat.yMMMEd().add_jmv().format(data.lastTransferAt),
                     style: context.medium.copyWith(
                       color: BrandColors.washedTextColor,
                       fontSize: 12.w,

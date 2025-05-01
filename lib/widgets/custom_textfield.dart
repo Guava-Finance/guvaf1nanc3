@@ -12,6 +12,7 @@ class CustomTextfield extends StatefulWidget {
     this.suffixIcon,
     this.label,
     this.onChanged,
+    this.onSubmit,
     this.capitalization,
     this.validator,
     this.inputFormatters,
@@ -26,6 +27,7 @@ class CustomTextfield extends StatefulWidget {
   final TextEditingController controller;
   final String? label;
   final Function(String?)? onChanged;
+  final Function(String?)? onSubmit;
   final TextCapitalization? capitalization;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
@@ -71,6 +73,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                 onTap: widget.onTap,
                 readOnly: widget.readOnly,
                 controller: widget.controller,
+                onFieldSubmitted: widget.onSubmit,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: widget.onChanged,
                 textCapitalization:

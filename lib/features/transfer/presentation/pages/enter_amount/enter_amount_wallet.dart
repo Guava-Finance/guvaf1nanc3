@@ -159,6 +159,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                 BalanceText(),
                 40.verticalSpace,
                 TextFormField(
+                  readOnly: true,
                   controller: amountCtrl,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
@@ -214,12 +215,12 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                                 ),
                               ]),
                             ),
-                            7.horizontalSpace,
-                            SvgPicture.asset(
-                              R.ASSETS_ICONS_EXCHANGE_SVG,
-                              width: 10.w,
-                              height: 10.h,
-                            ),
+                            // 7.horizontalSpace,
+                            // SvgPicture.asset(
+                            //   R.ASSETS_ICONS_EXCHANGE_SVG,
+                            //   width: 10.w,
+                            //   height: 10.h,
+                            // ),
                           ],
                         ),
                       ),
@@ -250,7 +251,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                     );
                   },
                 ),
-                10.verticalSpace,
+                30.verticalSpace,
               ],
             ).padHorizontal,
           ],

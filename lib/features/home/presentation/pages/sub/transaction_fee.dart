@@ -43,35 +43,68 @@ class TransactionFee extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               10.verticalSpace,
-              Text.rich(
-                TextSpan(
-                  children: [
+              FutureBuilder(
+                future: balance,
+                builder: (_, ss) {
+                  if (ss.data == null) {
+                    return 0.verticalSpace;
+                  }
+
+                  return Text.rich(
                     TextSpan(
-                      text: '\$',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.textColor,
-                        fontSize: 28.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      children: [
+                        TextSpan(
+                          text: ss.data!.symbol,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: BrandColors.textColor,
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ((txn?.amount ?? 0.0) / ss.data!.exchangeRate)
+                              .formatAmount(),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: BrandColors.textColor,
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ((txn?.amount ?? 0.0) / ss.data!.exchangeRate)
+                              .formatDecimal,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: BrandColors.washedTextColor,
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                    TextSpan(
-                      text: (txn?.amount ?? 0.0).formatAmount(),
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.textColor,
-                        fontSize: 28.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  );
+                },
+              ),
+              30.verticalSpace,
+              PaymentItem(
+                title: 'Equivalent to',
+                value: '',
+              ),
+              15.verticalSpace,
+              PaymentItem(
+                title: 'USDC',
+                value: '${txn?.amount} USDC',
+              ),
+              15.verticalSpace,
+              PaymentItem(
+                title: 'Fee',
+                value: '0.98 USDC',
+              ),
+              15.verticalSpace,
+              PaymentItem(
+                title: 'Date',
+                value: DateFormat.yMMMEd().add_jmv().format(
+                      txn?.timestamp ?? DateTime.now(),
                     ),
-                    TextSpan(
-                      text: (txn?.amount ?? 0.0).formatDecimal,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 28.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
               ),
               15.verticalSpace,
               StatusItem(
@@ -96,39 +129,6 @@ class TransactionFee extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              30.verticalSpace,
-              PaymentItem(
-                title: 'Equivalent to',
-                value: '',
-              ),
-              15.verticalSpace,
-              FutureBuilder<BalanceParam>(
-                future: balance,
-                builder: (_, snapshot) {
-                  if (snapshot.data == null) {
-                    return 0.verticalSpace;
-                  }
-
-                  return PaymentItem(
-                    title: 'Amount',
-                    value: NumberFormat.currency(symbol: snapshot.data!.symbol)
-                        .format(
-                            (txn?.amount ?? 0.0) / snapshot.data!.exchangeRate),
-                  );
-                },
-              ),
-              15.verticalSpace,
-              PaymentItem(
-                title: 'Fee',
-                value: '0.98 USDC',
-              ),
-              15.verticalSpace,
-              PaymentItem(
-                title: 'Date',
-                value: DateFormat.yMMMEd().add_jmv().format(
-                      txn?.timestamp ?? DateTime.now(),
-                    ),
               ),
             ],
           );

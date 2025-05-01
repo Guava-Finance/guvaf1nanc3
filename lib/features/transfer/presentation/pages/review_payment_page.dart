@@ -57,7 +57,8 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                   isLoading: data,
                 );
               },
-            )
+            ),
+            30.verticalSpace,
           ],
         ).padHorizontal,
       ),

@@ -94,7 +94,7 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
         throw Exception('App config is missing');
       }
       // in local currency
-      final amount = num.parse(params.amount ?? '0').toDouble();
+      // final amount = num.parse(params.amount ?? '0').toDouble();
       final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
       final txFee = await ref.watch(calcTransactionFee.future);
 
@@ -110,7 +110,7 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
       );
 
       final newParam = params.copyWith(
-        amount: amount.toString(),
+        amount: usdcAmount.toString(),
         transactionFee: txFee.toString(),
         signedTransaction: signedTx,
         type: 'wallet',
