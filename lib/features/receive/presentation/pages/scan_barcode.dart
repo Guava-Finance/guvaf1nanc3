@@ -61,49 +61,51 @@ class ScanBarcode extends ConsumerWidget {
                   builder: (context, snapshot) => Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        snapshot.data ?? '',
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18.sp,
-                          color: BrandColors.textColor,
-                        ),
-                      ),
-                      6.verticalSpace,
-                      GestureDetector(
-                        onTap: () {
-                          Clipboard.setData(
-                                  ClipboardData(text: snapshot.data ?? ''))
-                              .then((_) {
-                            navkey.currentContext!.notify.addNotification(
-                              NotificationTile(
-                                content: 'Username copied successfully...',
-                                duration: 3,
-                              ),
-                            );
-                          });
-                        },
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'guava@${snapshot.data ?? ''}',
-                                style: context.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.sp,
-                                  color: BrandColors.washedTextColor,
-                                ),
-                              ),
-                              4.horizontalSpace,
-                              SvgPicture.asset(
-                                R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
-                              ),
-                            ],
+                      if (snapshot.data != null) ...{
+                        Text(
+                          snapshot.data ?? '',
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18.sp,
+                            color: BrandColors.textColor,
                           ),
                         ),
-                      ),
+                        6.verticalSpace,
+                        GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(
+                                    ClipboardData(text: snapshot.data ?? ''))
+                                .then((_) {
+                              navkey.currentContext!.notify.addNotification(
+                                NotificationTile(
+                                  content: 'Username copied successfully...',
+                                  duration: 3,
+                                ),
+                              );
+                            });
+                          },
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${snapshot.data ?? ''}@guava',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14.sp,
+                                    color: BrandColors.washedTextColor,
+                                  ),
+                                ),
+                                4.horizontalSpace,
+                                SvgPicture.asset(
+                                  R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      },
                     ],
                   ),
                 ),

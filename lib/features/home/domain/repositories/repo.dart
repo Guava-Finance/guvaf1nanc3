@@ -5,4 +5,5 @@ abstract class HomeRepository {
   Future<AppState> getExchangeRate(String currencyCode);
   Future<AppState> checkUsername(String username);
   Future<AppState> setUsername(String wallet, String username);
+  Future<AppState> histroy(String wallet);
 }

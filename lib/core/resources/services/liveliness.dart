@@ -10,12 +10,13 @@ final livelinessServiceProvider = Provider<LivelinessService>((ref) {
 });
 
 class LivelinessService {
-  late final DojahKYC _dojahKYC;
+  DojahKYC? _dojahKYC;
 
   Future<void> initKyc({
     required String walletAddress,
     Function(dynamic)? onSuccess,
     Function(dynamic)? onError,
+    Function(dynamic)? onClose,
   }) async {
     final BuildContext context = navkey.currentState!.context;
 
@@ -34,7 +35,7 @@ class LivelinessService {
       },
     );
 
-    await _dojahKYC.open(
+    await _dojahKYC?.open(
       context,
       onSuccess: (result) {
         /// after a successful kyc session close the Dojah widget
@@ -43,7 +44,9 @@ class LivelinessService {
         /// use to carry out extra functionality on success of the KYC
         onSuccess?.call(result);
       },
-      onClose: (close) {},
+      onClose: (close) {
+        onClose?.call(close);
+      },
       onError: (error) {
         /// call the notification tile widget to display the error to the user
         //  context.notify.addNotification();

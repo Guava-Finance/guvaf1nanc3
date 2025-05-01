@@ -341,7 +341,11 @@ final class SolanaService {
       recentBlockhash: (await rpcClient.getLatestBlockhash()).value.blockhash,
     );
 
-    return signedTx.encode();
+    // return signedTx.encode();
+    // Get the raw bytes from the signed transaction
+
+    // Use bs58 package to encode the bytes in base58 instead of base64
+    return base58encode(signedTx.toByteArray().toList());
   }
 
   bool isMnemonicValid(String mnemonic) {

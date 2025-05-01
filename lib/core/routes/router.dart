@@ -13,8 +13,8 @@ import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/add
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/private_key.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/recovery_phase.dart';
 import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
-import 'package:guava/features/transaction/presentation/pages/transaction_detail_page.dart';
-import 'package:guava/features/transaction/presentation/pages/transaction_page.dart';
+import 'package:guava/features/home/presentation/pages/transactions/transaction_detail_page.dart';
+import 'package:guava/features/home/presentation/pages/transactions/transaction_page.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_bank.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_wallet.dart';
 import 'package:guava/features/transfer/presentation/pages/payment_status_page.dart';

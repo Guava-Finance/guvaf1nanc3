@@ -12,6 +12,7 @@ import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
@@ -44,6 +45,8 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
   late final MoneyMaskedTextController amountCtrl;
   late final TextEditingController controller;
 
+  bool isValidated = false;
+
   @override
   void initState() {
     amountCtrl = MoneyMaskedTextController();
@@ -53,6 +56,21 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
       controller.value = TextEditingValue(
         text: ref.read(receipentAddressProvider.notifier).state ?? '',
       );
+
+      amountCtrl.addListener(() async {
+        final balanceAsync = await ref.read(balanceUsecaseProvider.future);
+        final amount = NumberFormat().tryParse(amountCtrl.text)?.toDouble();
+
+        usdcAmount = (amount ?? 0.0) * balanceAsync.exchangeRate;
+
+        isValidated =
+            (amount ?? 0.0) > 0 && (amount ?? 0.0) <= balanceAsync.localBalance;
+
+        ref.watch(usdcAountTransfer.notifier).state = usdcAmount;
+        ref.watch(localAountTransfer.notifier).state = amount ?? 0.0;
+
+        setState(() {});
+      });
     });
 
     super.initState();
@@ -67,9 +85,12 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
 
   bool readOnly = true;
 
+  double usdcAmount = 0.0;
+
   @override
   Widget build(BuildContext context) {
     final currency = NumberFormat.currency(symbol: '₦', decimalDigits: 2);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -138,6 +159,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                 BalanceText(),
                 40.verticalSpace,
                 TextFormField(
+                  readOnly: true,
                   controller: amountCtrl,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
@@ -177,7 +199,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                             Text.rich(
                               TextSpan(children: [
                                 TextSpan(
-                                  text: '0',
+                                  text: usdcAmount.formatAmount(),
                                   style: context.textTheme.bodyMedium?.copyWith(
                                     color: BrandColors.textColor,
                                     fontSize: 10.sp,
@@ -185,7 +207,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                                   ),
                                 ),
                                 TextSpan(
-                                  text: '${(0.00).formatDecimal} USDC',
+                                  text: '${(usdcAmount).formatDecimal} USDC',
                                   style: context.textTheme.bodyMedium?.copyWith(
                                     color: BrandColors.washedTextColor,
                                     fontSize: 10.sp,
@@ -193,12 +215,12 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                                 ),
                               ]),
                             ),
-                            7.horizontalSpace,
-                            SvgPicture.asset(
-                              R.ASSETS_ICONS_EXCHANGE_SVG,
-                              width: 10.w,
-                              height: 10.h,
-                            ),
+                            // 7.horizontalSpace,
+                            // SvgPicture.asset(
+                            //   R.ASSETS_ICONS_EXCHANGE_SVG,
+                            //   width: 10.w,
+                            //   height: 10.h,
+                            // ),
                           ],
                         ),
                       ),
@@ -217,22 +239,19 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                   builder: (context, snapshot, child) {
                     return Consumer(
                       builder: (context, ref, child) {
-                        final result =
-                            ref.watch(receipentAddressProvider.notifier).state;
-
                         return CustomButton(
                           onTap: () {
                             context.push(pReviewPayemet);
                           },
                           title: 'Next',
-                          disable: result == null,
+                          disable: !isValidated,
                           isLoading: snapshot,
                         ).padHorizontal;
                       },
                     );
                   },
                 ),
-                10.verticalSpace,
+                30.verticalSpace,
               ],
             ).padHorizontal,
           ],

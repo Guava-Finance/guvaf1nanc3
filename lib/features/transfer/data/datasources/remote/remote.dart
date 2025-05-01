@@ -9,6 +9,24 @@ final transferRemoteProvider = Provider<TransferRemote>((ref) {
 
 abstract class TransferRemote {
   Future<dynamic> checkUsername(String username);
+  // Bank Transfer
+  Future<dynamic> countries();
+  Future<dynamic> banks(String countryCode);
+  Future<dynamic> resolveAccount(String countryCode, Map<String, dynamic> data);
+  Future<dynamic> getRecentBankTransfer(String wallet);
+  Future<dynamic> getBankBeneficiaries(String wallet);
+  Future<dynamic> submitBankTransfer(Map<String, dynamic> data);
+  // Wallet Transfer
+  Future<dynamic> recentWalletTransfer(String wallet);
+  Future<dynamic> walletAddressBook(String wallet);
+  Future<dynamic> submitWalletTransfer(
+    String wallet,
+    Map<String, dynamic> data,
+  );
+  Future<dynamic> saveAddress(
+    String wallet,
+    Map<String, dynamic> data,
+  );
 }
 
 class TransferRemoteImpl extends TransferRemote {
@@ -21,5 +39,87 @@ class TransferRemoteImpl extends TransferRemote {
   @override
   Future checkUsername(String username) async {
     return await interceptor.get('/transfer/username/$username/');
+  }
+
+  @override
+  Future banks(String countryCode) async {
+    return await interceptor.get('/transfer/bank/list/$countryCode/');
+  }
+
+  @override
+  Future countries() async {
+    return await interceptor.get('/transfer/bank/country/');
+  }
+
+  @override
+  Future getBankBeneficiaries(String wallet) async {
+    return await interceptor.get(
+      '/transfer/bank/beneficiary/$wallet/',
+      header: {
+        'X-Wallet-Public-Key': wallet,
+      },
+    );
+  }
+
+  @override
+  Future getRecentBankTransfer(String wallet) async {
+    return await interceptor.get(
+      '/transfer/bank/recent/$wallet/',
+      header: {
+        'X-Wallet-Public-Key': wallet,
+      },
+    );
+  }
+
+  @override
+  Future resolveAccount(String countryCode, Map<String, dynamic> data) async {
+    return await interceptor.post(
+      '/transfer/bank/lookup/$countryCode/',
+      data: data,
+    );
+  }
+
+  @override
+  Future submitBankTransfer(Map<String, dynamic> data) async {
+    return await interceptor.post(
+      '/transfer/bank/',
+      data: data,
+    );
+  }
+
+  @override
+  Future recentWalletTransfer(String wallet) async {
+    return await interceptor.get(
+      '/transfer/wallet/recent/$wallet/',
+    );
+  }
+
+  @override
+  Future submitWalletTransfer(String wallet, Map<String, dynamic> data) async {
+    return await interceptor.post(
+      '/transfer/wallet/',
+      data: data,
+      header: {
+        'X-Wallet-Public-Key': wallet,
+      },
+    );
+  }
+
+  @override
+  Future walletAddressBook(String wallet) async {
+    return await interceptor.get(
+      '/transfer/wallet/addressbook/$wallet/',
+    );
+  }
+
+  @override
+  Future saveAddress(String wallet, Map<String, dynamic> data) async {
+    return await interceptor.post(
+      '/transfer/wallet/addressbook/$wallet/',
+      data: data,
+      header: {
+        'X-Wallet-Public-Key': wallet,
+      },
+    );
   }
 }

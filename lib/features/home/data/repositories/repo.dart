@@ -55,4 +55,11 @@ class HomeRepositoryImpl implements HomeRepository {
       return await remoteDataSource.setUsername(wallet, username);
     });
   }
+
+  @override
+  Future<AppState> histroy(String wallet) async {
+    return await wrapper.format(() async {
+      return await remoteDataSource.history(wallet);
+    });
+  }
 }

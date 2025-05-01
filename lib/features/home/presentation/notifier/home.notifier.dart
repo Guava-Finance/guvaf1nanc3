@@ -9,6 +9,7 @@ import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
+import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/check_username.dart';
 import 'package:guava/features/home/domain/usecases/set_username.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -90,5 +91,18 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
     }
 
     return !result.isError;
+  }
+
+  Color txnColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'completed':
+        return BrandColors.washedGreen;
+      case 'failed':
+        return BrandColors.washedRed;
+      case 'pending':
+        return BrandColors.washedBlue;
+      default:
+        return BrandColors.washedTextColor;
+    }
   }
 }

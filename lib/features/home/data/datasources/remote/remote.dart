@@ -12,6 +12,7 @@ abstract class HomeRemoteDatasource {
   Future<dynamic> getExchangeRate(String currencyCode);
   Future<dynamic> checkUsername(String username);
   Future<dynamic> setUsername(String wallet, String username);
+  Future<dynamic> history(String wallet);
 }
 
 class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
@@ -47,6 +48,14 @@ class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
     return await networkInterceptor.post(
       '/account/username/',
       data: {'username': username},
+      header: {'X-Wallet-Public-Key': wallet},
+    );
+  }
+
+  @override
+  Future history(String wallet) async {
+    return await networkInterceptor.get(
+      '/transfer/history/$wallet/',
       header: {'X-Wallet-Public-Key': wallet},
     );
   }

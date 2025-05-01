@@ -25,7 +25,7 @@ class WalletTransfer extends ConsumerStatefulWidget {
 }
 
 class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
-  final debounce = Debouncer(duration: Durations.extralong4);
+  final debounce = Debouncer(duration: Duration(seconds: 2));
   late final TextEditingController controller;
 
   @override
@@ -48,6 +48,12 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
     super.dispose();
   }
 
+  void query() {
+    withLoading(() async {
+      await ref.read(transferNotifierProvider).resolveAddress(controller.text);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -59,14 +65,11 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
             ref.read(receipentAddressProvider.notifier).state = null;
 
             if ((p0 ?? '').length > 2) {
-              debounce.run(() {
-                withLoading(() async {
-                  await ref
-                      .read(transferNotifierProvider)
-                      .resolveAddress(p0 ?? '');
-                });
-              });
+              debounce.run(() => query());
             }
+          },
+          onSubmit: (p0) {
+            query();
           },
           suffixIcon: GestureDetector(
             onTap: () async {
@@ -91,13 +94,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
 
                     // Delay slightly to ensure controller update is complete
                     Future.delayed(const Duration(milliseconds: 50), () {
-                      debounce.run(() {
-                        withLoading(() async {
-                          await ref
-                              .read(transferNotifierProvider)
-                              .resolveAddress(controller.text);
-                        });
-                      });
+                      query();
                     });
                   }
                 } else {
@@ -179,7 +176,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
             );
           },
         ),
-        10.verticalSpace,
+        30.verticalSpace,
       ],
     );
   }

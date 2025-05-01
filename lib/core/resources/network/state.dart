@@ -1,7 +1,7 @@
 sealed class AppState {}
 
-class LoadedState extends AppState {
-  final dynamic data;
+class LoadedState<T> extends AppState {
+  final T data;
 
   LoadedState(this.data);
 }

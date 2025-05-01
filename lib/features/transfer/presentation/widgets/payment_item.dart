@@ -26,12 +26,16 @@ class PaymentItem extends StatelessWidget {
             color: BrandColors.textColor,
           ),
         ),
-        Text(
-          value,
-          style: context.textTheme.bodyMedium!.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: 12.sp,
-            color: BrandColors.washedTextColor,
+        8.horizontalSpace,
+        Expanded(
+          child: Text(
+            value,
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 12.sp,
+              color: BrandColors.washedTextColor,
+            ),
+            textAlign: TextAlign.end,
           ),
         ),
       ],

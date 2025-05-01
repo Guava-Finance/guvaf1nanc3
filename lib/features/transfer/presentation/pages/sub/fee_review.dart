@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/domain/usecases/balance.dart';
+import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
+import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class FeeReview extends StatelessWidget {
   const FeeReview({
@@ -13,60 +16,93 @@ class FeeReview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        vertical: 15.h,
-        horizontal: 15.w,
-      ),
-      decoration: BoxDecoration(
-        color: BrandColors.containerColor,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: BrandColors.textColor.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: currencyFormatter().format(5000.89),
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: BrandColors.textColor,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                TextSpan(
-                  text: (5000.89).formatDecimal,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                      color: BrandColors.washedTextColor,
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
+    return Consumer(
+      builder: (context, ref, child) {
+        final balance = ref.watch(balanceUsecaseProvider);
+        final localAmount = ref.watch(localAountTransfer.notifier).state;
+        final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
+        final fee = ref.watch(calcTransactionFee);
+
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            vertical: 15.h,
+            horizontal: 15.w,
+          ),
+          decoration: BoxDecoration(
+            color: BrandColors.containerColor,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: BrandColors.textColor.withValues(alpha: 0.1),
             ),
           ),
-          15.verticalSpace,
-          PaymentItem(
-            title: 'Equivalent to',
-            value: currencyFormatter().format(120000.98),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              balance.when(
+                data: (data) {
+                  return Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${data.symbol}${localAmount.formatAmount()}',
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: BrandColors.textColor,
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: (localAmount).formatDecimal,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                              color: BrandColors.washedTextColor,
+                              fontSize: 28.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                error: (_, __) => 0.verticalSpace,
+                loading: () => 0.verticalSpace,
+              ),
+              15.verticalSpace,
+              PaymentItem(
+                title: 'Equivalent to',
+                value: '',
+              ),
+              15.verticalSpace,
+              PaymentItem(
+                title: 'USDC',
+                value: '$usdcAmount USDC',
+              ),
+              15.verticalSpace,
+              fee.when(
+                data: (data) {
+                  return PaymentItem(
+                    title: 'Fee',
+                    value: '$data USDC',
+                  );
+                },
+                error: (e, __) {
+                  return Text(
+                    e.toString(),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontSize: 8.sp,
+                    ),
+                  );
+                },
+                loading: () {
+                  return CupertinoActivityIndicator(
+                    radius: 8.r,
+                    color: BrandColors.primary,
+                  );
+                },
+              ),
+            ],
           ),
-          15.verticalSpace,
-          PaymentItem(
-            title: 'USDC',
-            value: '100.00 USDC',
-          ),
-          15.verticalSpace,
-          PaymentItem(
-            title: 'Fee',
-            value: '0.98 USDC',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
