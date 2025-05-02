@@ -36,6 +36,7 @@ class Strings {
   static const setUsername = '/set-username';
   static const kycPage = '/kyc-page';
   static const kycDonePage = '/kyc-done-page';
+  static const scannerPage = '/wallet-scanner-page';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

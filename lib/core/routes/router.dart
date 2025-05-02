@@ -19,6 +19,7 @@ import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_am
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_wallet.dart';
 import 'package:guava/features/transfer/presentation/pages/payment_status_page.dart';
 import 'package:guava/features/transfer/presentation/pages/review_payment_page.dart';
+import 'package:guava/features/transfer/presentation/pages/scanner.dart';
 import 'package:guava/features/transfer/presentation/pages/transfer_page.dart';
 
 /// [p] suffix means path
@@ -41,6 +42,7 @@ const String pTransactionFilter = Strings.transactionFilter;
 const String pSetUsername = Strings.setUsername;
 const String pKyc = Strings.kycPage;
 const String pKycDone = Strings.kycDonePage;
+const String pScanner = Strings.scannerPage;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -140,6 +142,11 @@ final router = GoRouter(
       name: pKycDone.pathToName,
       path: pKycDone,
       builder: (context, state) => const KycDonePage(),
+    ),
+    GoRoute(
+      name: pScanner.pathToName,
+      path: pScanner,
+      builder: (context, state) => const WalletScannerPage(),
     ),
   ],
 );

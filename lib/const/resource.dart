@@ -193,6 +193,9 @@ class R {
   static const String ASSETS_ICONS_TRANSFER_ICON_SVG =
       'assets/icons/transfer-icon.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/usd-coin.svg)
+  static const String ASSETS_ICONS_USD_COIN_SVG = 'assets/icons/usd-coin.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/username-icon.svg)
   static const String ASSETS_ICONS_USERNAME_ICON_SVG =
       'assets/icons/username-icon.svg';

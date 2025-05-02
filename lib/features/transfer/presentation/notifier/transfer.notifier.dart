@@ -38,7 +38,7 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
   @override
   TransferNotifier build() {
     pageController = PageController(
-      initialPage: ref.read(activeTabState.notifier).state,
+      initialPage: ref.watch(activeTabState),
     );
 
     ref.onDispose(() => pageController.dispose());
@@ -49,6 +49,7 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
   void jumpTo(int page) {
     pageController.jumpToPage(page);
+    ref.watch(activeTabState.notifier).state = page;
   }
 
   Future<void> resolveAddress(String address) async {

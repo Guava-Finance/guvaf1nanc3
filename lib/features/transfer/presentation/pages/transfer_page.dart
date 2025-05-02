@@ -2,75 +2,89 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/routes/router.dart';
+import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/pages/wallet_transfer.dart';
 import 'package:guava/features/transfer/presentation/pages/bank_transfer.dart';
 import 'package:guava/features/transfer/presentation/widgets/transfer_type_selector.dart';
 
-class TransferPage extends ConsumerWidget {
+class TransferPage extends ConsumerStatefulWidget {
   const TransferPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TransferPage> createState() => _TransferPageState();
+}
+
+class _TransferPageState extends ConsumerState<TransferPage> {
+  String? walletAddress;
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final notifier = ref.watch(transferNotifierProvider.notifier);
-        final tabState = ref.watch(activeTabState.notifier);
+        final tabState = ref.watch(activeTabState);
 
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                title: TransferTypeSelector(
-                  selected: tabState.state,
-                  onChanged: (value) {
-                    setState(() {
-                      tabState.state = (value);
-                      notifier.jumpTo(value);
-                    });
-                  },
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: TransferTypeSelector(
+              selected: tabState,
+              onChanged: (value) {
+                notifier.jumpTo(value);
+              },
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  context.push(pScanner).then((v) {
+                    if (v != null) {
+                      walletAddress = v.toString();
+
+                      notifier.jumpTo(0);
+
+                      ref.read(receipentAddressProvider.notifier).state =
+                          v.toString();
+                    }
+                  });
+                },
+                icon: SvgPicture.asset(
+                  R.ASSETS_ICONS_SCAN_ICON_SVG,
+                  width: 20.w,
+                  height: 20.h,
                 ),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      R.ASSETS_ICONS_SCAN_ICON_SVG,
-                      width: 20.w,
-                      height: 20.h,
-                    ),
+              ),
+              6.horizontalSpace,
+            ],
+          ),
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      12.verticalSpace,
+                      Expanded(
+                        child: PageView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          controller: notifier.pageController,
+                          children: [
+                            WalletTransfer(walletAddress: walletAddress),
+                            BankTransfer(),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  6.horizontalSpace,
-                ],
-              ),
-              body: SafeArea(
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          12.verticalSpace,
-                          Expanded(
-                            child: PageView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              controller: notifier.pageController,
-                              children: const [
-                                WalletTransfer(),
-                                BankTransfer(),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-            );
-          },
+              ],
+            ),
+          ),
         );
       },
     );

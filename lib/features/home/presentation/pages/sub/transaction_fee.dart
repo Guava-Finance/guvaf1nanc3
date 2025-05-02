@@ -92,12 +92,14 @@ class TransactionFee extends StatelessWidget {
               15.verticalSpace,
               PaymentItem(
                 title: 'USDC',
-                value: '${txn?.amount} USDC',
+                value: '${txn?.amount}',
+                isUsdc: true,
               ),
               15.verticalSpace,
               PaymentItem(
                 title: 'Fee',
-                value: '0.98 USDC',
+                value: '0.98',
+                isUsdc: true,
               ),
               15.verticalSpace,
               PaymentItem(

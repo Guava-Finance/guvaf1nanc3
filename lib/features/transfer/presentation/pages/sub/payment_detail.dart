@@ -48,7 +48,8 @@ class PaymentDetail extends ConsumerWidget {
           15.verticalSpace,
           PaymentItem(
             title: 'USDC',
-            value: '$usdcAmount USDC',
+            value: '$usdcAmount',
+            isUsdc: true,
           ),
           15.verticalSpace,
           Consumer(
@@ -59,7 +60,8 @@ class PaymentDetail extends ConsumerWidget {
                 data: (data) {
                   return PaymentItem(
                     title: 'Fee',
-                    value: '$data USDC',
+                    value: '$data',
+                    isUsdc: true,
                   );
                 },
                 error: (_, __) {

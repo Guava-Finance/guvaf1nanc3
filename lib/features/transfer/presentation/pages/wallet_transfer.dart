@@ -18,7 +18,12 @@ import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/custom_textfield.dart';
 
 class WalletTransfer extends ConsumerStatefulWidget {
-  const WalletTransfer({super.key});
+  const WalletTransfer({
+    this.walletAddress,
+    super.key,
+  });
+
+  final String? walletAddress;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WalletTransferState();
@@ -35,7 +40,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(receipentAddressProvider.notifier).state = null;
+      ref.read(receipentAddressProvider.notifier).state = widget.walletAddress;
 
       setState(() {});
     });
@@ -161,8 +166,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
           builder: (context, snapshot, child) {
             return Consumer(
               builder: (context, ref, child) {
-                final result =
-                    ref.watch(receipentAddressProvider.notifier).state;
+                final result = ref.watch(receipentAddressProvider);
 
                 return CustomButton(
                   onTap: () {

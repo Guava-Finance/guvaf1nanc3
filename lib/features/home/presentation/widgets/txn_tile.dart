@@ -42,142 +42,148 @@ class TransactionHistoryTile extends ConsumerWidget {
         context.push(pTransactionDetail, extra: data);
         HapticFeedback.lightImpact();
       },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            maxRadius: 20.r,
-            backgroundColor: BrandColors.lightGreen,
-            child: CustomIcon(
-              icon: R.ASSETS_ICONS_WALLET_ICON_SVG,
-              color: BrandColors.backgroundColor,
+      child: Material(
+        color: Colors.transparent,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              maxRadius: 20.r,
+              backgroundColor: BrandColors.lightGreen,
+              child: CustomIcon(
+                icon: R.ASSETS_ICONS_WALLET_ICON_SVG,
+                color: BrandColors.backgroundColor,
+              ),
             ),
-          ),
-          10.horizontalSpace,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      if (data.category == 'debit') ...{
-                        TextSpan(text: 'Transfer to '),
-                        TextSpan(
-                          text: data.recipient?.toMaskedFormat(),
-                          style: context.medium.copyWith(
-                            color: BrandColors.primary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13.w,
+            10.horizontalSpace,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        if (data.category == 'debit') ...{
+                          TextSpan(text: 'Transfer to '),
+                          TextSpan(
+                            text: data.recipient?.toMaskedFormat(),
+                            style: context.medium.copyWith(
+                              color: BrandColors.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13.w,
+                            ),
                           ),
+                        } else ...{
+                          TextSpan(text: 'Transfer from '),
+                          TextSpan(
+                            text: data.sender?.toMaskedFormat(),
+                          ),
+                        }
+                      ],
+                    ),
+                    style: context.medium.copyWith(
+                      color: BrandColors.textColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13.w,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  8.verticalSpace,
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat('MMM dd').format(
+                          data.timestamp ?? DateTime.now(),
                         ),
-                      } else ...{
-                        TextSpan(text: 'Transfer from '),
-                        TextSpan(
-                          text: data.sender?.toMaskedFormat(),
+                        style: context.medium.copyWith(
+                          color: BrandColors.washedTextColor,
+                          fontSize: 11.w,
                         ),
-                      }
+                      ),
+                      Container(
+                        width: 1.w,
+                        height: 10.h,
+                        color:
+                            BrandColors.washedTextColor.withValues(alpha: 0.3),
+                        margin: EdgeInsets.symmetric(horizontal: 8.w),
+                      ),
+                      Text(
+                        DateFormat.jmv()
+                            .format(data.timestamp ?? DateTime.now()),
+                        style: context.medium.copyWith(
+                          color: BrandColors.washedTextColor,
+                          fontSize: 11.w,
+                        ),
+                      ),
+                      Container(
+                        width: 1.w,
+                        height: 10.h,
+                        color:
+                            BrandColors.washedTextColor.withValues(alpha: 0.3),
+                        margin: EdgeInsets.symmetric(horizontal: 8.w),
+                      ),
+                      Text(
+                        (data.type ?? '').toUpperCase(),
+                        style: context.medium.copyWith(
+                          color: BrandColors.washedTextColor,
+                          fontSize: 11.w,
+                        ),
+                      ),
                     ],
                   ),
-                  style: context.medium.copyWith(
-                    color: BrandColors.textColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13.w,
+                ],
+              ),
+            ),
+            8.horizontalSpace,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FutureBuilder(
+                  future: ref.read(balanceUsecaseProvider.future),
+                  builder: (_, ss) {
+                    if (ss.data == null) {
+                      return 0.verticalSpace;
+                    }
+
+                    return IntrinsicWidth(
+                      child: Text(
+                        '''${ss.data!.symbol}${currency.format((data.amount ?? 0.0) / ss.data!.exchangeRate)}''',
+                        style: context.medium.copyWith(
+                          color: Colors.white,
+                          fontSize: 13.w,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                6.verticalSpace,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 4.h,
+                    horizontal: 8.w,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                8.verticalSpace,
-                Row(
-                  children: [
-                    Text(
-                      DateFormat('MMM dd').format(
-                        data.timestamp ?? DateTime.now(),
-                      ),
-                      style: context.medium.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 11.w,
+                  decoration: ShapeDecoration(
+                    color: hn.txnColor(data.status).withValues(alpha: 0.05),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      side: BorderSide(
+                        color: hn.txnColor(data.status).withValues(alpha: 0.3),
                       ),
                     ),
-                    Container(
-                      width: 1.w,
-                      height: 10.h,
-                      color: BrandColors.washedTextColor.withValues(alpha: 0.3),
-                      margin: EdgeInsets.symmetric(horizontal: 8.w),
+                  ),
+                  child: Text(
+                    data.status ?? '',
+                    style: context.medium.copyWith(
+                      color: hn.txnColor(data.status),
+                      fontSize: 8.sp,
                     ),
-                    Text(
-                      DateFormat.jmv().format(data.timestamp ?? DateTime.now()),
-                      style: context.medium.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 11.w,
-                      ),
-                    ),
-                    Container(
-                      width: 1.w,
-                      height: 10.h,
-                      color: BrandColors.washedTextColor.withValues(alpha: 0.3),
-                      margin: EdgeInsets.symmetric(horizontal: 8.w),
-                    ),
-                    Text(
-                      (data.type ?? '').toUpperCase(),
-                      style: context.medium.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 11.w,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                )
               ],
             ),
-          ),
-          8.horizontalSpace,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              FutureBuilder(
-                future: ref.read(balanceUsecaseProvider.future),
-                builder: (_, ss) {
-                  if (ss.data == null) {
-                    return 0.verticalSpace;
-                  }
-
-                  return IntrinsicWidth(
-                    child: Text(
-                      '''${ss.data!.symbol}${currency.format((data.amount ?? 0.0) / ss.data!.exchangeRate)}''',
-                      style: context.medium.copyWith(
-                        color: Colors.white,
-                        fontSize: 13.w,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              6.verticalSpace,
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 4.h,
-                  horizontal: 8.w,
-                ),
-                decoration: ShapeDecoration(
-                  color: hn.txnColor(data.status).withValues(alpha: 0.05),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    side: BorderSide(
-                      color: hn.txnColor(data.status).withValues(alpha: 0.3),
-                    ),
-                  ),
-                ),
-                child: Text(
-                  data.status ?? '',
-                  style: context.medium.copyWith(
-                    color: hn.txnColor(data.status),
-                    fontSize: 8.sp,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -12,15 +12,15 @@ class RecievePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recieveState = ref.watch(recieveNotifierProvider);
     final notifier = ref.read(recieveNotifierProvider.notifier);
+    final tabState = ref.watch(activeReceiveTabState);
 
     return Scaffold(
       appBar: AppBar(
         title: RecieveTypeSelector(
-          selected: recieveState.selectedRecieveType,
+          selected: tabState,
           onChanged: (value) {
-            notifier.updateRecieveType(value);
+            notifier.jumpTo(value);
           },
         ),
       ),
