@@ -37,6 +37,10 @@ class Strings {
   static const kycPage = '/kyc-page';
   static const kycDonePage = '/kyc-done-page';
   static const scannerPage = '/wallet-scanner-page';
+  // SolanaPay
+  static const solanaPayReview = '/solana-pay-review-page';
+  static const solanaPayStatus = '/solana-pay-status-page';
+
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

@@ -10,12 +10,14 @@ class PaymentItem extends StatelessWidget {
     required this.title,
     required this.value,
     this.isUsdc = false,
+    this.isSol = false,
     super.key,
   });
 
   final String title;
   final String value;
   final bool isUsdc;
+  final bool isSol;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +34,30 @@ class PaymentItem extends StatelessWidget {
         ),
         8.horizontalSpace,
         Expanded(
-          child: isUsdc
+          child: (isUsdc || isSol)
               ? Text.rich(
                   TextSpan(
                     children: [
                       TextSpan(text: value),
                       TextSpan(text: ' '),
-                      WidgetSpan(
-                        child: CustomIcon(
-                          icon: R.ASSETS_ICONS_USD_COIN_SVG,
-                          height: 16.h,
-                          width: 16.w,
+                      if (isUsdc) ...{
+                        WidgetSpan(
+                          child: CustomIcon(
+                            icon: R.ASSETS_ICONS_USD_COIN_SVG,
+                            height: 16.h,
+                            width: 16.w,
+                          ),
                         ),
-                      ),
+                      },
+                      if (isSol) ...{
+                        WidgetSpan(
+                          child: CustomIcon(
+                            icon: R.ASSETS_ICONS_SOLANA_SOL_ICON_SVG,
+                            height: 13.h,
+                            width: 13.w,
+                          ),
+                        ),
+                      }
                     ],
                   ),
                   style: context.textTheme.bodyMedium!.copyWith(

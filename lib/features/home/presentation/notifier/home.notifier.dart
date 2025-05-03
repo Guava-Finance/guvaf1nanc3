@@ -31,12 +31,12 @@ final avatarProvider = FutureProvider<String>((ref) async {
   return wallet.avatar;
 });
 
-final myUsernameProvider = FutureProvider<String>((ref) async {
+final myUsernameProvider = FutureProvider<String?>((ref) async {
   final username = (await ref
       .read(securedStorageServiceProvider)
       .readFromStorage(Strings.myUsername));
 
-  return username ?? '';
+  return username;
 });
 
 @riverpod

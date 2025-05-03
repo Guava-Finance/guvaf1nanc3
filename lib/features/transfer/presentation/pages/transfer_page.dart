@@ -12,7 +12,13 @@ import 'package:guava/features/transfer/presentation/pages/bank_transfer.dart';
 import 'package:guava/features/transfer/presentation/widgets/transfer_type_selector.dart';
 
 class TransferPage extends ConsumerStatefulWidget {
-  const TransferPage({super.key});
+  const TransferPage({
+    this.initialAddress,
+    super.key,
+  });
+
+  // Parameter to receive address from route navigation
+  final String? initialAddress;
 
   @override
   ConsumerState<TransferPage> createState() => _TransferPageState();
@@ -20,6 +26,31 @@ class TransferPage extends ConsumerStatefulWidget {
 
 class _TransferPageState extends ConsumerState<TransferPage> {
   String? walletAddress;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Process initial address if provided through route navigation
+      if (widget.initialAddress != null && widget.initialAddress!.isNotEmpty) {
+        setState(() {
+          walletAddress = widget.initialAddress;
+        });
+
+        // Update the provider state with the initial address
+        if (ref.exists(receipentAddressProvider)) {
+          ref.read(receipentAddressProvider.notifier).state =
+              widget.initialAddress;
+        }
+      } else {
+        // Reset the address provider if no initial address
+        ref.read(receipentAddressProvider.notifier).state = null;
+      }
+
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +73,21 @@ class _TransferPageState extends ConsumerState<TransferPage> {
                 onPressed: () {
                   context.push(pScanner).then((v) {
                     if (v != null) {
-                      walletAddress = v.toString();
+                      final scannedValue = v.toString();
 
-                      notifier.jumpTo(0);
+                      // Store the wallet address
+                      setState(() {
+                        walletAddress = scannedValue;
+                      });
 
-                      ref.read(receipentAddressProvider.notifier).state =
-                          v.toString();
+                      // Switch to wallet transfer tab if not already there
+                      if (tabState != 0) notifier.jumpTo(0);
+
+                      // Update the provider state
+                      if (ref.exists(receipentAddressProvider)) {
+                        ref.read(receipentAddressProvider.notifier).state =
+                            scannedValue;
+                      }
                     }
                   });
                 },

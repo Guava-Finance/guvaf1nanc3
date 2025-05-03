@@ -30,58 +30,93 @@ class WalletTransfer extends ConsumerStatefulWidget {
 }
 
 class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
-  final debounce = Debouncer(duration: Duration(seconds: 2));
+  final debouncer = Debouncer(duration: Duration(seconds: 2));
   late final TextEditingController controller;
+  bool _isDisposed = false;
 
   @override
   void initState() {
     controller = TextEditingController();
 
+    // If walletAddress is provided, set it right away
+    if (widget.walletAddress != null && widget.walletAddress!.isNotEmpty) {
+      controller.text = widget.walletAddress!;
+      // Delay query to ensure widget is fully initialized
+      Future.microtask(() => query());
+    }
+
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(receipentAddressProvider.notifier).state = widget.walletAddress;
-
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
+    debouncer.dispose(); // Ensure the debouncer is properly disposed
     controller.dispose();
-
     super.dispose();
   }
 
   void query() {
+    // Check if widget is still mounted before proceeding
+    if (_isDisposed) return;
+
     withLoading(() async {
+      // Check mounted state again before starting async operation
+      if (_isDisposed) return;
       await ref.read(transferNotifierProvider).resolveAddress(controller.text);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Only run this once after the first build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isDisposed) return; // Safety check
+
+      // Use a safer approach to update the text field
+      final savedAddress = ref.read(receipentAddressProvider);
+      if (savedAddress != null && savedAddress.isNotEmpty && mounted) {
+        Future.delayed(Durations.medium1, () {
+          if (mounted && controller.text != savedAddress) {
+            controller.text = savedAddress;
+            setState(() {});
+          }
+        });
+      }
+    });
+
     return Column(
       children: [
         CustomTextfield(
           hintText: 'To: username or address',
           controller: controller,
           onChanged: (p0) {
+            if (_isDisposed) return; // Safety check
+
             ref.read(receipentAddressProvider.notifier).state = null;
 
             if ((p0 ?? '').length > 2) {
-              debounce.run(() => query());
+              debouncer.run(() {
+                if (!mounted) return; // Safety check inside debouncer callback
+                query();
+              });
             }
           },
           onSubmit: (p0) {
+            if (!mounted) return; // Safety check
             query();
           },
           suffixIcon: GestureDetector(
             onTap: () async {
+              if (!mounted) return; // Safety check
+
               try {
                 // Use the proper Flutter clipboard API pattern
                 final clipboardData =
                     await Clipboard.getData(Clipboard.kTextPlain);
+
+                // Verify mounted state after async operation
+                if (!mounted) return;
 
                 // Check if clipboard has valid text content
                 if (clipboardData != null &&
@@ -99,28 +134,36 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
 
                     // Delay slightly to ensure controller update is complete
                     Future.delayed(const Duration(milliseconds: 50), () {
+                      if (!mounted) return; // Safety check
                       query();
                     });
                   }
                 } else {
                   // Show clipboard empty notification using the current context
+                  if (navkey.currentContext != null) {
+                    navkey.currentContext!.notify.addNotification(
+                      NotificationTile(
+                        notificationType: NotificationType.warning,
+                        content: 'Clipboard is empty',
+                        duration: 2,
+                      ),
+                    );
+                  }
+                }
+              } catch (e) {
+                // Verify mounted state after exception
+                if (!mounted) return;
+
+                // Show error notification
+                if (navkey.currentContext != null) {
                   navkey.currentContext!.notify.addNotification(
                     NotificationTile(
-                      notificationType: NotificationType.warning,
-                      content: 'Clipboard is empty',
+                      notificationType: NotificationType.error,
+                      content: 'Failed to access clipboard: ${e.toString()}',
                       duration: 2,
                     ),
                   );
                 }
-              } catch (e) {
-                // Show error notification
-                navkey.currentContext!.notify.addNotification(
-                  NotificationTile(
-                    notificationType: NotificationType.error,
-                    content: 'Failed to access clipboard: ${e.toString()}',
-                    duration: 2,
-                  ),
-                );
               }
             },
             child: Container(
@@ -170,6 +213,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
 
                 return CustomButton(
                   onTap: () {
+                    if (!mounted) return; // Safety check
                     context.push(pEnterAmountWallet);
                   },
                   title: 'Next',

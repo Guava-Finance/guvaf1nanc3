@@ -167,7 +167,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank> {
                   },
                   title: 'Continue',
                 ),
-                10.verticalSpace,
+                15.verticalSpace,
               ],
             ).padHorizontal,
           ],

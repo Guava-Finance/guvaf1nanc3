@@ -7,7 +7,6 @@ import 'package:guava/features/transfer/domain/usecases/countries_usecase.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
-import 'package:guava/widgets/utility_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends ConsumerWidget {

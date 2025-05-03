@@ -13,6 +13,7 @@ import 'package:guava/features/transfer/domain/usecases/bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_account.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
+import 'package:guava/features/transfer/domain/usecases/solana_pay.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -150,6 +151,26 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
               'Address saved to your address book',
         ),
       );
+
+      return true;
+    }
+  }
+
+  Future<bool> processSolanaPay() async {
+    final result = await ref.read(solanaPayUsecaseProvider).call(params: null);
+
+    if (result.isError) {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          content: result.errorMessage,
+          notificationType: NotificationType.error,
+        ),
+      );
+
+      return false;
+    } else {
+      ref.read(transactionId.notifier).state =
+          (result as LoadedState<String>).data;
 
       return true;
     }

@@ -1,17 +1,21 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart';
 import 'package:convert/convert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:guava/core/resources/services/config.dart';
+import 'package:guava/features/transfer/data/models/params/solana_pay.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
-import 'package:solana/encoder.dart';
+// import 'package:solana/encoder.dart';
+import 'package:solana/encoder.dart' as encoder;
 import 'package:solana/solana.dart';
 
 import 'storage.dart';
@@ -136,27 +140,6 @@ final class SolanaService {
     throw Exception('Oops! Nothing here');
   }
 
-  /// This method check whether user has already created SPLToken account
-  /// To avoid trying to recreate it
-  /// SPLToken account is created only once
-  // Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
-  //   final address = await _getTokenAddress();
-
-  //   // Fetch the token account info
-  //   final accountInfo = await rpcClient.getAccountInfo(
-  //     address.toBase58(),
-  //     encoding: Encoding.base64,
-  //   );
-
-  //   /// Check if the account exists and is initialized
-  //   // todo: Cross check this implementation
-  //   if (accountInfo.value != null && accountInfo.value?.data != null) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
     try {
       // Get the associated token account address for this mint and owner
@@ -190,12 +173,12 @@ final class SolanaService {
   /// Newly created wallet would be pre-funded by the system to enable
   /// wallet create the USDC SPL Token account on the blockchain
   /// ANd it return the transactionId after creating
-  Future<String> enableUSDCForWallet() async {
+  Future<String> enableUSDCForWallet([String? mintAddress]) async {
     final config = await configService.getConfig();
     final wallet = await _getWallet();
 
     final usdcMint = Ed25519HDPublicKey.fromBase58(
-      config!.walletSettings.usdcMintAddress,
+      mintAddress ?? config!.walletSettings.usdcMintAddress,
     );
 
     /// This get the associated wallet address for that token mint
@@ -328,15 +311,15 @@ final class SolanaService {
 
     final Message message = Message(
       instructions: [
+        memoInstruction,
         instruction,
         if (transactionFee != null) txnFeeInstruction,
-        memoInstruction,
       ],
     );
 
     /// Sign the message instructions and send the encode SignedTx
     /// to the backend for submission
-    final SignedTx signedTx = await wallet.signMessage(
+    final encoder.SignedTx signedTx = await wallet.signMessage(
       message: message,
       recentBlockhash: (await rpcClient.getLatestBlockhash()).value.blockhash,
     );
@@ -492,27 +475,170 @@ final class SolanaService {
     }
   }
 
-  // String _newMnemonicFromPrivateKey(Uint8List privateKeyBytes) {
-  //   // Note: This is a complex cryptographic operation that isn't truly reversible
-  //   // We're creating a new mnemonic that, when used with path m/44'/501'/0'/0',
-  //   // will hopefully result in a key that matches our original private key
+  Future<String> solanaPay(SolanaPayUrl solanaPayUrl) async {
+    final wallet = await _getWallet();
 
-  //   // For proper mnemonic generation, we need entropy that's a multiple of 32 bits
-  //   // A standard BIP39 mnemonic uses either 128 or 256 bits of entropy
+    List<encoder.Instruction> instructions = [];
 
-  //   // Create entropy from the private key bytes (ensuring it's 16 bytes/128 bits)
-  //   final entropy = Uint8List(16);
+    // Process memo if it exists - needs to be added before transfer instruction
+    if (solanaPayUrl.memo != null) {
+      instructions.add(
+        encoder.Instruction(
+          programId: Ed25519HDPublicKey.fromBase58(
+            'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
+          ),
+          accounts: [],
+          data: encoder.ByteArray(utf8.encode(solanaPayUrl.memo!)),
+        ),
+      );
+    }
 
-  //   // Use as much of the private key as fits, up to 16 bytes
-  //   final bytesToUse = min(privateKeyBytes.length, 16);
-  //   for (int i = 0; i < bytesToUse; i++) {
-  //     entropy[i] = privateKeyBytes[i];
-  //   }
+    // Add transfer instructions based on SPL token or native SOL
+    if (solanaPayUrl.splToken == null) {
+      instructions.addAll(await _isSolanaPayNative(solanaPayUrl));
+    } else {
+      instructions.addAll(await _isSolanaPaySpl(solanaPayUrl));
+    }
 
-  //   // Convert entropy to hex string (required by entropyToMnemonic)
-  //   final entropyHex = hex.encode(entropy);
+    return await rpcClient.signAndSendTransaction(
+      Message(instructions: instructions),
+      [wallet],
+    );
+  }
 
-  //   // Generate mnemonic from entropy
-  //   return entropyToMnemonic(entropyHex);
-  // }
+  Future<List<encoder.Instruction>> _isSolanaPayNative(
+    SolanaPayUrl payUrl,
+  ) async {
+    final wallet = await walletAddress();
+    final config = await configService.getConfig();
+
+    // Create the base transfer instruction
+    final transferInstruction = SystemInstruction.transfer(
+      fundingAccount: Ed25519HDPublicKey.fromBase58(wallet),
+      recipientAccount: Ed25519HDPublicKey.fromBase58(payUrl.recipient),
+      lamports: (double.parse(payUrl.amount!) * lamportsPerSol).toInt(),
+    );
+
+    // Add reference accounts if present
+    if (payUrl.reference != null && payUrl.reference!.isNotEmpty) {
+      // Split multiple references if present (comma-separated)
+      final List<String> references = payUrl.reference!.split(',');
+
+      // Add each reference as a read-only, non-signer account
+      for (final ref in references) {
+        final trimmedRef = ref.trim();
+        if (trimmedRef.isNotEmpty) {
+          try {
+            final refPubKey = Ed25519HDPublicKey.fromBase58(trimmedRef);
+            transferInstruction.accounts.add(
+              encoder.AccountMeta(
+                pubKey: refPubKey,
+                isWriteable: false,
+                isSigner: false,
+              ),
+            );
+          } catch (e) {
+            AppLogger.log('Invalid reference key: $trimmedRef - $e');
+          }
+        }
+      }
+    }
+
+    final instructions = [transferInstruction];
+
+    // Add fee transfer if present
+    if (payUrl.fee != null) {
+      instructions.add(
+        SystemInstruction.transfer(
+          fundingAccount: Ed25519HDPublicKey.fromBase58(wallet),
+          recipientAccount: Ed25519HDPublicKey.fromBase58(
+            config!.companySettings.companyWalletAddress,
+          ),
+          lamports: (double.parse(payUrl.fee!) * lamportsPerSol).toInt(),
+        ),
+      );
+    }
+
+    return instructions;
+  }
+
+  Future<List<encoder.Instruction>> _isSolanaPaySpl(SolanaPayUrl payUrl) async {
+    final wallet = await walletAddress();
+    final config = await configService.getConfig();
+    final walletPubKey = Ed25519HDPublicKey.fromBase58(wallet);
+    final tokenMintPubKey = Ed25519HDPublicKey.fromBase58(payUrl.splToken!);
+    final recipientPubKey = Ed25519HDPublicKey.fromBase58(payUrl.recipient);
+
+    final senderATA = await findAssociatedTokenAddress(
+      owner: walletPubKey,
+      mint: tokenMintPubKey,
+    );
+
+    final receiverATA = await findAssociatedTokenAddress(
+      owner: recipientPubKey,
+      mint: tokenMintPubKey,
+    );
+
+    if (!(await doesSPLTokenAccountExist(payUrl.splToken!))) {
+      // In case the company doesn't have the SPLToken account
+      // create it
+      await enableUSDCForWallet(payUrl.splToken!);
+    }
+
+    // Create the base transfer instruction
+    final transferInstruction = TokenInstruction.transfer(
+      amount: (double.parse(payUrl.amount!) * lamportsPerSol).toInt(),
+      source: senderATA,
+      destination: receiverATA,
+      owner: walletPubKey,
+    );
+
+    // Add reference accounts if present
+    if (payUrl.reference != null && payUrl.reference!.isNotEmpty) {
+      // Split multiple references if present (comma-separated)
+      final List<String> references = payUrl.reference!.split(',');
+
+      // Add each reference as a read-only, non-signer account
+      for (final ref in references) {
+        final trimmedRef = ref.trim();
+        if (trimmedRef.isNotEmpty) {
+          try {
+            final refPubKey = Ed25519HDPublicKey.fromBase58(trimmedRef);
+            transferInstruction.accounts.add(
+              encoder.AccountMeta(
+                pubKey: refPubKey,
+                isWriteable: false,
+                isSigner: false,
+              ),
+            );
+          } catch (e) {
+            AppLogger.log('Invalid reference key: $trimmedRef - $e');
+          }
+        }
+      }
+    }
+
+    final instructions = [transferInstruction];
+
+    // Add fee transfer if present
+    if (payUrl.fee != null) {
+      final companyATA = await findAssociatedTokenAddress(
+        owner: Ed25519HDPublicKey.fromBase58(
+          config!.companySettings.companyWalletAddress,
+        ),
+        mint: tokenMintPubKey,
+      );
+
+      instructions.add(
+        TokenInstruction.transfer(
+          amount: (double.parse(payUrl.fee!) * lamportsPerSol).toInt(),
+          source: senderATA,
+          destination: companyATA,
+          owner: walletPubKey,
+        ),
+      );
+    }
+
+    return instructions;
+  }
 }

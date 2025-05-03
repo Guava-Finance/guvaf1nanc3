@@ -172,6 +172,10 @@ class R {
   static const String ASSETS_ICONS_SOLANA_FLOATER_SVG =
       'assets/icons/solana-floater.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/solana-sol-icon.svg)
+  static const String ASSETS_ICONS_SOLANA_SOL_ICON_SVG =
+      'assets/icons/solana-sol-icon.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/statement-icon.svg)
   static const String ASSETS_ICONS_STATEMENT_ICON_SVG =
       'assets/icons/statement-icon.svg';

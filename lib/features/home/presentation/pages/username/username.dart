@@ -203,6 +203,8 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
                     await withLoading(() async {
                       await hn.setUsername(usernameCtrl.text).then((v) {
                         if (v) navkey.currentContext!.pop();
+
+                        ref.invalidate(myUsernameProvider);
                       });
                     });
                   },

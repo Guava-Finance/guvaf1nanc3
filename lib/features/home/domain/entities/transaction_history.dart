@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:guava/features/home/data/models/bank.dart';
-import 'package:guava/features/home/domain/entities/bank_details.dart';
 
 class TransactionsHistory extends Equatable {
   final String? id;

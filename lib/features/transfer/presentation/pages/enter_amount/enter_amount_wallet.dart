@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -251,7 +249,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                     );
                   },
                 ),
-                30.verticalSpace,
+                15.verticalSpace,
               ],
             ).padHorizontal,
           ],

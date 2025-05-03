@@ -4,13 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/home/data/models/balance.param.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/home/presentation/widgets/status_item.dart';
 import 'package:guava/features/home/presentation/widgets/txn_tile.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
-import 'package:guava/widgets/utility_widget.dart';
 import 'package:intl/intl.dart';
 
 class TransactionFee extends StatelessWidget {

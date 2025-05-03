@@ -20,6 +20,8 @@ import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_am
 import 'package:guava/features/transfer/presentation/pages/payment_status_page.dart';
 import 'package:guava/features/transfer/presentation/pages/review_payment_page.dart';
 import 'package:guava/features/transfer/presentation/pages/scanner.dart';
+import 'package:guava/features/transfer/presentation/pages/solana_pay/sp_payment_status_page.dart';
+import 'package:guava/features/transfer/presentation/pages/solana_pay/sp_review_payment_page.dart';
 import 'package:guava/features/transfer/presentation/pages/transfer_page.dart';
 
 /// [p] suffix means path
@@ -43,6 +45,9 @@ const String pSetUsername = Strings.setUsername;
 const String pKyc = Strings.kycPage;
 const String pKycDone = Strings.kycDonePage;
 const String pScanner = Strings.scannerPage;
+// Solana Pay
+const String pSolanaPayReview = Strings.solanaPayReview;
+const String pSolanaPayStatus = Strings.solanaPayStatus;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -91,7 +96,12 @@ final router = GoRouter(
     GoRoute(
       name: pTransfer.pathToName,
       path: pTransfer,
-      builder: (context, state) => const TransferPage(),
+      builder: (context, state) {
+        final initialAddress = state.extra as String?;
+        return TransferPage(
+          initialAddress: initialAddress,
+        );
+      },
     ),
     GoRoute(
       name: pRecieve.pathToName,
@@ -147,6 +157,17 @@ final router = GoRouter(
       name: pScanner.pathToName,
       path: pScanner,
       builder: (context, state) => const WalletScannerPage(),
+    ),
+    // SolanaPay
+    GoRoute(
+      name: pSolanaPayReview.pathToName,
+      path: pSolanaPayReview,
+      builder: (context, state) => const ReviewSolanaPayDetailPage(),
+    ),
+     GoRoute(
+      name: pSolanaPayStatus.pathToName,
+      path: pSolanaPayStatus,
+      builder: (context, state) => const SolanaPayStatusPage(),
     ),
   ],
 );
