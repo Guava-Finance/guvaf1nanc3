@@ -21,7 +21,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
     with Loader {
   @override
   Widget build(BuildContext context) {
-    final activeState = ref.watch(activeTabState.notifier).state;
+    final activeState = ref.watch(activeTabState);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,9 +45,17 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                   title: 'Complete Transfer',
                   onTap: () async {
                     await withLoading(() async {
-                      final result = await ref
-                          .read(transferNotifierProvider)
-                          .makeWalletTransfer();
+                      late bool result;
+
+                      if (activeState == 0) {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeWalletTransfer();
+                      } else {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeABankTransfer();
+                      }
 
                       if (result) {
                         navkey.currentContext!.go(pPaymentStatus);

@@ -11,6 +11,7 @@ class PaymentItem extends StatelessWidget {
     required this.value,
     this.isUsdc = false,
     this.isSol = false,
+    this.valueWidget,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class PaymentItem extends StatelessWidget {
   final String value;
   final bool isUsdc;
   final bool isSol;
+  final Widget? valueWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +69,16 @@ class PaymentItem extends StatelessWidget {
                   ),
                   textAlign: TextAlign.end,
                 )
-              : Text(
-                  value,
-                  style: context.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12.sp,
-                    color: BrandColors.washedTextColor,
+              : valueWidget ??
+                  Text(
+                    value,
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      color: BrandColors.washedTextColor,
+                    ),
+                    textAlign: TextAlign.end,
                   ),
-                  textAlign: TextAlign.end,
-                ),
         ),
       ],
     );

@@ -15,7 +15,7 @@ abstract class TransferRemote {
   Future<dynamic> resolveAccount(String countryCode, Map<String, dynamic> data);
   Future<dynamic> getRecentBankTransfer(String wallet);
   Future<dynamic> getBankBeneficiaries(String wallet);
-  Future<dynamic> submitBankTransfer(Map<String, dynamic> data);
+  Future<dynamic> submitBankTransfer(String wallet, Map<String, dynamic> data);
   // Wallet Transfer
   Future<dynamic> recentWalletTransfer(String wallet);
   Future<dynamic> walletAddressBook(String wallet);
@@ -27,6 +27,7 @@ abstract class TransferRemote {
     String wallet,
     Map<String, dynamic> data,
   );
+  Future<dynamic> purpose();
 }
 
 class TransferRemoteImpl extends TransferRemote {
@@ -80,10 +81,13 @@ class TransferRemoteImpl extends TransferRemote {
   }
 
   @override
-  Future submitBankTransfer(Map<String, dynamic> data) async {
+  Future submitBankTransfer(String wallet, Map<String, dynamic> data) async {
     return await interceptor.post(
       '/transfer/bank/',
       data: data,
+      header: {
+        'X-Wallet-Public-Key': wallet,
+      },
     );
   }
 
@@ -120,6 +124,13 @@ class TransferRemoteImpl extends TransferRemote {
       header: {
         'X-Wallet-Public-Key': wallet,
       },
+    );
+  }
+
+  @override
+  Future purpose() async {
+    return await interceptor.get(
+      '/transfer/purpose/',
     );
   }
 }

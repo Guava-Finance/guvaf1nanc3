@@ -8,9 +8,10 @@ abstract class TransferRepository {
       String countryCode, Map<String, dynamic> data);
   Future<AppState> getRecentBankTransfer(String wallet);
   Future<AppState> getBankBeneficiaries(String wallet);
-  Future<AppState> initBankTransfer(Map<String, dynamic> data);
+  Future<AppState> initBankTransfer(String wallet, Map<String, dynamic> data);
   Future<AppState> recentWalletTransfer(String wallet);
   Future<AppState> addressBook(String wallet);
   Future<AppState> initWalletTransfer(String wallet, Map<String, dynamic> data);
   Future<AppState> saveAddress(String wallet, Map<String, dynamic> data);
+  Future<AppState> purpose();
 }

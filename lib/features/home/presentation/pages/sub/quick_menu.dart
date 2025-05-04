@@ -6,7 +6,9 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/home/presentation/widgets/icon_button.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class QuickMenu extends StatelessWidget {
   const QuickMenu({
@@ -29,23 +31,34 @@ class QuickMenu extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          CircularIconButton(
-            action: 'Transfer',
-            icon: R.ASSETS_ICONS_TRANSFER_ICON_SVG,
-            color: BrandColors.washedRed,
-            onTap: () {
-              context.push(pTransfer);
-              HapticFeedback.lightImpact();
-            },
+          Showcase(
+            key: transferWidgetKey,
+            description: 'Send money to other wallets, banks and across border',
+            targetPadding: EdgeInsets.all(12.sp),
+            child: CircularIconButton(
+              action: 'Transfer',
+              icon: R.ASSETS_ICONS_TRANSFER_ICON_SVG,
+              color: BrandColors.washedRed,
+              onTap: () {
+                context.push(pTransfer);
+                HapticFeedback.lightImpact();
+              },
+            ),
           ),
-          CircularIconButton(
-            action: 'Recieve',
-            icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
-            color: BrandColors.washedGreen,
-            onTap: () {
-              context.push(pRecieve);
-              HapticFeedback.lightImpact();
-            },
+          Showcase(
+            key: receiveWidgetKey,
+            description:
+                'Receive money from other banks, wallet and acros border',
+            targetPadding: EdgeInsets.all(12.sp),
+            child: CircularIconButton(
+              action: 'Recieve',
+              icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
+              color: BrandColors.washedGreen,
+              onTap: () {
+                context.push(pRecieve);
+                HapticFeedback.lightImpact();
+              },
+            ),
           ),
           CircularIconButton(
             action: 'Guava Pay',

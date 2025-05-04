@@ -12,6 +12,7 @@ import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/add_connect_wallet.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/private_key.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/recovery_phase.dart';
+import 'package:guava/features/receive/presentation/pages/amount/enter_amount.dart';
 import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
 import 'package:guava/features/home/presentation/pages/transactions/transaction_detail_page.dart';
 import 'package:guava/features/home/presentation/pages/transactions/transaction_page.dart';
@@ -36,6 +37,7 @@ const String pTransfer = Strings.transfer;
 const String pRecieve = Strings.recieve;
 const String pEnterAmountWallet = Strings.enterAmountWallet;
 const String pEnterAmountBank = Strings.enterAmountBank;
+const String pEnterAmountReceive = Strings.enterAmountReceive;
 const String pReviewPayemet = Strings.reviewPayment;
 const String pPaymentStatus = Strings.paymentStatus;
 const String pTransaction = Strings.transaction;
@@ -98,6 +100,7 @@ final router = GoRouter(
       path: pTransfer,
       builder: (context, state) {
         final initialAddress = state.extra as String?;
+
         return TransferPage(
           initialAddress: initialAddress,
         );
@@ -117,6 +120,11 @@ final router = GoRouter(
       name: pEnterAmountBank.pathToName,
       path: pEnterAmountBank,
       builder: (context, state) => const EnterAmountBank(),
+    ),
+    GoRoute(
+      name: pEnterAmountReceive.pathToName,
+      path: pEnterAmountReceive,
+      builder: (context, state) => const EnterAmountReceive(),
     ),
     GoRoute(
       name: pReviewPayemet.pathToName,
@@ -164,7 +172,7 @@ final router = GoRouter(
       path: pSolanaPayReview,
       builder: (context, state) => const ReviewSolanaPayDetailPage(),
     ),
-     GoRoute(
+    GoRoute(
       name: pSolanaPayStatus.pathToName,
       path: pSolanaPayStatus,
       builder: (context, state) => const SolanaPayStatusPage(),

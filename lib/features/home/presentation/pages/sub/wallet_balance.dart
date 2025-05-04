@@ -11,6 +11,7 @@ import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/data/models/balance.param.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class WalletBalance extends StatelessWidget {
   const WalletBalance({super.key});
@@ -94,7 +95,7 @@ class WalletBalance extends StatelessWidget {
   }
 }
 
-class _BalanceDisplay extends StatelessWidget {
+class _BalanceDisplay extends ConsumerWidget {
   const _BalanceDisplay({
     required this.isVisible,
     required this.onToggleVisibility,
@@ -112,47 +113,51 @@ class _BalanceDisplay extends StatelessWidget {
   final bool isLoading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            IntrinsicWidth(
-              child: Text.rich(
-                TextSpan(children: [
-                  TextSpan(
-                    text: _getLocalBalanceText(),
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: BrandColors.textColor,
-                      fontSize: 36.sp,
-                      fontWeight: FontWeight.bold,
+        Showcase(
+          key: balanceWidgetKey,
+          description: 'See your wallet balance in your local currency',
+          child: Row(
+            children: [
+              IntrinsicWidth(
+                child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(
+                      text: _getLocalBalanceText(),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: BrandColors.textColor,
+                        fontSize: 36.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: _getLocalBalanceDecimalText(),
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: BrandColors.washedTextColor,
-                      fontSize: 36.sp,
+                    TextSpan(
+                      text: _getLocalBalanceDecimalText(),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: BrandColors.washedTextColor,
+                        fontSize: 36.sp,
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: onToggleVisibility,
-              icon: isLoading
-                  ? CupertinoActivityIndicator(
-                      color: BrandColors.primary,
-                      radius: 12.r,
-                    )
-                  : Icon(
-                      isVisible ? Icons.visibility_off : Icons.visibility,
-                      color: BrandColors.textColor,
-                    ),
-            ),
-          ],
+              IconButton(
+                onPressed: onToggleVisibility,
+                icon: isLoading
+                    ? CupertinoActivityIndicator(
+                        color: BrandColors.primary,
+                        radius: 12.r,
+                      )
+                    : Icon(
+                        isVisible ? Icons.visibility_off : Icons.visibility,
+                        color: BrandColors.textColor,
+                      ),
+              ),
+            ],
+          ),
         ),
         Text.rich(
           TextSpan(

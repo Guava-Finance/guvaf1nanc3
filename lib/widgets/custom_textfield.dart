@@ -18,6 +18,7 @@ class CustomTextfield extends StatefulWidget {
     this.inputFormatters,
     this.readOnly = false,
     this.onTap,
+    this.inputType,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class CustomTextfield extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
   final VoidCallback? onTap;
+  final TextInputType? inputType;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -74,6 +76,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                 readOnly: widget.readOnly,
                 controller: widget.controller,
                 onFieldSubmitted: widget.onSubmit,
+                keyboardType: widget.inputType,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: widget.onChanged,
                 textCapitalization:

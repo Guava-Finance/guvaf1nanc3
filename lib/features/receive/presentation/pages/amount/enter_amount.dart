@@ -15,8 +15,8 @@ import 'package:guava/features/transfer/presentation/widgets/balance_text.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:intl/intl.dart';
 
-class EnterAmountBank extends ConsumerStatefulWidget {
-  const EnterAmountBank({
+class EnterAmountReceive extends ConsumerStatefulWidget {
+  const EnterAmountReceive({
     this.onComplete,
     this.subtitle,
     this.title,
@@ -32,7 +32,7 @@ class EnterAmountBank extends ConsumerStatefulWidget {
       _EnterAmountWalletState();
 }
 
-class _EnterAmountWalletState extends ConsumerState<EnterAmountBank>
+class _EnterAmountWalletState extends ConsumerState<EnterAmountReceive>
     with Loader {
   late final MoneyMaskedTextController amountCtrl;
   late final TextEditingController controller;
@@ -52,8 +52,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank>
 
         usdcAmount = (amount ?? 0.0) * balanceAsync.exchangeRate;
 
-        isValidated =
-            (amount ?? 0.0) > 0 && (amount ?? 0.0) <= balanceAsync.localBalance;
+        isValidated = (amount ?? 0.0) > 0;
 
         ref.watch(usdcAountTransfer.notifier).state = usdcAmount;
         ref.watch(localAountTransfer.notifier).state = amount ?? 0.0;

@@ -14,9 +14,9 @@ class PaymentReview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final purpose = ref.watch(transferPurpose.notifier).state;
-    final acctDetail = ref.watch(accountDetail.notifier).state;
-    final country = ref.watch(selectedCountry.notifier).state;
+    final purpose = ref.watch(selectedPurpose);
+    final acctDetail = ref.watch(accountDetail);
+    final country = ref.watch(selectedCountry);
 
     return Container(
       width: double.infinity,
@@ -56,7 +56,7 @@ class PaymentReview extends ConsumerWidget {
           15.verticalSpace,
           PaymentItem(
             title: 'Purpose',
-            value: purpose,
+            value: purpose?.title ?? '',
           ),
           20.verticalSpace,
           Text(

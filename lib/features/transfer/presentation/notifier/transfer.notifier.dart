@@ -9,6 +9,7 @@ import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/transfer/data/models/params/bank_transfer.dart';
 import 'package:guava/features/transfer/data/models/params/wallet_transfer.dart';
 import 'package:guava/features/transfer/domain/entities/account_detail.dart';
+import 'package:guava/features/transfer/domain/entities/purpose.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_account.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
@@ -33,6 +34,8 @@ final transferPurpose = StateProvider<String>((ref) => '');
 
 final transactionId = StateProvider<String>((ref) => '');
 final addressLabel = StateProvider<String>((ref) => '');
+
+final selectedPurpose = StateProvider<TransferPurpose?>((ref) => null);
 
 @riverpod
 class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
@@ -81,7 +84,7 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
   Map<String, dynamic> bankTransferData = {};
 
-  Future<void> makeABankTransfer() async {
+  Future<bool> makeABankTransfer() async {
     final result = await ref.read(bankTransferUsecaseProvider).call(
           params: BankTransferParam.fromJson(bankTransferData),
         );
@@ -93,8 +96,12 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
           notificationType: NotificationType.error,
         ),
       );
+
+      return false;
     } else {
       AppLogger.log((result as LoadedState).data);
+
+      return true;
     }
   }
 
@@ -176,3 +183,6 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
     }
   }
 }
+
+final transferToggleWidgetKey = GlobalKey();
+final recipientWidgetKey = GlobalKey();

@@ -15,6 +15,7 @@ import 'package:guava/features/onboarding/domain/entities/config/country.entity.
 import 'package:guava/features/transfer/data/models/params/bank_transfer.dart';
 import 'package:guava/features/transfer/data/repositories/repo.dart';
 import 'package:guava/features/transfer/domain/repositories/repo.dart';
+import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 
 final bankTransferUsecaseProvider = Provider<BankTransferUsecase>((ref) {
   return BankTransferUsecase(
@@ -23,6 +24,7 @@ final bankTransferUsecaseProvider = Provider<BankTransferUsecase>((ref) {
     info: ref.watch(ipInfoServiceProvider),
     storageService: ref.watch(securedStorageServiceProvider),
     solanaService: ref.watch(solanaServiceProvider),
+    ref: ref,
   );
 });
 
@@ -33,6 +35,7 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
     required this.info,
     required this.storageService,
     required this.solanaService,
+    required this.ref,
   });
 
   final TransferRepository repository;
@@ -40,9 +43,12 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
   final IpInfoService info;
   final SecuredStorageService storageService;
   final SolanaService solanaService;
+  final Ref ref;
 
   @override
   Future<AppState> call({required BankTransferParam params}) async {
+    final wallet = await solanaService.walletAddress();
+
     final config = await configService.getConfig();
     final myAccountData =
         await storageService.readFromStorage(Strings.myAccount);
@@ -79,11 +85,12 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
 
     try {
       // in local currency
-      final amount = num.parse(params.amount ?? '0').toDouble();
+      // final amount = ref.read(localAountTransfer.notifier).state;
+      final accountDetails = ref.read(accountDetail);
+      final purpose = ref.read(selectedPurpose);
 
       // convert local currency to usdc amount
-      double usdcAmount =
-          amount * (num.tryParse(exchnageRate)?.toDouble() ?? 0.0);
+      double usdcAmount = ref.read(usdcAountTransfer);
       double transactionFee =
           country.rates.offRamp.calculateTransactionFee(usdcAmount);
 
@@ -95,15 +102,20 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
       );
 
       final newParam = params.copyWith(
-        amount: amount.toString(),
-        transactionFee: transactionFee.toString(),
+        amount: usdcAmount.toStringAsFixed(9),
+        transactionFee: transactionFee.toStringAsFixed(9),
         signedTransaction: signedTx,
         type: 'bank',
+        accountName: accountDetails!.accountName,
+        accountNumber: accountDetails.accountNumber,
+        bank: accountDetails.bankCode,
+        country: country.name,
+        purpose: purpose!.id,
       );
 
       AppLogger.log(newParam);
 
-      return await repository.initBankTransfer(newParam.toJson());
+      return await repository.initBankTransfer(wallet, newParam.toJson());
     } catch (e) {
       return ErrorState(e.toString());
     }

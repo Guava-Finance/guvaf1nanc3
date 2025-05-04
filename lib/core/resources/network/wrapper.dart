@@ -49,10 +49,12 @@ class NetworkExceptionWrapper {
           );
         }
 
-        if (e.response?.statusCode == 400 || e.response?.statusCode == 401) {
-          AppLogger.log(e);
-          AppLogger.log(e.message);
+        if ((e.response?.statusCode ?? 000) >= 400 &&
+            (e.response?.statusCode ?? 000) <= 408) {
+          return ErrorState(e.response?.data['message']);
+        }
 
+        if ((e.response?.statusCode ?? 000) >= 500) {
           return ErrorState(e.response?.data['message']);
         }
 

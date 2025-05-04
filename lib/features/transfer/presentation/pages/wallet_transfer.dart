@@ -16,6 +16,7 @@ import 'package:guava/features/transfer/presentation/pages/sub/address_book.dart
 import 'package:guava/features/transfer/presentation/pages/sub/recent_transfers.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/custom_textfield.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class WalletTransfer extends ConsumerStatefulWidget {
   const WalletTransfer({
@@ -87,102 +88,108 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
 
     return Column(
       children: [
-        CustomTextfield(
-          hintText: 'To: username or address',
-          controller: controller,
-          onChanged: (p0) {
-            if (_isDisposed) return; // Safety check
+        Showcase(
+          key: recipientWidgetKey,
+          description: 'Send money via username or wallet address',
+          targetBorderRadius: BorderRadius.circular(16.r),
+          child: CustomTextfield(
+            hintText: 'To: username or address',
+            controller: controller,
+            onChanged: (p0) {
+              if (_isDisposed) return; // Safety check
 
-            ref.read(receipentAddressProvider.notifier).state = null;
+              ref.read(receipentAddressProvider.notifier).state = null;
 
-            if ((p0 ?? '').length > 2) {
-              debouncer.run(() {
-                if (!mounted) return; // Safety check inside debouncer callback
-                query();
-              });
-            }
-          },
-          onSubmit: (p0) {
-            if (!mounted) return; // Safety check
-            query();
-          },
-          suffixIcon: GestureDetector(
-            onTap: () async {
+              if ((p0 ?? '').length > 2) {
+                debouncer.run(() {
+                  if (!mounted)
+                    return; // Safety check inside debouncer callback
+                  query();
+                });
+              }
+            },
+            onSubmit: (p0) {
               if (!mounted) return; // Safety check
+              query();
+            },
+            suffixIcon: GestureDetector(
+              onTap: () async {
+                if (!mounted) return; // Safety check
 
-              try {
-                // Use the proper Flutter clipboard API pattern
-                final clipboardData =
-                    await Clipboard.getData(Clipboard.kTextPlain);
+                try {
+                  // Use the proper Flutter clipboard API pattern
+                  final clipboardData =
+                      await Clipboard.getData(Clipboard.kTextPlain);
 
-                // Verify mounted state after async operation
-                if (!mounted) return;
+                  // Verify mounted state after async operation
+                  if (!mounted) return;
 
-                // Check if clipboard has valid text content
-                if (clipboardData != null &&
-                    clipboardData.text != null &&
-                    clipboardData.text!.isNotEmpty) {
-                  // Set the text and trigger the onChanged callback
-                  controller.text = clipboardData.text!;
+                  // Check if clipboard has valid text content
+                  if (clipboardData != null &&
+                      clipboardData.text != null &&
+                      clipboardData.text!.isNotEmpty) {
+                    // Set the text and trigger the onChanged callback
+                    controller.text = clipboardData.text!;
 
-                  // Manually trigger resolveAddress if needed
-                  if (controller.text.length > 2) {
-                    // Move cursor to the end of the text
-                    controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: controller.text.length),
-                    );
+                    // Manually trigger resolveAddress if needed
+                    if (controller.text.length > 2) {
+                      // Move cursor to the end of the text
+                      controller.selection = TextSelection.fromPosition(
+                        TextPosition(offset: controller.text.length),
+                      );
 
-                    // Delay slightly to ensure controller update is complete
-                    Future.delayed(const Duration(milliseconds: 50), () {
-                      if (!mounted) return; // Safety check
-                      query();
-                    });
+                      // Delay slightly to ensure controller update is complete
+                      Future.delayed(const Duration(milliseconds: 50), () {
+                        if (!mounted) return; // Safety check
+                        query();
+                      });
+                    }
+                  } else {
+                    // Show clipboard empty notification using the current context
+                    if (navkey.currentContext != null) {
+                      navkey.currentContext!.notify.addNotification(
+                        NotificationTile(
+                          notificationType: NotificationType.warning,
+                          content: 'Clipboard is empty',
+                          duration: 2,
+                        ),
+                      );
+                    }
                   }
-                } else {
-                  // Show clipboard empty notification using the current context
+                } catch (e) {
+                  // Verify mounted state after exception
+                  if (!mounted) return;
+
+                  // Show error notification
                   if (navkey.currentContext != null) {
                     navkey.currentContext!.notify.addNotification(
                       NotificationTile(
-                        notificationType: NotificationType.warning,
-                        content: 'Clipboard is empty',
+                        notificationType: NotificationType.error,
+                        content: 'Failed to access clipboard: ${e.toString()}',
                         duration: 2,
                       ),
                     );
                   }
                 }
-              } catch (e) {
-                // Verify mounted state after exception
-                if (!mounted) return;
-
-                // Show error notification
-                if (navkey.currentContext != null) {
-                  navkey.currentContext!.notify.addNotification(
-                    NotificationTile(
-                      notificationType: NotificationType.error,
-                      content: 'Failed to access clipboard: ${e.toString()}',
-                      duration: 2,
-                    ),
-                  );
-                }
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 6.h,
-                horizontal: 10.w,
-              ),
-              decoration: ShapeDecoration(
-                color: BrandColors.containerColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 6.h,
+                  horizontal: 10.w,
                 ),
-              ),
-              child: Text(
-                'Paste',
-                style: context.textTheme.bodyMedium!.copyWith(
-                  color: BrandColors.textColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.sp,
+                decoration: ShapeDecoration(
+                  color: BrandColors.containerColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                child: Text(
+                  'Paste',
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    color: BrandColors.textColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.sp,
+                  ),
                 ),
               ),
             ),

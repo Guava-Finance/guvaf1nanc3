@@ -43,8 +43,12 @@ final myUsernameProvider = FutureProvider<String?>((ref) async {
 class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   @override
   HomeNotifier build() {
+    scrollController = ScrollController();
+
     return this;
   }
+
+  late ScrollController scrollController;
 
   Future<void> checkUsername(String username) async {
     final result =
@@ -106,3 +110,12 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
     }
   }
 }
+
+GlobalKey balanceWidgetKey = GlobalKey();
+GlobalKey walletDetailWidgetKey = GlobalKey();
+GlobalKey avatarWidgetKey = GlobalKey();
+GlobalKey scannerWidgetKey = GlobalKey();
+GlobalKey transferWidgetKey = GlobalKey();
+GlobalKey receiveWidgetKey = GlobalKey();
+GlobalKey allTransactionsButtonWidgetKey = GlobalKey();
+GlobalKey transactionSessionWidgetKey = GlobalKey();

@@ -28,6 +28,7 @@ class Strings {
   static const recieve = '/recieve';
   static const enterAmountWallet = '/enterAmountWallet';
   static const enterAmountBank = '/enterAmountBank';
+  static const enterAmountReceive = '/enterAmountReceive';
   static const reviewPayment = '/reviewPayment';
   static const paymentStatus = '/paymentStatus';
   static const transaction = '/transaction';

@@ -10,6 +10,7 @@ import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.
 import 'package:guava/features/transfer/presentation/pages/wallet_transfer.dart';
 import 'package:guava/features/transfer/presentation/pages/bank_transfer.dart';
 import 'package:guava/features/transfer/presentation/widgets/transfer_type_selector.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class TransferPage extends ConsumerStatefulWidget {
   const TransferPage({
@@ -25,6 +26,8 @@ class TransferPage extends ConsumerStatefulWidget {
 }
 
 class _TransferPageState extends ConsumerState<TransferPage> {
+  final scaffoldKey = GlobalKey();
+
   String? walletAddress;
 
   @override
@@ -48,7 +51,19 @@ class _TransferPageState extends ConsumerState<TransferPage> {
         ref.read(receipentAddressProvider.notifier).state = null;
       }
 
+      ref.read(accountDetail.notifier).state = null;
+      ref.read(usdcAountTransfer.notifier).state = 0.0;
+      ref.read(localAountTransfer.notifier).state = 0.0;
+
       setState(() {});
+
+      // todo: make is show once
+      Future.delayed(Durations.extralong1, () {
+        ShowCaseWidget.of(scaffoldKey.currentContext!).startShowCase([
+          transferToggleWidgetKey,
+          recipientWidgetKey,
+        ]);
+      });
     });
   }
 
@@ -59,70 +74,80 @@ class _TransferPageState extends ConsumerState<TransferPage> {
         final notifier = ref.watch(transferNotifierProvider.notifier);
         final tabState = ref.watch(activeTabState);
 
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: TransferTypeSelector(
-              selected: tabState,
-              onChanged: (value) {
-                notifier.jumpTo(value);
-              },
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  context.push(pScanner).then((v) {
-                    if (v != null) {
-                      final scannedValue = v.toString();
-
-                      // Store the wallet address
-                      setState(() {
-                        walletAddress = scannedValue;
-                      });
-
-                      // Switch to wallet transfer tab if not already there
-                      if (tabState != 0) notifier.jumpTo(0);
-
-                      // Update the provider state
-                      if (ref.exists(receipentAddressProvider)) {
-                        ref.read(receipentAddressProvider.notifier).state =
-                            scannedValue;
-                      }
-                    }
-                  });
-                },
-                icon: SvgPicture.asset(
-                  R.ASSETS_ICONS_SCAN_ICON_SVG,
-                  width: 20.w,
-                  height: 20.h,
+        return ShowCaseWidget(
+          onFinish: () {},
+          builder: (context) => Scaffold(
+            key: scaffoldKey,
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: Showcase(
+                key: transferToggleWidgetKey,
+                description:
+                    '''Toggle between send money out via wallet transfer or via banks (i.e. off ramping)''',
+                targetBorderRadius: BorderRadius.circular(20.r),
+                child: TransferTypeSelector(
+                  selected: tabState,
+                  onChanged: (value) {
+                    notifier.jumpTo(value);
+                  },
                 ),
               ),
-              6.horizontalSpace,
-            ],
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      12.verticalSpace,
-                      Expanded(
-                        child: PageView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          controller: notifier.pageController,
-                          children: [
-                            WalletTransfer(walletAddress: walletAddress),
-                            BankTransfer(),
-                          ],
-                        ),
-                      )
-                    ],
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    context.push(pScanner).then((v) {
+                      if (v != null) {
+                        final scannedValue = v.toString();
+
+                        // Store the wallet address
+                        setState(() {
+                          walletAddress = scannedValue;
+                        });
+
+                        // Switch to wallet transfer tab if not already there
+                        if (tabState != 0) notifier.jumpTo(0);
+
+                        // Update the provider state
+                        if (ref.exists(receipentAddressProvider)) {
+                          ref.read(receipentAddressProvider.notifier).state =
+                              scannedValue;
+                        }
+                      }
+                    });
+                  },
+                  icon: SvgPicture.asset(
+                    R.ASSETS_ICONS_SCAN_ICON_SVG,
+                    width: 20.w,
+                    height: 20.h,
                   ),
                 ),
+                6.horizontalSpace,
               ],
+            ),
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        12.verticalSpace,
+                        Expanded(
+                          child: PageView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            controller: notifier.pageController,
+                            children: [
+                              WalletTransfer(walletAddress: walletAddress),
+                              BankTransfer(),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
