@@ -85,7 +85,7 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
 
     try {
       // in local currency
-      // final amount = ref.read(localAountTransfer.notifier).state;
+      final amount = ref.read(localAountTransfer.notifier).state;
       final accountDetails = ref.read(accountDetail);
       final purpose = ref.read(selectedPurpose);
 
@@ -101,9 +101,10 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
         narration: params.purpose,
       );
 
+      // local currency is entered instead
       final newParam = params.copyWith(
-        amount: usdcAmount.toStringAsFixed(9),
-        transactionFee: transactionFee.toStringAsFixed(9),
+        amount: amount.toStringAsFixed(2),
+        transactionFee: transactionFee.toStringAsFixed(2),
         signedTransaction: signedTx,
         type: 'bank',
         accountName: accountDetails!.accountName,
@@ -112,8 +113,6 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
         country: country.name,
         purpose: purpose!.id,
       );
-
-      AppLogger.log(newParam);
 
       return await repository.initBankTransfer(wallet, newParam.toJson());
     } catch (e) {

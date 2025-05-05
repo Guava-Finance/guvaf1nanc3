@@ -76,16 +76,17 @@ class RecentBankTransfers<T> extends StatelessWidget {
                 )
               : Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: 20.h,
+                    vertical: 8.h,
                     horizontal: 15.w,
                   ),
                   decoration: ShapeDecoration(
-                    color: BrandColors.containerColor,
+                    color: BrandColors.containerColor.withValues(alpha: .5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                   ),
                   child: ListView.separated(
+                    shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.symmetric(
                       vertical: 20.h,
@@ -106,7 +107,7 @@ class RecentBankTransfers<T> extends StatelessWidget {
                       );
                     },
                   ),
-                ),
+                ).padHorizontal,
     );
   }
 }

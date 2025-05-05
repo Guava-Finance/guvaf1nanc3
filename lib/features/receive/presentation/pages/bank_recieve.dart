@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/mixins/loading.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
+import 'package:guava/features/receive/presentation/notifier/recieve.notifier.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
 import 'package:guava/widgets/app_icon.dart';
@@ -21,7 +23,7 @@ class BankRecieve extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _BankRecieveState();
 }
 
-class _BankRecieveState extends ConsumerState<BankRecieve> {
+class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
   late final MoneyMaskedTextController amountCtrl;
   late final MoneyMaskedTextController receiveCtrl;
 
@@ -54,6 +56,8 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
 
   @override
   Widget build(BuildContext context) {
+    final rn = ref.watch(recieveNotifierProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -325,11 +329,25 @@ class _BankRecieveState extends ConsumerState<BankRecieve> {
           ),
         ),
         Spacer(),
-        CustomButton(
-          onTap: () {},
-          title: 'Continue',
-          disable: !isValidated,
-        )
+        ValueListenableBuilder(
+          valueListenable: isLoading,
+          builder: (_, data, __) {
+            return CustomButton(
+              onTap: () async {
+                withLoading(() async {
+                  final result = await rn.initDeposit();
+
+                  if (result) {
+                    navkey.currentContext!.push(pAccountPayable);
+                  }
+                });
+              },
+              title: 'Continue',
+              disable: !isValidated,
+              isLoading: data,
+            );
+          },
+        ),
       ],
     );
   }

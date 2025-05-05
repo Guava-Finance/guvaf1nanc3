@@ -31,6 +31,9 @@ class R {
   static const String ASSETS_ICONS_ARROW_FORWARD_SVG =
       'assets/icons/arrow-forward.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/bank.svg)
+  static const String ASSETS_ICONS_BANK_SVG = 'assets/icons/bank.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/biometric.svg)
   static const String ASSETS_ICONS_BIOMETRIC_SVG = 'assets/icons/biometric.svg';
 
@@ -40,6 +43,9 @@ class R {
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/camera.svg)
   static const String ASSETS_ICONS_CAMERA_SVG = 'assets/icons/camera.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/checkbox.svg)
+  static const String ASSETS_ICONS_CHECKBOX_SVG = 'assets/icons/checkbox.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/checkmark.svg)
   static const String ASSETS_ICONS_CHECKMARK_SVG = 'assets/icons/checkmark.svg';
@@ -156,6 +162,10 @@ class R {
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/search.svg)
   static const String ASSETS_ICONS_SEARCH_SVG = 'assets/icons/search.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/secured_by.svg)
+  static const String ASSETS_ICONS_SECURED_BY_SVG =
+      'assets/icons/secured_by.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/security-floater.svg)
   static const String ASSETS_ICONS_SECURITY_FLOATER_SVG =

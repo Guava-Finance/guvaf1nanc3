@@ -102,8 +102,10 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
 
               if ((p0 ?? '').length > 2) {
                 debouncer.run(() {
-                  if (!mounted)
-                    return; // Safety check inside debouncer callback
+                  if (!mounted) {
+                    return;
+                  } // Safety check inside debouncer callback
+
                   query();
                 });
               }

@@ -12,6 +12,7 @@ import 'package:guava/features/onboarding/presentation/pages/splash.page.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/add_connect_wallet.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/private_key.dart';
 import 'package:guava/features/onboarding/presentation/pages/wallet_recovery/recovery_phase.dart';
+import 'package:guava/features/receive/presentation/pages/account_payable.dart';
 import 'package:guava/features/receive/presentation/pages/amount/enter_amount.dart';
 import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
 import 'package:guava/features/home/presentation/pages/transactions/transaction_detail_page.dart';
@@ -47,6 +48,7 @@ const String pSetUsername = Strings.setUsername;
 const String pKyc = Strings.kycPage;
 const String pKycDone = Strings.kycDonePage;
 const String pScanner = Strings.scannerPage;
+const String pAccountPayable = Strings.accountPayable;
 // Solana Pay
 const String pSolanaPayReview = Strings.solanaPayReview;
 const String pSolanaPayStatus = Strings.solanaPayStatus;
@@ -165,6 +167,11 @@ final router = GoRouter(
       name: pScanner.pathToName,
       path: pScanner,
       builder: (context, state) => const WalletScannerPage(),
+    ),
+    GoRoute(
+      name: pAccountPayable.pathToName,
+      path: pAccountPayable,
+      builder: (context, state) => const AccountPayablePage(),
     ),
     // SolanaPay
     GoRoute(
