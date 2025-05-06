@@ -47,7 +47,7 @@ class Strings {
   static const scannerPage = '/wallet-scanner-page';
   static const accountPayable = '/account-payable-page';
   static const mnenomicInstruction = '/mnenomics-instruction-page';
-  static const mnenomicPin = '/mnenomics-pin-page';
+  static const accessPin = '/app-access-pin-page';
   static const mnenomicShow = '/mnenomics-show-page';
   static const mnenomicValidation = '/mnenomics-validation-page';
   static const mnenomicBackupComplete = '/mnenomics-backup-complete-page';

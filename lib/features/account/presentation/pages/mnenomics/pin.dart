@@ -12,20 +12,20 @@ import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:guava/widgets/page_indicator.dart';
 import 'package:pinput/pinput.dart';
 
-class MnenomicsEnterPinPage extends ConsumerStatefulWidget {
-  const MnenomicsEnterPinPage({
-    this.isBackUp = false,
+class AppPinValidation extends ConsumerStatefulWidget {
+  const AppPinValidation({
+    this.isPhoneLock = false,
     super.key,
   });
 
-  final bool isBackUp;
+  final bool isPhoneLock;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _MnenomicsEnterPinPageState();
+      _AppPinValidationState();
 }
 
-class _MnenomicsEnterPinPageState extends ConsumerState<MnenomicsEnterPinPage> {
+class _AppPinValidationState extends ConsumerState<AppPinValidation> {
   late final TextEditingController pinCtrl;
   String? _warningMessage;
 
@@ -104,9 +104,10 @@ class _MnenomicsEnterPinPageState extends ConsumerState<MnenomicsEnterPinPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: !widget.isPhoneLock,
       child: Scaffold(
         appBar: AppBar(
+          leading: widget.isPhoneLock ? 0.verticalSpace : null,
           title: PageIndicator(
             totalPages: 4,
             currentPage: 1,
@@ -115,7 +116,7 @@ class _MnenomicsEnterPinPageState extends ConsumerState<MnenomicsEnterPinPage> {
         body: Column(children: [
           24.verticalSpace,
           Text(
-            'Enter up your PIN',
+            'Enter your Passcode',
             style: context.textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -123,15 +124,16 @@ class _MnenomicsEnterPinPageState extends ConsumerState<MnenomicsEnterPinPage> {
             ),
             textAlign: TextAlign.center,
           ),
-          16.verticalSpace,
-          Text(
-            'Insert PIN',
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: BrandColors.washedTextColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          30.verticalSpace,
+          // 16.verticalSpace,
+          // Text(
+          //   widget.isPhoneLock ? 'To resume wallet usage' : 'Insert PIN',
+          //   style: context.textTheme.bodyMedium?.copyWith(
+          //     fontWeight: FontWeight.w600,
+          //     color: BrandColors.washedTextColor,
+          //   ),
+          //   textAlign: TextAlign.center,
+          // ),
           if (_warningMessage != null) ...[
             12.verticalSpace,
             Text(

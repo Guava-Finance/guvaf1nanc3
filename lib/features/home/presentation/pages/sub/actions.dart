@@ -35,7 +35,9 @@ class ActionTasks extends StatelessWidget {
             bannerKey: Strings.backupPhrase,
             icon: R.ASSETS_ICONS_SECURITY_LOCK_SVG,
             onTap: () {
-              context.push(pMnenomicInstruction);
+              // true: means backup seed phrase
+              // false: means just see seed phrase
+              context.push(pMnenomicInstruction, extra: true);
               HapticFeedback.lightImpact();
             },
           ),

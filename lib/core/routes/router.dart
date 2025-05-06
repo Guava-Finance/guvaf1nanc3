@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/util/navigator_observer.dart';
 import 'package:guava/features/account/presentation/pages/mnenomics/backup_complete.dart';
 import 'package:guava/features/account/presentation/pages/mnenomics/instruction.dart';
 import 'package:guava/features/account/presentation/pages/mnenomics/pin.dart';
@@ -55,7 +56,7 @@ const String pKycDone = Strings.kycDonePage;
 const String pScanner = Strings.scannerPage;
 const String pAccountPayable = Strings.accountPayable;
 const String pMnenomicInstruction = Strings.mnenomicInstruction;
-const String pMnenomicPin = Strings.mnenomicPin;
+const String pAccessPin = Strings.accessPin;
 const String pMnenomicShow = Strings.mnenomicShow;
 const String pMnenomicValidation = Strings.mnenomicValidation;
 const String pMnenomicBackupComplete = Strings.mnenomicBackupComplete;
@@ -70,6 +71,7 @@ final GlobalKey<NavigatorState> navkey = GlobalKey();
 // GoRouter configuration
 final router = GoRouter(
   navigatorKey: navkey,
+  observers: [RouteObserverImpl()],
   routes: [
     GoRoute(
       name: pRoot.pathToName,
@@ -195,11 +197,11 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-      name: pMnenomicPin.pathToName,
-      path: pMnenomicPin,
+      name: pAccessPin.pathToName,
+      path: pAccessPin,
       builder: (context, state) {
-        return MnenomicsEnterPinPage(
-          isBackUp: (state.extra as bool?) ?? false,
+        return AppPinValidation(
+          isPhoneLock: (state.extra as bool?) ?? false,
         );
       },
     ),

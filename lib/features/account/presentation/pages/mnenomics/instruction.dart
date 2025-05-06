@@ -195,9 +195,12 @@ class _MnenomicsInstructionsPageState
         children: [
           CustomButton(
             onTap: () {
-              context.push(pMnenomicPin).then((v) {
+              context.push(pAccessPin).then((v) {
                 if ((v != null) && (v as bool)) {
-                  navkey.currentContext!.push(pMnenomicShow);
+                  navkey.currentContext!.push(
+                    pMnenomicShow,
+                    extra: widget.isBackUp,
+                  );
                 }
               });
             },

@@ -31,7 +31,11 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         final isAccessCodeSet = await ref.read(isAccessPinSetProovider.future);
 
         if (isAccessCodeSet) {
-          context.go(pDashboard);
+          context.push(pAccessPin, extra: true).then((v) {
+            if (v != null && (v as bool)) {
+              context.go(pDashboard);
+            }
+          });
         } else {
           _pinSetup(ref.read(onboardingNotifierProvider));
         }
