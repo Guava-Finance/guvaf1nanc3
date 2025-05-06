@@ -52,8 +52,8 @@ class SecuredStorageService {
     return await secureStorage.containsKey(key: key);
   }
 
-  Future<void> removeFromStorage(String key, {bool removeAll = false}) async {
-    await secureStorage.delete(key: key);
+  Future<void> removeFromStorage({String? key, bool removeAll = false}) async {
+    if (key != null) await secureStorage.delete(key: key);
 
     if (removeAll) await secureStorage.deleteAll();
   }

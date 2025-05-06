@@ -57,12 +57,15 @@ class _TransferPageState extends ConsumerState<TransferPage> {
 
       setState(() {});
 
-      // todo: make is show once
-      Future.delayed(Durations.extralong1, () {
-        ShowCaseWidget.of(scaffoldKey.currentContext!).startShowCase([
-          transferToggleWidgetKey,
-          recipientWidgetKey,
-        ]);
+      Future.delayed(Duration(seconds: 2), () async {
+        if (!(await ref
+            .watch(transferNotifierProvider)
+            .hasShowcasedTransfer())) {
+          ShowCaseWidget.of(scaffoldKey.currentContext!).startShowCase([
+            transferToggleWidgetKey,
+            recipientWidgetKey,
+          ]);
+        }
       });
     });
   }
@@ -75,7 +78,9 @@ class _TransferPageState extends ConsumerState<TransferPage> {
         final tabState = ref.watch(activeTabState);
 
         return ShowCaseWidget(
-          onFinish: () {},
+          onFinish: () async {
+            await notifier.hasShowcased();
+          },
           builder: (context) => Scaffold(
             key: scaffoldKey,
             resizeToAvoidBottomInset: false,

@@ -66,7 +66,10 @@ class WalletBalance extends StatelessWidget {
   }
 
   Widget _buildLoadingState(
-      BuildContext context, WidgetRef ref, bool isVisible) {
+    BuildContext context,
+    WidgetRef ref,
+    bool isVisible,
+  ) {
     return _BalanceDisplay(
       isVisible: isVisible,
       onToggleVisibility: () => _toggleVisibility(ref, isVisible),
@@ -121,27 +124,30 @@ class _BalanceDisplay extends ConsumerWidget {
         Showcase(
           key: balanceWidgetKey,
           description: 'See your wallet balance in your local currency',
+          targetPadding: EdgeInsets.symmetric(horizontal: 8.w),
           child: Row(
             children: [
               IntrinsicWidth(
                 child: Text.rich(
-                  TextSpan(children: [
-                    TextSpan(
-                      text: _getLocalBalanceText(),
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.textColor,
-                        fontSize: 36.sp,
-                        fontWeight: FontWeight.bold,
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: _getLocalBalanceText(),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: BrandColors.textColor,
+                          fontSize: 36.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: _getLocalBalanceDecimalText(),
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 36.sp,
+                      TextSpan(
+                        text: _getLocalBalanceDecimalText(),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: BrandColors.washedTextColor,
+                          fontSize: 36.sp,
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
               ),
               IconButton(

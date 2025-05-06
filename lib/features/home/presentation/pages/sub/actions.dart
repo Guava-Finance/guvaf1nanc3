@@ -35,6 +35,7 @@ class ActionTasks extends StatelessWidget {
             bannerKey: Strings.backupPhrase,
             icon: R.ASSETS_ICONS_SECURITY_LOCK_SVG,
             onTap: () {
+              context.push(pMnenomicInstruction);
               HapticFeedback.lightImpact();
             },
           ),

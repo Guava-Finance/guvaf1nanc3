@@ -103,7 +103,7 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    for (var i = 0; i < on.slides.length; i++)
+                    for (var i = 0; i < on.slides.length; i++) ...{
                       AnimatedContainer(
                         width: i == on.slideIndex ? 24.w : 4.w,
                         height: 4.h,
@@ -119,6 +119,7 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage>
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
+                    },
                   ],
                 ),
               ),

@@ -109,6 +109,19 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
         return BrandColors.washedTextColor;
     }
   }
+
+  Future<bool> hasShowcasedHome() async {
+    return ref
+        .watch(securedStorageServiceProvider)
+        .doesExistInStorage(Strings.homeShowcase);
+  }
+
+  Future<void> hasShowcased() async {
+    await ref.watch(securedStorageServiceProvider).writeToStorage(
+          key: Strings.homeShowcase,
+          value: DateTime.now().toIso8601String(),
+        );
+  }
 }
 
 GlobalKey balanceWidgetKey = GlobalKey();

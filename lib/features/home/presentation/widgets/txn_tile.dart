@@ -148,7 +148,7 @@ class TransactionHistoryTile extends ConsumerWidget {
 
                     return IntrinsicWidth(
                       child: Text(
-                        '''${ss.data!.symbol}${currency.format((data.amount ?? 0.0) / ss.data!.exchangeRate)}''',
+                        '''${ss.data!.symbol}${currency.format(data.type == 'bank' ? (data.amount ?? 0.0) : ((data.amount ?? 0.0) / ss.data!.exchangeRate))}''',
                         style: context.medium.copyWith(
                           color: Colors.white,
                           fontSize: 13.w,

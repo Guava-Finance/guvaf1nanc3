@@ -60,7 +60,10 @@ class TransactionFee extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: ((txn?.amount ?? 0.0) / ss.data!.exchangeRate)
+                          text: (txn?.type == 'bank'
+                                  ? (txn?.amount ?? 0.0)
+                                  : ((txn?.amount ?? 0.0) /
+                                      ss.data!.exchangeRate))
                               .formatAmount(),
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: BrandColors.textColor,
@@ -69,7 +72,10 @@ class TransactionFee extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: ((txn?.amount ?? 0.0) / ss.data!.exchangeRate)
+                          text: (txn?.type == 'bank'
+                                  ? (txn?.amount ?? 0.0)
+                                  : ((txn?.amount ?? 0.0) /
+                                      ss.data!.exchangeRate))
                               .formatDecimal,
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: BrandColors.washedTextColor,
@@ -88,18 +94,35 @@ class TransactionFee extends StatelessWidget {
                 value: '',
               ),
               15.verticalSpace,
-              PaymentItem(
-                title: 'USDC',
-                value: '${txn?.amount}',
-                isUsdc: true,
+              FutureBuilder(
+                future: balance,
+                builder: (context, ref) {
+                  if (ref.data == null) {
+                    return 0.verticalSpace;
+                  }
+
+                  final exchngRate = ref.data!.exchangeRate;
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PaymentItem(
+                        title: 'USDC',
+                        value:
+                            '''${txn?.type == 'bank' ? ((txn?.amount ?? 0.0) * exchngRate) : (txn?.amount)}''',
+                        isUsdc: true,
+                      ),
+                      15.verticalSpace,
+                      PaymentItem(
+                        title: 'Fee',
+                        value: '0.98',
+                        isUsdc: true,
+                      ),
+                      15.verticalSpace,
+                    ],
+                  );
+                },
               ),
-              15.verticalSpace,
-              PaymentItem(
-                title: 'Fee',
-                value: '0.98',
-                isUsdc: true,
-              ),
-              15.verticalSpace,
               PaymentItem(
                 title: 'Date',
                 value: DateFormat.yMMMEd().add_jmv().format(

@@ -95,6 +95,10 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/kyc-icon.svg)
   static const String ASSETS_ICONS_KYC_ICON_SVG = 'assets/icons/kyc-icon.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/lock-with%20floater.svg)
+  static const String ASSETS_ICONS_LOCK_WITH_FLOATER_SVG =
+      'assets/icons/lock-with floater.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/lock.svg)
   static const String ASSETS_ICONS_LOCK_SVG = 'assets/icons/lock.svg';
 

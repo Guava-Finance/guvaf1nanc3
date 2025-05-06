@@ -160,9 +160,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
     return result;
   }
 
-  String accessPin = '';
-
-  Future<void> savedAccessPin() async {
+  Future<void> savedAccessPin(String accessPin) async {
     // gets the HashDigest and saved the base64 format
     final pin = sha256.string(accessPin);
 

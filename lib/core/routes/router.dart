@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/features/account/presentation/pages/mnenomics/backup_complete.dart';
+import 'package:guava/features/account/presentation/pages/mnenomics/instruction.dart';
+import 'package:guava/features/account/presentation/pages/mnenomics/pin.dart';
+import 'package:guava/features/account/presentation/pages/mnenomics/show.dart';
+import 'package:guava/features/account/presentation/pages/mnenomics/validation.dart';
 import 'package:guava/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/features/home/presentation/pages/username/username.dart';
@@ -49,6 +54,12 @@ const String pKyc = Strings.kycPage;
 const String pKycDone = Strings.kycDonePage;
 const String pScanner = Strings.scannerPage;
 const String pAccountPayable = Strings.accountPayable;
+const String pMnenomicInstruction = Strings.mnenomicInstruction;
+const String pMnenomicPin = Strings.mnenomicPin;
+const String pMnenomicShow = Strings.mnenomicShow;
+const String pMnenomicValidation = Strings.mnenomicValidation;
+const String pMnenomicBackupComplete = Strings.mnenomicBackupComplete;
+
 // Solana Pay
 const String pSolanaPayReview = Strings.solanaPayReview;
 const String pSolanaPayStatus = Strings.solanaPayStatus;
@@ -173,6 +184,45 @@ final router = GoRouter(
       path: pAccountPayable,
       builder: (context, state) => const AccountPayablePage(),
     ),
+
+    GoRoute(
+      name: pMnenomicInstruction.pathToName,
+      path: pMnenomicInstruction,
+      builder: (context, state) {
+        return MnenomicsInstructionsPage(
+          isBackUp: (state.extra as bool?) ?? false,
+        );
+      },
+    ),
+    GoRoute(
+      name: pMnenomicPin.pathToName,
+      path: pMnenomicPin,
+      builder: (context, state) {
+        return MnenomicsEnterPinPage(
+          isBackUp: (state.extra as bool?) ?? false,
+        );
+      },
+    ),
+    GoRoute(
+      name: pMnenomicShow.pathToName,
+      path: pMnenomicShow,
+      builder: (context, state) {
+        return ShowMnenomicsPage(
+          isBackUp: (state.extra as bool?) ?? false,
+        );
+      },
+    ),
+    GoRoute(
+      name: pMnenomicValidation.pathToName,
+      path: pMnenomicValidation,
+      builder: (context, state) => const MnemonicBackupValidationPage(),
+    ),
+    GoRoute(
+      name: pMnenomicBackupComplete.pathToName,
+      path: pMnenomicBackupComplete,
+      builder: (context, state) => const MnenomicBackupComplete(),
+    ),
+
     // SolanaPay
     GoRoute(
       name: pSolanaPayReview.pathToName,

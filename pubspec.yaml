@@ -40,7 +40,6 @@ dependencies:
   equatable: ^2.0.7
   dio: ^5.8.0+1
   intl: ^0.20.2
-  # injectable: ^2.5.0
   logger: ^2.5.0
   encrypt: ^5.0.3
   flutter_screenutil: ^5.9.3

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
@@ -112,9 +113,14 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
                   pinCtrl.clear();
                   confirmPinCtrl.clear();
 
-                  // todo: show pin mismatch error
+                  context.notify.addNotification(
+                    NotificationTile(
+                      content: 'Pin mismatch. Please try again',
+                      notificationType: NotificationType.error,
+                    ),
+                  );
                 } else {
-                  await on.savedAccessPin();
+                  await on.savedAccessPin(value);
 
                   Future.microtask(() {
                     if (mounted) {

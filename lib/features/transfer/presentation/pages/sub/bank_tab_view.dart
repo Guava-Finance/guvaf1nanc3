@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/transfer/domain/entities/account_detail.dart';
 import 'package:guava/features/transfer/domain/entities/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/entities/recent_bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_bank_transfer.dart';
-import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/recent_bank_transfers.dart';
 import 'package:guava/widgets/app_icon.dart';
 

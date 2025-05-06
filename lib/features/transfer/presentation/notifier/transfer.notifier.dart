@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/transfer/data/models/params/bank_transfer.dart';
 import 'package:guava/features/transfer/data/models/params/wallet_transfer.dart';
@@ -54,6 +56,19 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
   void jumpTo(int page) {
     pageController.jumpToPage(page);
     ref.watch(activeTabState.notifier).state = page;
+  }
+
+  Future<bool> hasShowcasedTransfer() async {
+    return ref
+        .watch(securedStorageServiceProvider)
+        .doesExistInStorage(Strings.transferShowcase);
+  }
+
+  Future<void> hasShowcased() async {
+    await ref.watch(securedStorageServiceProvider).writeToStorage(
+          key: Strings.transferShowcase,
+          value: DateTime.now().toIso8601String(),
+        );
   }
 
   Future<void> resolveAddress(String address) async {

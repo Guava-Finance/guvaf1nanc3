@@ -15,7 +15,6 @@ import 'package:guava/features/transfer/domain/usecases/address_book.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_wallet_transfer.dart';
-import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/address-book_new.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/payment_detail.dart';

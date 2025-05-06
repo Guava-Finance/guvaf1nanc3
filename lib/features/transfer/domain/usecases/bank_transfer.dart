@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/rate_rule.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/config.dart';
@@ -103,13 +102,14 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
 
       // local currency is entered instead
       final newParam = params.copyWith(
-        amount: amount.toStringAsFixed(2),
-        transactionFee: transactionFee.toStringAsFixed(2),
+        amount: amount.toStringAsFixed(9),
+        transactionFee: transactionFee.toStringAsFixed(9),
         signedTransaction: signedTx,
         type: 'bank',
         accountName: accountDetails!.accountName,
         accountNumber: accountDetails.accountNumber,
-        bank: accountDetails.bankCode,
+        bank: accountDetails.bankName,
+        bankCode: accountDetails.bankCode,
         country: country.name,
         purpose: purpose!.id,
       );

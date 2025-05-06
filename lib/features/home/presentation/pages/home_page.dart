@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
@@ -31,15 +29,17 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 2), () {
-        ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
-          balanceWidgetKey,
-          walletDetailWidgetKey,
-          avatarWidgetKey,
-          scannerWidgetKey,
-          transferWidgetKey,
-          receiveWidgetKey,
-        ]);
+      Future.delayed(Duration(seconds: 2), () async {
+        if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
+          ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
+            balanceWidgetKey,
+            walletDetailWidgetKey,
+            avatarWidgetKey,
+            scannerWidgetKey,
+            transferWidgetKey,
+            receiveWidgetKey,
+          ]);
+        }
       });
     });
   }
@@ -67,6 +67,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             allTransactionsButtonWidgetKey,
             transactionSessionWidgetKey,
           ]);
+        }
+
+        if (set == 2) {
+          await hn.scrollController.animateTo(
+            hn.scrollController.position.minScrollExtent,
+            duration: Durations.extralong2,
+            curve: Curves.linear,
+          );
+
+          await ref.watch(homeNotifierProvider).hasShowcased();
         }
       },
       builder: (context) => Scaffold(

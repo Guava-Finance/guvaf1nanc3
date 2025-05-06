@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'recieve.notifier.dart';
+part of 'account.notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recieveNotifierHash() => r'2858f66a117e9e1d42c452005f375bd95dead286';
+String _$accountNotifierHash() => r'4af4f2a6f9b0e87e20a6f5bf157d0cde591da618';
 
-/// See also [RecieveNotifier].
-@ProviderFor(RecieveNotifier)
-final recieveNotifierProvider =
-    AutoDisposeNotifierProvider<RecieveNotifier, RecieveNotifier>.internal(
-  RecieveNotifier.new,
-  name: r'recieveNotifierProvider',
+/// See also [AccountNotifier].
+@ProviderFor(AccountNotifier)
+final accountNotifierProvider =
+    AutoDisposeNotifierProvider<AccountNotifier, AccountNotifier>.internal(
+  AccountNotifier.new,
+  name: r'accountNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$recieveNotifierHash,
+      : _$accountNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$RecieveNotifier = AutoDisposeNotifier<RecieveNotifier>;
+typedef _$AccountNotifier = AutoDisposeNotifier<AccountNotifier>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
