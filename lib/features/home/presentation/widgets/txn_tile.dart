@@ -44,120 +44,106 @@ class TransactionHistoryTile extends ConsumerWidget {
       },
       child: Material(
         color: Colors.transparent,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            CircleAvatar(
-              maxRadius: 20.r,
-              backgroundColor: BrandColors.lightGreen,
-              child: CustomIcon(
-                icon: R.ASSETS_ICONS_WALLET_ICON_SVG,
-                color: BrandColors.backgroundColor,
-              ),
-            ),
-            10.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        if (data.category == 'debit') ...{
-                          TextSpan(text: 'Transfer to '),
-                          TextSpan(
-                            text: data.recipient?.toMaskedFormat(),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                CircleAvatar(
+                  maxRadius: 20.r,
+                  backgroundColor: BrandColors.lightGreen,
+                  child: CustomIcon(
+                    icon: R.ASSETS_ICONS_WALLET_ICON_SVG,
+                    color: BrandColors.backgroundColor,
+                  ),
+                ),
+                10.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            if (data.category == 'debit') ...{
+                              TextSpan(text: 'Transfer to '),
+                              TextSpan(
+                                text: data.recipient?.toMaskedFormat(),
+                                style: context.medium.copyWith(
+                                  color: BrandColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13.w,
+                                ),
+                              ),
+                            } else ...{
+                              TextSpan(text: 'Transfer from '),
+                              TextSpan(
+                                text: data.sender?.toMaskedFormat(),
+                              ),
+                            }
+                          ],
+                        ),
+                        style: context.medium.copyWith(
+                          color: BrandColors.textColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13.w,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      8.verticalSpace,
+                      Row(
+                        children: [
+                          Text(
+                            DateFormat('MMM dd').format(
+                              data.timestamp ?? DateTime.now(),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
                             style: context.medium.copyWith(
-                              color: BrandColors.primary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.w,
+                              color: BrandColors.washedTextColor,
+                              fontSize: 10.sp,
                             ),
                           ),
-                        } else ...{
-                          TextSpan(text: 'Transfer from '),
-                          TextSpan(
-                            text: data.sender?.toMaskedFormat(),
+                          Container(
+                            width: 1.w,
+                            height: 10.h,
+                            color: BrandColors.washedTextColor
+                                .withValues(alpha: 0.3),
+                            margin: EdgeInsets.symmetric(horizontal: 8.w),
                           ),
-                        }
-                      ],
-                    ),
-                    style: context.medium.copyWith(
-                      color: BrandColors.textColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13.w,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  8.verticalSpace,
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat('MMM dd').format(
-                          data.timestamp ?? DateTime.now(),
-                        ),
-                        style: context.medium.copyWith(
-                          color: BrandColors.washedTextColor,
-                          fontSize: 11.w,
-                        ),
-                      ),
-                      Container(
-                        width: 1.w,
-                        height: 10.h,
-                        color:
-                            BrandColors.washedTextColor.withValues(alpha: 0.3),
-                        margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      ),
-                      Text(
-                        DateFormat.jmv()
-                            .format(data.timestamp ?? DateTime.now()),
-                        style: context.medium.copyWith(
-                          color: BrandColors.washedTextColor,
-                          fontSize: 11.w,
-                        ),
-                      ),
-                      Container(
-                        width: 1.w,
-                        height: 10.h,
-                        color:
-                            BrandColors.washedTextColor.withValues(alpha: 0.3),
-                        margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      ),
-                      Text(
-                        (data.type ?? '').toUpperCase(),
-                        style: context.medium.copyWith(
-                          color: BrandColors.washedTextColor,
-                          fontSize: 11.w,
-                        ),
+                          Text(
+                            DateFormat.jmv()
+                                .format(data.timestamp ?? DateTime.now()),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: context.medium.copyWith(
+                              color: BrandColors.washedTextColor,
+                              fontSize: 10.sp,
+                            ),
+                          ),
+                          Container(
+                            width: 1.w,
+                            height: 10.h,
+                            color: BrandColors.washedTextColor
+                                .withValues(alpha: 0.3),
+                            margin: EdgeInsets.symmetric(horizontal: 8.w),
+                          ),
+                          Text(
+                            (data.type ?? '').toUpperCase(),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: context.medium.copyWith(
+                              color: BrandColors.washedTextColor,
+                              fontSize: 10.sp,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            8.horizontalSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                FutureBuilder(
-                  future: ref.read(balanceUsecaseProvider.future),
-                  builder: (_, ss) {
-                    if (ss.data == null) {
-                      return 0.verticalSpace;
-                    }
-
-                    return IntrinsicWidth(
-                      child: Text(
-                        '''${ss.data!.symbol}${currency.format(data.type == 'bank' ? (data.amount ?? 0.0) : ((data.amount ?? 0.0) / ss.data!.exchangeRate))}''',
-                        style: context.medium.copyWith(
-                          color: Colors.white,
-                          fontSize: 13.w,
-                        ),
-                      ),
-                    );
-                  },
                 ),
-                6.verticalSpace,
+                8.horizontalSpace,
                 Container(
                   padding: EdgeInsets.symmetric(
                     vertical: 4.h,
@@ -181,6 +167,28 @@ class TransactionHistoryTile extends ConsumerWidget {
                   ),
                 )
               ],
+            ),
+            Positioned(
+              top: -1.h,
+              right: 0.w,
+              child: FutureBuilder(
+                future: ref.read(balanceUsecaseProvider.future),
+                builder: (_, ss) {
+                  if (ss.data == null) {
+                    return 0.verticalSpace;
+                  }
+
+                  return IntrinsicWidth(
+                    child: Text(
+                      '''${ss.data!.symbol}${currency.format(data.type == 'bank' ? (data.amount ?? 0.0) : ((data.amount ?? 0.0) / ss.data!.exchangeRate))}''',
+                      style: context.medium.copyWith(
+                        color: Colors.white,
+                        fontSize: 13.w,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

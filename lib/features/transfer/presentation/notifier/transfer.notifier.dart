@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -114,7 +113,8 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
       return false;
     } else {
-      AppLogger.log((result as LoadedState).data);
+      ref.read(transactionId.notifier).state =
+          (result as LoadedState).data['transaction_id'];
 
       return true;
     }

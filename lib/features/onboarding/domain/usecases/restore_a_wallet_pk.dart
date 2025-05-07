@@ -4,6 +4,7 @@ import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/usecase/usecase.dart';
@@ -18,6 +19,7 @@ final restoreAWalletPKUsecaseProvider =
     repository: ref.watch(onboardingRepositoryProvider),
     solanaService: ref.watch(solanaServiceProvider),
     storageService: ref.watch(securedStorageServiceProvider),
+    configService: ref.watch(configServiceProvider),
   );
 });
 
@@ -26,15 +28,23 @@ class RestoreAWalletPKUsecase extends UseCase<AppState, String> {
     required this.repository,
     required this.solanaService,
     required this.storageService,
+    required this.configService,
   });
 
   final OnboardingRepository repository;
   final SolanaService solanaService;
   final SecuredStorageService storageService;
+  final ConfigService configService;
 
   @override
   Future<AppState> call({required String params}) async {
     try {
+      final config = await configService.getConfig();
+
+      if (config == null) {
+        await configService.fetchConfig();
+      }
+
       final wallet = await solanaService.restoreAWalletPK(params);
 
       AppState? account;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
@@ -34,6 +35,7 @@ class WalletRecoveryOptions extends StatelessWidget {
             subtilte: 'Add a new multi-chain account',
             onTap: () {
               context.push(pRecoveryPhrase);
+              HapticFeedback.lightImpact();
             },
           ),
           CustomTile(
@@ -42,6 +44,7 @@ class WalletRecoveryOptions extends StatelessWidget {
             subtilte: 'Add a new multi-chain account',
             onTap: () {
               context.push(pPrivateKey);
+              HapticFeedback.lightImpact();
             },
           ),
         ],

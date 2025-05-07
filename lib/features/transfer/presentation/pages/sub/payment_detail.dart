@@ -16,12 +16,12 @@ class PaymentDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeState = ref.watch(activeTabState.notifier).state;
-    final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
-    final purpose = ref.watch(transferPurpose.notifier).state;
-    final acctDetail = ref.watch(accountDetail.notifier).state;
-    final country = ref.watch(selectedCountry.notifier).state;
-    final txnId = ref.watch(transactionId.notifier).state;
+    final activeState = ref.watch(activeTabState);
+    final usdcAmount = ref.watch(usdcAountTransfer);
+    final purpose = ref.watch(transferPurpose);
+    final acctDetail = ref.watch(accountDetail);
+    final country = ref.watch(selectedCountry);
+    final txnId = ref.watch(transactionId);
 
     return Container(
       width: double.infinity,

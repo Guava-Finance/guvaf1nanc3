@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:guava/core/app_core.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/usecase/usecase.dart';
@@ -16,6 +17,7 @@ final createAWalletUsecaseProvider = Provider<CreateAWalletUsecase>((ref) {
     repository: ref.watch(onboardingRepositoryProvider),
     solanaService: ref.watch(solanaServiceProvider),
     storageService: ref.watch(securedStorageServiceProvider),
+    configService: ref.watch(configServiceProvider),
   );
 });
 
@@ -24,14 +26,22 @@ class CreateAWalletUsecase extends UseCase<AppState, Null> {
     required this.repository,
     required this.solanaService,
     required this.storageService,
+    required this.configService,
   });
 
   final OnboardingRepository repository;
   final SolanaService solanaService;
   final SecuredStorageService storageService;
+  final ConfigService configService;
 
   @override
   Future<AppState> call({Null params}) async {
+    final config = await configService.getConfig();
+
+    if (config == null) {
+      await configService.fetchConfig();
+    }
+
     // cretate the wallet
     final wallet = await solanaService.createANewWallet();
 

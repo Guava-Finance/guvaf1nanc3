@@ -9,7 +9,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account.notifier.g.dart';
 
+// ignore: constant_identifier_names
 const int MAX_PIN_ATTEMPTS = 5;
+// ignore: constant_identifier_names
 const int WARNING_THRESHOLD = 3; // Show warning when this many attempts remain
 
 final myMnenomics = FutureProvider<String>((ref) async {
@@ -24,6 +26,14 @@ final isWalletBackedUp = FutureProvider<String?>((ref) async {
   final storage = ref.watch(securedStorageServiceProvider);
 
   return await storage.readFromStorage(Strings.backupMnenomic);
+});
+
+final userHasBackedUpPhrase = FutureProvider<bool>((ref) async {
+  final storage = ref.watch(securedStorageServiceProvider);
+
+  final result = await storage.doesExistInStorage(Strings.backupMnenomic);
+
+  return result;
 });
 
 @riverpod

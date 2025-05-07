@@ -39,6 +39,11 @@ final myUsernameProvider = FutureProvider<String?>((ref) async {
   return username;
 });
 
+final currentAction = StateProvider<int>((ref) {
+  return 0;
+});
+
+
 @riverpod
 class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   @override

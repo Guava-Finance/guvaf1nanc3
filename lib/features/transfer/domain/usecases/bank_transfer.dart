@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/rate_rule.dart';
+import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/ip.dart';
@@ -114,7 +115,15 @@ class BankTransferUsecase extends UseCase<AppState, BankTransferParam> {
         purpose: purpose!.id,
       );
 
-      return await repository.initBankTransfer(wallet, newParam.toJson());
+      final result =
+          await repository.initBankTransfer(wallet, newParam.toJson());
+
+      if (!result.isError) {
+        return LoadedState<Map<String, dynamic>>(
+            (result as LoadedState).data['data']);
+      }
+
+      return result;
     } catch (e) {
       return ErrorState(e.toString());
     }

@@ -227,6 +227,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                     CustomTextfield(
                       hintText: 'Enter 10 digit account number',
                       controller: accountNumberCtrl,
+                      inputType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],

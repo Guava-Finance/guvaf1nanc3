@@ -85,6 +85,7 @@ final class SolanaService {
       key: Strings.mnemonics,
       value: mnemonics,
     );
+
     final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
       seed: mnemonicToSeed(mnemonics),
       hdPath: config!.walletSettings.derivativePath,

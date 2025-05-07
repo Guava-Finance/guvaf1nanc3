@@ -6,6 +6,7 @@ import 'package:guava/widgets/animated_icon.dart';
 
 import 'dart:math' as math;
 
+
 class OnboardingSlide extends StatelessWidget {
   const OnboardingSlide({
     required this.e,

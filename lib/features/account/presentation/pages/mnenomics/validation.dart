@@ -23,8 +23,6 @@ class MnemonicBackupValidationPage extends ConsumerStatefulWidget {
 class _MnemonicBackupValidationPageState
     extends ConsumerState<MnemonicBackupValidationPage> {
   bool _isValidating = false;
-  final String _validationMessage = '';
-  final bool _validationSuccess = false;
 
   @override
   void initState() {

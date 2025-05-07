@@ -29,8 +29,8 @@ class CustomNumberPad extends StatelessWidget {
             9,
             (i) => InkWell(
               onTap: () {
+                HapticFeedback.lightImpact();
                 controller.text += '${i + 1}';
-                HapticFeedback.mediumImpact();
               },
               child: Container(
                 width: (context.mediaQuery.size.width * .30),
