@@ -50,7 +50,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
     {
       'title': 'Welcome to Guava',
       'subtitle': '',
-      'background_icon': R.ASSETS_ICONS_GUAVA_LOGO_FLAVOR_TWO_SVG,
+      'background_icon': R.ASSETS_ICONS_GUAVA_LOGO_SVG,
       'sub_icons_n_positions': []
     },
     {

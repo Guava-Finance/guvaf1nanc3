@@ -9,6 +9,7 @@ import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/notifier/account.notifier.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/custom_button.dart';
 import 'package:guava/widgets/page_indicator.dart';
 
@@ -233,6 +234,8 @@ class _MnemonicBackupValidationPageState
               notificationType: NotificationType.success,
             ),
           );
+
+          ref.invalidate(pendingActions);
         });
       } else {
         navkey.currentContext!.notify.addNotification(

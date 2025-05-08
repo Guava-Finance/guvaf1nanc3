@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/auth.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/notifier/account.notifier.dart';
@@ -33,6 +34,25 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
   void initState() {
     pinCtrl = TextEditingController();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final auth = ref.read(biometricProvider);
+
+      if (await auth.isAppBiometricEnabled()) {
+        final result = await auth.authenticate();
+
+        if (result) {
+          navkey.currentContext!.pop(result);
+        } else {
+          navkey.currentContext!.notify.addNotification(
+            NotificationTile(
+              content: 'Biometric failed... Enter your passcode',
+              notificationType: NotificationType.error,
+            ),
+          );
+        }
+      }
+    });
+
     super.initState();
   }
 
@@ -52,7 +72,7 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
         title: Text('Warning'),
         content: Text(
           '''Incorrect PIN. You have $attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} '''
-          '''remaining before all wallet data is wiped.''',
+          '''remaining before all wallet data is wiped from this device.''',
           style: context.textTheme.bodyMedium?.copyWith(
             color: BrandColors.backgroundColor,
           ),
@@ -77,7 +97,7 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
       builder: (context) => AlertDialog(
         title: Text('Security Alert'),
         content: Text(
-          '''Maximum PIN attempts exceeded. All wallet data has been wiped for security reasons.''',
+          '''Maximum PIN attempts exceeded. All wallet data has been wiped from this device for security reasons.''',
           style: context.textTheme.bodyMedium?.copyWith(
             color: BrandColors.backgroundColor,
           ),
@@ -188,7 +208,7 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
                   if (attemptsRemaining <= WARNING_THRESHOLD) {
                     setState(() {
                       _warningMessage =
-                          'Warning: $attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining';
+                          '''Warning: $attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining''';
                     });
                     _showWarningDialog(attemptsRemaining);
                   } else {

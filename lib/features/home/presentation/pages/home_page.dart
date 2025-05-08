@@ -29,7 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 2), () async {
+      Future.delayed(Duration(seconds: 5), () async {
         if (mounted) {
           if (ref.exists(homeNotifierProvider)) {
             if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {

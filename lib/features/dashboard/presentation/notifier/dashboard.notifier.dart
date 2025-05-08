@@ -37,7 +37,7 @@ class DashboardNotifier extends _$DashboardNotifier {
   }
 
   Future<void> hasLocationChanged() async {
-    final result = await ref.read(userLocationMonitorUsecaseProvider.future);
+    final result = await ref.read(locationMonitorProvider.future);
 
     if (result) {
       navkey.currentContext!.notify.addNotification(

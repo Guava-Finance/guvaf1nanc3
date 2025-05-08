@@ -78,9 +78,9 @@ class R {
   static const String ASSETS_ICONS_GUAVA_LOGO_FLAVOR_ONE_SVG =
       'assets/icons/guava-logo-flavor-one.svg';
 
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/guava-logo-flavor-two.svg)
-  static const String ASSETS_ICONS_GUAVA_LOGO_FLAVOR_TWO_SVG =
-      'assets/icons/guava-logo-flavor-two.svg';
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/guava-logo.svg)
+  static const String ASSETS_ICONS_GUAVA_LOGO_SVG =
+      'assets/icons/guava-logo.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/hardware.svg)
   static const String ASSETS_ICONS_HARDWARE_SVG = 'assets/icons/hardware.svg';

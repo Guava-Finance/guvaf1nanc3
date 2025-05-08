@@ -17,6 +17,7 @@ class Strings {
   static const String backupMnenomic = 'is_mnenomic_backed_up';
   static const String pinFailureCount = 'pin_failure_count';
   static const String pinFailureDate = 'pin_failure_date';
+  static const String biometric = 'biometric_enabled';
 
   // Showcase keys
   static const String homeShowcase = 'has_home_be_showcased';

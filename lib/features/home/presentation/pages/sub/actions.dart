@@ -1,15 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:guava/const/resource.dart';
-import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
-import 'package:guava/features/home/presentation/widgets/action_banner.dart';
 
 class ActionTasks extends ConsumerStatefulWidget {
   const ActionTasks({
@@ -24,7 +18,7 @@ class _ActionTasksState extends ConsumerState<ActionTasks> {
   late final PageController controller;
 
   Timer? _autoScrollTimer;
-  bool _isForward = true;
+  final bool _isForward = true;
 
   @override
   initState() {
@@ -35,7 +29,7 @@ class _ActionTasksState extends ConsumerState<ActionTasks> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // final hasBackedUp = await ref.read(userHasBackedUpPhrase.future);
 
-      _startAutoScroll();
+      // _startAutoScroll();
 
       // if (hasBackedUp) {
       //   widgetActions.removeAt(1);
@@ -50,106 +44,82 @@ class _ActionTasksState extends ConsumerState<ActionTasks> {
     super.dispose();
   }
 
-  void _startAutoScroll() {
-    // Set a timer that triggers every 3 seconds
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (!mounted) return;
+  // int totalLength = 0;
 
-      int ca = ref.read(currentAction);
+  // void _startAutoScroll() {
+  //   setState(() {});
 
-      if (_isForward) {
-        // Moving forward
-        if (ca < widgetActions.length - 1) {
-          controller.animateToPage(
-            ca + 1,
-            duration: Durations.long2,
-            curve: Curves.linear,
-          );
-        } else {
-          // Reached the end, change direction
-          _isForward = false;
-          controller.animateToPage(
-            ca - 1,
-            duration: Durations.long2,
-            curve: Curves.linear,
-          );
-        }
-      } else {
-        // Moving backward
-        if (ca > 0) {
-          controller.animateToPage(
-            ca - 1,
-            duration: Durations.long2,
-            curve: Curves.linear,
-          );
-        } else {
-          // Reached the beginning, change direction
-          _isForward = true;
-          controller.animateToPage(
-            ca + 1,
-            duration: Durations.long2,
-            curve: Curves.linear,
-          );
-        }
-      }
-    });
-  }
+  //   // Set a timer that triggers every 3 seconds
+  //   _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+  //     if (!mounted) return;
 
-  List<Widget> widgetActions = [
-    ActionBanners(
-      title: 'KYC Verification',
-      subtitle: 'Unlock more access',
-      bannerKey: Strings.kycVerification,
-      icon: R.ASSETS_ICONS_KYC_ICON_SVG,
-      onTap: () {
-        navkey.currentContext!.push(pKyc);
-        HapticFeedback.lightImpact();
-      },
-    ),
-    ActionBanners(
-      title: 'Back up your 12/24 Key-phrase!',
-      subtitle: 'Learn more',
-      bannerKey: Strings.backupPhrase,
-      icon: R.ASSETS_ICONS_SECURITY_LOCK_SVG,
-      onTap: () {
-        // true: means backup seed phrase
-        // false: means just see seed phrase
-        navkey.currentContext!.push(pMnenomicInstruction, extra: true);
-        HapticFeedback.lightImpact();
-      },
-    ),
-    ActionBanners(
-      title: 'Create your @username',
-      subtitle: 'A unique identity for your wallet',
-      bannerKey: Strings.createUsername,
-      icon: R.ASSETS_ICONS_USERNAME_ICON_SVG,
-      onTap: () {
-        navkey.currentContext!.push(pSetUsername);
-        HapticFeedback.lightImpact();
-      },
-    ),
-    ActionBanners(
-      title: 'Connect your wallet',
-      subtitle: 'Unlock full functionality',
-      icon: R.ASSETS_ICONS_WALLET_CONNECT_ICON_SVG,
-      bannerKey: Strings.connectWallet,
-      onTap: () {},
-    ),
-  ];
+  //     int ca = ref.read(currentAction);
+
+  //     if (_isForward) {
+  //       // Moving forward
+  //       if (ca < totalLength - 1) {
+  //         controller.animateToPage(
+  //           ca + 1,
+  //           duration: Durations.long2,
+  //           curve: Curves.linear,
+  //         );
+  //       } else {
+  //         // Reached the end, change direction
+  //         _isForward = false;
+  //         controller.animateToPage(
+  //           ca - 1,
+  //           duration: Durations.long2,
+  //           curve: Curves.linear,
+  //         );
+  //       }
+  //     } else {
+  //       // Moving backward
+  //       if (ca > 0) {
+  //         controller.animateToPage(
+  //           ca - 1,
+  //           duration: Durations.long2,
+  //           curve: Curves.linear,
+  //         );
+  //       } else {
+  //         // Reached the beginning, change direction
+  //         _isForward = true;
+  //         controller.animateToPage(
+  //           ca + 1,
+  //           duration: Durations.long2,
+  //           curve: Curves.linear,
+  //         );
+  //       }
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return widgetActions.isEmpty
-        ? 0.verticalSpace
-        : SizedBox(
-            height: 90.h,
-            child: PageView(
-              onPageChanged: (value) {
-                ref.read(currentAction.notifier).state = value;
-              },
-              controller: controller,
-              children: widgetActions,
-            ),
-          );
+    return Consumer(
+      builder: (context, ref, child) {
+        final actions = ref.watch(pendingActions);
+
+        return actions.when(
+          data: (data) {
+            return SizedBox(
+              height: 90.h,
+              child: PageView(
+                onPageChanged: (value) {
+                  ref.read(currentAction.notifier).state = value;
+                },
+                controller: controller,
+                children: data,
+              ),
+            );
+          },
+          error: (_, __) {
+            return 0.verticalSpace;
+          },
+          loading: () {
+            return 0.verticalSpace;
+          },
+        );
+      },
+    );
   }
 }

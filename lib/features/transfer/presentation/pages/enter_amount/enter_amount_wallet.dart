@@ -104,86 +104,37 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                24.verticalSpace,
-                CustomTextfield(
-                  readOnly: readOnly,
-                  controller: controller,
-                  onChanged: (p0) {
-                    ref.read(receipentAddressProvider.notifier).state = null;
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  24.verticalSpace,
+                  CustomTextfield(
+                    readOnly: readOnly,
+                    controller: controller,
+                    onChanged: (p0) {
+                      ref.read(receipentAddressProvider.notifier).state = null;
 
-                    if ((p0 ?? '').length > 2) {
-                      debounce.run(() {
-                        withLoading(() async {
-                          await ref
-                              .read(transferNotifierProvider)
-                              .resolveAddress(p0 ?? '');
+                      if ((p0 ?? '').length > 2) {
+                        debounce.run(() {
+                          withLoading(() async {
+                            await ref
+                                .read(transferNotifierProvider)
+                                .resolveAddress(p0 ?? '');
+                          });
                         });
-                      });
-                    }
-                  },
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      // setState(() {
-                      //   readOnly = !readOnly;
-                      // });
-                      context.pop();
+                      }
                     },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 6.h,
-                        horizontal: 12.w,
-                      ),
-                      decoration: ShapeDecoration(
-                        color: BrandColors.containerColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                      ),
-                      child: Text(
-                        readOnly ? 'Edit' : 'Okay',
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          color: BrandColors.textColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                12.verticalSpace,
-                BalanceText(),
-                40.verticalSpace,
-                TextFormField(
-                  readOnly: true,
-                  controller: amountCtrl,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    hintText: currency.format(0.00),
-                    hintStyle: context.textTheme.bodyMedium?.copyWith(
-                      color: BrandColors.washedTextColor,
-                      fontSize: 40.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontSize: 40.sp,
-                    fontWeight: FontWeight.w600,
-                    color: BrandColors.light,
-                  ),
-                  textAlign: TextAlign.center,
-                ).padHorizontal,
-                // 10.verticalSpace,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        // setState(() {
+                        //   readOnly = !readOnly;
+                        // });
+                        context.pop();
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: 8.h,
+                          vertical: 6.h,
                           horizontal: 12.w,
                         ),
                         decoration: ShapeDecoration(
@@ -192,69 +143,125 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
                             borderRadius: BorderRadius.circular(16.r),
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Text.rich(
-                              TextSpan(children: [
-                                TextSpan(
-                                  text: usdcAmount.formatAmount(),
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: BrandColors.textColor,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '${(usdcAmount).formatDecimal} USDC',
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: BrandColors.washedTextColor,
-                                    fontSize: 10.sp,
-                                  ),
-                                ),
-                              ]),
-                            ),
-                            // 7.horizontalSpace,
-                            // SvgPicture.asset(
-                            //   R.ASSETS_ICONS_EXCHANGE_SVG,
-                            //   width: 10.w,
-                            //   height: 10.h,
-                            // ),
-                          ],
+                        child: Text(
+                          readOnly ? 'Edit' : 'Okay',
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: BrandColors.textColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.sp,
+                          ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-                Spacer(),
-                CustomNumberPad(
-                  controller: amountCtrl,
-                  isAmountPad: true,
-                ),
-                40.verticalSpace,
-
-                ValueListenableBuilder<bool>(
-                  valueListenable: isLoading,
-                  builder: (context, snapshot, child) {
-                    return Consumer(
-                      builder: (context, ref, child) {
-                        return CustomButton(
-                          onTap: () {
-                            context.push(pReviewPayemet);
-                          },
-                          title: 'Next',
-                          disable: !isValidated,
-                          isLoading: snapshot,
-                        ).padHorizontal;
-                      },
-                    );
-                  },
-                ),
-                15.verticalSpace,
-              ],
-            ).padHorizontal,
+                  ),
+                  12.verticalSpace,
+                  BalanceText(),
+                  40.verticalSpace,
+                  TextFormField(
+                    readOnly: true,
+                    controller: amountCtrl,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                      hintText: currency.format(0.00),
+                      hintStyle: context.textTheme.bodyMedium?.copyWith(
+                        color: BrandColors.washedTextColor,
+                        fontSize: 40.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontSize: 40.sp,
+                      fontWeight: FontWeight.w600,
+                      color: BrandColors.light,
+                    ),
+                    textAlign: TextAlign.center,
+                  ).padHorizontal,
+                  // 10.verticalSpace,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 8.h,
+                            horizontal: 12.w,
+                          ),
+                          decoration: ShapeDecoration(
+                            color: BrandColors.containerColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Text.rich(
+                                TextSpan(children: [
+                                  TextSpan(
+                                    text: usdcAmount.formatAmount(),
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: BrandColors.textColor,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '${(usdcAmount).formatDecimal} USDC',
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: BrandColors.washedTextColor,
+                                      fontSize: 10.sp,
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                              // 7.horizontalSpace,
+                              // SvgPicture.asset(
+                              //   R.ASSETS_ICONS_EXCHANGE_SVG,
+                              //   width: 10.w,
+                              //   height: 10.h,
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ).padHorizontal,
+            ),
           ],
         ),
       ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomNumberPad(
+            controller: amountCtrl,
+            isAmountPad: true,
+          ),
+          40.verticalSpace,
+          ValueListenableBuilder<bool>(
+            valueListenable: isLoading,
+            builder: (context, snapshot, child) {
+              return Consumer(
+                builder: (context, ref, child) {
+                  return CustomButton(
+                    onTap: () {
+                      context.push(pReviewPayemet);
+                    },
+                    title: 'Next',
+                    disable: !isValidated,
+                    isLoading: snapshot,
+                  ).padHorizontal;
+                },
+              );
+            },
+          ),
+          40.verticalSpace,
+        ],
+      ).padHorizontal,
     );
   }
 }

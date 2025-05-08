@@ -205,6 +205,7 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
                         if (v) navkey.currentContext!.pop();
 
                         ref.invalidate(myUsernameProvider);
+                        ref.invalidate(pendingActions);
                       });
                     });
                   },

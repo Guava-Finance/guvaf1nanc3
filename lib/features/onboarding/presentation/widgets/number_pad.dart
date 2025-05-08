@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/services/auth.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:pinput/pinput.dart';
 
-class CustomNumberPad extends StatelessWidget {
+class CustomNumberPad extends ConsumerWidget {
   const CustomNumberPad({
     required this.controller,
     this.isAmountPad = false,
@@ -17,7 +21,7 @@ class CustomNumberPad extends StatelessWidget {
   final bool isAmountPad;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,20 +56,42 @@ class CustomNumberPad extends StatelessWidget {
           children: [
             if (!isAmountPad) ...{
               Expanded(
-                child: InkWell(
-                  onTap: () {
-                    HapticFeedback.mediumImpact();
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final biometric = ref.read(biometricProvider);
+
+                    return FutureBuilder(
+                      future: biometric.isAppBiometricEnabled(),
+                      builder: (_, ss) {
+                        if (ss.data == null) return 0.verticalSpace;
+
+                        return (ss.data!)
+                            ? InkWell(
+                                onTap: () async {
+                                  HapticFeedback.mediumImpact();
+                                  final result = await ref
+                                      .read(biometricProvider)
+                                      .authenticate();
+
+                                  if (result) {
+                                    navkey.currentContext!.pop(result);
+                                  }
+                                },
+                                child: Container(
+                                  width: (context.mediaQuery.size.width * .30),
+                                  height: (context.mediaQuery.size.width * .2),
+                                  alignment: Alignment.center,
+                                  child: CustomIcon(
+                                    icon: R.ASSETS_ICONS_BIOMETRIC_SVG,
+                                    width: 24.w,
+                                    height: 24.h,
+                                  ),
+                                ),
+                              )
+                            : 0.verticalSpace;
+                      },
+                    );
                   },
-                  child: Container(
-                    width: (context.mediaQuery.size.width * .30),
-                    height: (context.mediaQuery.size.width * .2),
-                    alignment: Alignment.center,
-                    child: CustomIcon(
-                      icon: R.ASSETS_ICONS_BIOMETRIC_SVG,
-                      width: 24.w,
-                      height: 24.h,
-                    ),
-                  ),
                 ),
               ),
             } else ...{

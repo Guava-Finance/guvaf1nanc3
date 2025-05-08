@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/app_core.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/auth.dart';
+import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
@@ -121,17 +126,17 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
                   );
                 } else {
                   await on.savedAccessPin(value);
-
-                  Future.microtask(() {
-                    if (mounted) {
-                      // ignore: use_build_context_synchronously
-                      context.go(pDashboard);
-                    }
-                  });
+                  setupBiometric();
                 }
                 // submit pin
               } else {
                 setState(() => isConfirmingPin = true);
+
+                navkey.currentContext!.notify.addNotification(
+                  NotificationTile(
+                    content: 'Confirm your pin. Re-enter your pin',
+                  ),
+                );
               }
             },
           ),
@@ -144,5 +149,38 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
         ],
       ).padHorizontal,
     );
+  }
+
+  void setupBiometric() {
+    Future.microtask(() async {
+      if (mounted) {
+        final auth = ref.read(biometricProvider);
+
+        if ((await auth.hasDeviceSupport()) &&
+            (await auth.isDeviceBiometricEnabled())) {
+          final result = await auth.authenticate();
+
+          if (result) {
+            unawaited(_biometricEnabled());
+            navkey.currentContext!.go(pDashboard);
+          } else {
+            navkey.currentContext!.go(pDashboard);
+            navkey.currentContext!.notify.addNotification(
+              NotificationTile(
+                content: 'Failed to setup biometric.',
+                notificationType: NotificationType.error,
+              ),
+            );
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> _biometricEnabled() async {
+    await ref.read(securedStorageServiceProvider).writeToStorage(
+          key: Strings.biometric,
+          value: DateTime.now().toIso8601String(),
+        );
   }
 }

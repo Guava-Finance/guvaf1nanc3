@@ -171,7 +171,7 @@ class _OnboardingpageState extends ConsumerState<Onboardingpage>
                           width: 18.w,
                           height: 18.h,
                           decoration: BoxDecoration(
-                            color: iAgree ? BrandColors.textColor : null,
+                            color: iAgree ? BrandColors.primary : null,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: BrandColors.textColor,
