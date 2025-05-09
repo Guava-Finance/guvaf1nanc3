@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
+import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
@@ -22,6 +23,8 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  final debouncer = Debouncer(duration: Duration(seconds: 5));
+
   final scaffldKey = GlobalKey();
 
   @override
@@ -29,9 +32,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 5), () async {
+      debouncer.run(() async {
         if (mounted) {
           if (ref.exists(homeNotifierProvider)) {
+            // todo: make sure all permission has been allowed
             if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
               ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
                 balanceWidgetKey,

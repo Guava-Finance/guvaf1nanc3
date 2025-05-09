@@ -56,7 +56,7 @@ class AccountNotifier extends _$AccountNotifier {
   }
 
   Future<void> hasBackedUpPhrase() async {
-    ref.watch(securedStorageServiceProvider).writeToStorage(
+    await ref.watch(securedStorageServiceProvider).writeToStorage(
           key: Strings.backupMnenomic,
           value: DateTime.now().toIso8601String(),
         );

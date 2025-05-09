@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
@@ -6,6 +5,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/domain/entities/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/entities/recent_bank_transfer.dart';
+import 'package:guava/widgets/app_icon.dart';
 
 class RecentsBankTransferTile<T> extends StatelessWidget {
   const RecentsBankTransferTile({
@@ -25,9 +25,10 @@ class RecentsBankTransferTile<T> extends StatelessWidget {
       },
       child: Row(
         children: [
-          Image.asset(
-            R.ASSETS_IMAGES_NGN_TRANS_PNG,
+          CustomIcon(
+            icon: R.ASSETS_ICONS_NGN_FLAG_SVG,
             height: 40.h,
+            width: 40.w,
           ),
           10.horizontalSpace,
           Expanded(

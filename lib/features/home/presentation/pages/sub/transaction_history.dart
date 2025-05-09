@@ -20,6 +20,7 @@ class TransactionHistory extends StatelessWidget {
         final txns = txnHistory.groupedbyDate;
 
         return SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: Column(
             children: [
               if (txns.isEmpty) ...{

@@ -75,6 +75,7 @@ dependencies:
   showcaseview: ^4.0.1
   local_auth: ^2.3.0
   connectivity_plus: ^6.1.4
+  flutter_assets_cleaner: ^0.0.9
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +94,7 @@ dev_dependencies:
   package_rename: ^1.8.0
   envied_generator: ^1.1.1
   flutter_asset_manager: "^0.0.1"
+  flutter_launcher_icons: "^0.14.3"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

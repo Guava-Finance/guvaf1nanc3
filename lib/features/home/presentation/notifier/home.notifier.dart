@@ -16,10 +16,13 @@ import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/domain/entities/transaction_history.dart';
+import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/check_username.dart';
 import 'package:guava/features/home/domain/usecases/set_username.dart';
 import 'package:guava/features/home/presentation/widgets/action_banner.dart';
 import 'package:guava/features/onboarding/data/models/account.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home.notifier.g.dart';
@@ -206,6 +209,51 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
           key: Strings.homeShowcase,
           value: DateTime.now().toIso8601String(),
         );
+  }
+
+  Future<String> displayAmount(TransactionsHistory data) async {
+    final balance = await ref.read(balanceUsecaseProvider.future);
+    final exchangeRate = balance.exchangeRate;
+    final symbol = balance.symbol;
+
+    final fmt = NumberFormat.currency(symbol: symbol, decimalDigits: 2);
+
+    double amount = data.amount ?? 0.0;
+
+    // If it's a wallet debit (USDC), convert to local
+    if (data.type == 'wallet' && data.category == 'debit') {
+      final localAmount = amount / exchangeRate;
+      return fmt.format(localAmount);
+    }
+
+    // If it's a bank transaction (already in local currency)
+    if (data.type == 'bank') {
+      return fmt.format(amount);
+    }
+
+    // Deposits or credits are already in local currency
+    if (data.category == 'credit' || data.type == 'deposit') {
+      return fmt.format(amount);
+    }
+
+    // Fallback: return raw amount
+    return fmt.format(amount);
+  }
+
+  Future<String> usdcAmount(TransactionsHistory data) async {
+    final balance = await ref.read(balanceUsecaseProvider.future);
+    final exchangeRate = balance.exchangeRate;
+
+    double amount = data.amount ?? 0.0;
+
+    // Wallet or deposit are already in USDC
+    if (data.type == 'wallet') {
+      return '\$${amount.toStringAsFixed(6)}';
+    }
+
+    // Other types (bank, credit) are in NGN and need conversion
+    final usdc = amount * exchangeRate;
+    return '\$${usdc.toStringAsFixed(6)}';
   }
 }
 

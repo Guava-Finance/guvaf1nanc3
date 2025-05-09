@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/notification/wrapper/blur.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/auth.dart';
 import 'package:guava/core/routes/router.dart';
@@ -41,6 +43,9 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
         final result = await auth.authenticate();
 
         if (result) {
+          AppLogger.log(ref.read(appStateProvider));
+          AppLogger.log(ref.read(appLastActiveProvider));
+
           navkey.currentContext!.pop(result);
         } else {
           navkey.currentContext!.notify.addNotification(

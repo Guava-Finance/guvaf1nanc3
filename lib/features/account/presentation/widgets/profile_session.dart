@@ -39,13 +39,16 @@ class AccountProfileSession extends StatelessWidget {
                     width: 3.w,
                   ),
                 ),
-                child: CircleAvatar(
-                  maxRadius: 12.r,
-                  backgroundColor: BrandColors.textColor,
-                  child: CustomIcon(
-                    icon: R.ASSETS_ICONS_CAMERA_SVG,
-                    width: 11.w,
-                    height: 11.h,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: CircleAvatar(
+                    maxRadius: 12.r,
+                    backgroundColor: BrandColors.textColor,
+                    child: CustomIcon(
+                      icon: R.ASSETS_ICONS_CAMERA_SVG,
+                      width: 11.w,
+                      height: 11.h,
+                    ),
                   ),
                 ),
               ),

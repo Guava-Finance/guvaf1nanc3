@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -218,16 +217,16 @@ class _MnemonicBackupValidationPageState
     });
 
     // Simulate validation delay
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 1000), () async {
       final success = setEquals(selectedWords, requiredIndices);
 
       if (success) {
         // Navigate to the next screen after short delay
-        Future.delayed(const Duration(milliseconds: 700), () async {
+        await Future.delayed(const Duration(milliseconds: 700), () async {
           await ref.watch(accountNotifierProvider).hasBackedUpPhrase();
           // Navigate to the next page in the flow
           // navkey.currentContext!.push(pMnenomicBackupComplete);
-          navkey.currentContext!.go(pDashboard);
+          navkey.currentContext!.toPath(pDashboard);
           navkey.currentContext!.notify.addNotification(
             NotificationTile(
               content: 'Backup Verification success...',

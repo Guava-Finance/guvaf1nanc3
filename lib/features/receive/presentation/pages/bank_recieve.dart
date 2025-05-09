@@ -348,6 +348,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
             );
           },
         ),
+        20.verticalSpace,
       ],
     );
   }

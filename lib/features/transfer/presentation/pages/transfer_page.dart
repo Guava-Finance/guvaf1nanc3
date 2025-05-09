@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
@@ -27,6 +28,7 @@ class TransferPage extends ConsumerStatefulWidget {
 
 class _TransferPageState extends ConsumerState<TransferPage> {
   final scaffoldKey = GlobalKey();
+  final debouncer = Debouncer(duration: Duration(seconds: 2));
 
   String? walletAddress;
 
@@ -57,7 +59,7 @@ class _TransferPageState extends ConsumerState<TransferPage> {
 
       setState(() {});
 
-      Future.delayed(Duration(seconds: 2), () async {
+      debouncer.run(() async {
         if (!(await ref
             .watch(transferNotifierProvider)
             .hasShowcasedTransfer())) {
@@ -68,6 +70,13 @@ class _TransferPageState extends ConsumerState<TransferPage> {
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    debouncer.dispose();
+
+    super.dispose();
   }
 
   @override

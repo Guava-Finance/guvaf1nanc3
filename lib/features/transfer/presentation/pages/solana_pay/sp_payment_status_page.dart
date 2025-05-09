@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -54,8 +53,6 @@ class _SolanaPayStatusPageState extends ConsumerState<SolanaPayStatusPage> {
 
   @override
   Widget build(BuildContext context) {
-    final activeState = ref.read(activeTabState.notifier).state;
-
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -89,9 +86,13 @@ class _SolanaPayStatusPageState extends ConsumerState<SolanaPayStatusPage> {
             Center(
               child: Column(
                 children: [
-                  Image.asset(
-                    R.ASSETS_IMAGES_CHECKMARK_PNG,
-                    height: 32.h,
+                  CircleAvatar(
+                    maxRadius: 16.r,
+                    backgroundColor: BrandColors.primary,
+                    child: Icon(
+                      Icons.check,
+                      color: BrandColors.backgroundColor,
+                    ),
                   ),
                   15.verticalSpace,
                   Text(
@@ -197,7 +198,7 @@ class _SolanaPayStatusPageState extends ConsumerState<SolanaPayStatusPage> {
             CustomButton(
               title: 'Done',
               onTap: () {
-                context.go(pDashboard);
+                context.toPath(pDashboard);
               },
             )
           ],

@@ -118,6 +118,9 @@ class R {
   static const String ASSETS_ICONS_NFC_FLOATER_SVG =
       'assets/icons/nfc-floater.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/ngn-flag.svg)
+  static const String ASSETS_ICONS_NGN_FLAG_SVG = 'assets/icons/ngn-flag.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/no-hdden-charge-floater.svg)
   static const String ASSETS_ICONS_NO_HDDEN_CHARGE_FLOATER_SVG =
       'assets/icons/no-hdden-charge-floater.svg';
@@ -246,110 +249,8 @@ class R {
   static const String ASSETS_ICONS_YOUR_CONTROL_SVG =
       'assets/icons/your-control.svg';
 
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/arrow.png)
-  static const String ASSETS_IMAGES_ARROW_PNG = 'assets/images/arrow.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/barcode.png)
-  static const String ASSETS_IMAGES_BARCODE_PNG = 'assets/images/barcode.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/camera.png)
-  static const String ASSETS_IMAGES_CAMERA_PNG = 'assets/images/camera.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/checkmark.png)
-  static const String ASSETS_IMAGES_CHECKMARK_PNG =
-      'assets/images/checkmark.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/close.png)
-  static const String ASSETS_IMAGES_CLOSE_PNG = 'assets/images/close.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/connect_wallet.png)
-  static const String ASSETS_IMAGES_CONNECT_WALLET_PNG =
-      'assets/images/connect_wallet.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/copy_button.png)
-  static const String ASSETS_IMAGES_COPY_BUTTON_PNG =
-      'assets/images/copy_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/escrow.png)
-  static const String ASSETS_IMAGES_ESCROW_PNG = 'assets/images/escrow.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/guava_pay_btn.png)
-  static const String ASSETS_IMAGES_GUAVA_PAY_BTN_PNG =
-      'assets/images/guava_pay_btn.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider1.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER1_PNG =
-      'assets/images/home_slider1.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider2.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER2_PNG =
-      'assets/images/home_slider2.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider3.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER3_PNG =
-      'assets/images/home_slider3.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider4.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER4_PNG =
-      'assets/images/home_slider4.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/invite.png)
-  static const String ASSETS_IMAGES_INVITE_PNG = 'assets/images/invite.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/mob_coins.png)
-  static const String ASSETS_IMAGES_MOB_COINS_PNG =
-      'assets/images/mob_coins.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/ngn_trans.png)
-  static const String ASSETS_IMAGES_NGN_TRANS_PNG =
-      'assets/images/ngn_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/notification_button.png)
-  static const String ASSETS_IMAGES_NOTIFICATION_BUTTON_PNG =
-      'assets/images/notification_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/pending_trans.png)
-  static const String ASSETS_IMAGES_PENDING_TRANS_PNG =
-      'assets/images/pending_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/receive_btn.png)
-  static const String ASSETS_IMAGES_RECEIVE_BTN_PNG =
-      'assets/images/receive_btn.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/savings.png)
-  static const String ASSETS_IMAGES_SAVINGS_PNG = 'assets/images/savings.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/scan_button.png)
-  static const String ASSETS_IMAGES_SCAN_BUTTON_PNG =
-      'assets/images/scan_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/security.png)
-  static const String ASSETS_IMAGES_SECURITY_PNG = 'assets/images/security.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/settings.png)
-  static const String ASSETS_IMAGES_SETTINGS_PNG = 'assets/images/settings.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/stable_coins.png)
-  static const String ASSETS_IMAGES_STABLE_COINS_PNG =
-      'assets/images/stable_coins.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/statement.png)
-  static const String ASSETS_IMAGES_STATEMENT_PNG =
-      'assets/images/statement.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/successful_trans.png)
-  static const String ASSETS_IMAGES_SUCCESSFUL_TRANS_PNG =
-      'assets/images/successful_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/support.png)
-  static const String ASSETS_IMAGES_SUPPORT_PNG = 'assets/images/support.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/terms.png)
-  static const String ASSETS_IMAGES_TERMS_PNG = 'assets/images/terms.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/transfer_btn.png)
-  static const String ASSETS_IMAGES_TRANSFER_BTN_PNG =
-      'assets/images/transfer_btn.png';
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/app_icon.png)
+  static const String ASSETS_IMAGES_APP_ICON_PNG = 'assets/images/app_icon.png';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/shorebird.yaml)
   static const String SHOREBIRD_YAML = 'shorebird.yaml';

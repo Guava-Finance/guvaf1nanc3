@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_core.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -16,7 +15,6 @@ import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:pinput/pinput.dart';
 
-// todo: verify pin to access dashboard and verify pin on lifecylec resume
 class SetupPinPage extends ConsumerStatefulWidget {
   const SetupPinPage({
     this.onComplete,
@@ -162,9 +160,9 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
 
           if (result) {
             unawaited(_biometricEnabled());
-            navkey.currentContext!.go(pDashboard);
+            navkey.currentContext!.toPath(pDashboard);
           } else {
-            navkey.currentContext!.go(pDashboard);
+            navkey.currentContext!.toPath(pDashboard);
             navkey.currentContext!.notify.addNotification(
               NotificationTile(
                 content: 'Failed to setup biometric.',

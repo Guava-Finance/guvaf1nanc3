@@ -1,12 +1,12 @@
 package_rename_config:
   android:
-    app_name: "Guava Finance"
+    app_name: "Guava Wallet"
     package_name: finance.guava
     # override_old_package: # (Optional) (String) Use this to delete the old folder structure of MainActivity or to use the existing code with the new package name
     # lang: # (Optional) (String) The android development language {kotlin(default) or java}
 
   ios:
-    app_name: "Guava Finance"
+    app_name: "Guava Wallet"
     bundle_name: finance.guava
     package_name: finance.guava
 
@@ -21,7 +21,7 @@ package_rename_config:
   #   copyright_notice: # (String) The product copyright of the macos app
 
   web:
-    app_name: "Guava Finance"
+    app_name: "Guava Wallet"
     short_app_name: GuavaFi
     description: "Guava Finance is a USDC backed CrossBorder App for Inividuals and SMEs"
 

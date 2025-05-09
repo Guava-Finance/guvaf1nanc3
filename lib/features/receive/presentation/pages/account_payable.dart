@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
@@ -505,7 +504,12 @@ class _AccountPayablePageState extends ConsumerState<AccountPayablePage> {
               ref.invalidate(balanceUsecaseProvider);
               ref.invalidate(myTransactionHistory);
 
-              context.go(pDashboard);
+              context.toPath(pDashboard);
+              context.notify.addNotification(
+                NotificationTile(
+                  content: 'Your wallet would be automatically credited.',
+                ),
+              );
             },
             title: 'I have made the payment',
             disable: !iAgree,

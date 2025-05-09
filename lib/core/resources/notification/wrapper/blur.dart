@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/notification/wrapper/notification.wrapper.dart';
@@ -36,6 +37,7 @@ class BlurWrapper extends ConsumerStatefulWidget {
 class BlurWrapperState extends ConsumerState<BlurWrapper>
     with WidgetsBindingObserver {
   bool shouldBlur = false;
+  bool _hasNavigatedToPin = false;
 
   DateTime? _lastResumeTime;
   DateTime? _lastPausedTime;
@@ -79,8 +81,12 @@ class BlurWrapperState extends ConsumerState<BlurWrapper>
 
           // Check if we need to lock the app due to inactivity
           if (_lastPausedTime != null) {
+            AppLogger.log('last paused time: $_lastPausedTime');
             final inactivityDuration =
                 _lastResumeTime!.difference(_lastPausedTime!);
+
+            AppLogger.log('paused duration: ${inactivityDuration.inMinutes}');
+
             if (inactivityDuration.inMinutes >= APP_TIMEOUT_MINUTES) {
               // Lock the app and navigate to pin screen
               _handleAppTimeout();
@@ -115,17 +121,34 @@ class BlurWrapperState extends ConsumerState<BlurWrapper>
   }
 
   void _handleAppTimeout() {
-    // Navigate to PIN screen when app times out
-    // We use a slight delay to ensure the app is fully resumed
+    if (_hasNavigatedToPin) return; // prevent loop
+    _hasNavigatedToPin = true;
+
     Future.delayed(const Duration(milliseconds: 200), () {
       if (navkey.currentContext != null) {
-        // Check if we're already on the PIN page to avoid navigation loops
         final currentRoute =
             GoRouter.of(navkey.currentContext!).state.name ?? '';
         if (!currentRoute.contains(pAccessPin.pathToName) &&
             !currentRoute.contains(pSetupPin.pathToName) &&
+            !currentRoute.contains(pRecoveryPhrase.pathToName) &&
+            !currentRoute.contains(pPrivateKey.pathToName) &&
             !currentRoute.contains(pOnboarding.pathToName)) {
-          navkey.currentContext!.push(pAccessPin, extra: true);
+          navkey.currentContext!.push(pAccessPin, extra: true).then((result) {
+            // Reset the flag after returning from PIN
+            _hasNavigatedToPin = false;
+
+            // If pin was successfully validated, reset the last active time
+            if (result == true && context.mounted) {
+              final appLastActiveNotifier = ProviderScope.containerOf(
+                navkey.currentContext!,
+              ).read(appLastActiveProvider.notifier);
+              appLastActiveNotifier.state = DateTime.now();
+              _lastResumeTime = DateTime.now();
+              _lastPausedTime = null;
+            }
+          });
+        } else {
+          _hasNavigatedToPin = false;
         }
       }
     });

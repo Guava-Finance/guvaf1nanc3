@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -86,9 +84,13 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
             Center(
               child: Column(
                 children: [
-                  Image.asset(
-                    R.ASSETS_IMAGES_CHECKMARK_PNG,
-                    height: 32.h,
+                  CircleAvatar(
+                    maxRadius: 16.r,
+                    backgroundColor: BrandColors.primary,
+                    child: Icon(
+                      Icons.check,
+                      color: BrandColors.backgroundColor,
+                    ),
                   ),
                   15.verticalSpace,
                   Text(
@@ -163,9 +165,6 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
                       },
                     ).bottomSheet;
                   }
-                  // todo: go to a new page that calls the profile
-                  // from wallet address endpoint then the user give's
-                  // his own name to remember the address
                 },
                 backgroundColor: BrandColors.containerColor,
                 textColor: BrandColors.washedTextColor,
@@ -175,7 +174,7 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
             CustomButton(
               title: 'Done',
               onTap: () {
-                context.go(pDashboard);
+                context.toPath(pDashboard);
               },
             )
           ],

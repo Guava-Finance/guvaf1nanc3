@@ -9,7 +9,6 @@ import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/entities/transaction_history.dart';
-import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:intl/intl.dart';
@@ -29,11 +28,6 @@ class TransactionHistoryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hn = ref.watch(homeNotifierProvider);
-
-    final currency = NumberFormat.currency(
-      symbol: '',
-      decimalDigits: 2,
-    );
 
     return GestureDetector(
       onTap: () {
@@ -76,10 +70,14 @@ class TransactionHistoryTile extends ConsumerWidget {
                                 ),
                               ),
                             } else ...{
-                              TextSpan(text: 'Transfer from '),
-                              TextSpan(
-                                text: data.sender?.toMaskedFormat(),
-                              ),
+                              if (data.type == 'deposit') ...{
+                                TextSpan(text: 'Wallet Deposit '),
+                              } else ...{
+                                TextSpan(text: 'Transfer from '),
+                                TextSpan(
+                                  text: data.sender?.toMaskedFormat(),
+                                ),
+                              }
                             }
                           ],
                         ),
@@ -172,7 +170,7 @@ class TransactionHistoryTile extends ConsumerWidget {
               top: -1.h,
               right: 0.w,
               child: FutureBuilder(
-                future: ref.read(balanceUsecaseProvider.future),
+                future: hn.displayAmount(data),
                 builder: (_, ss) {
                   if (ss.data == null) {
                     return 0.verticalSpace;
@@ -180,7 +178,7 @@ class TransactionHistoryTile extends ConsumerWidget {
 
                   return IntrinsicWidth(
                     child: Text(
-                      '''${ss.data!.symbol}${currency.format(data.type == 'bank' ? (data.amount ?? 0.0) : ((data.amount ?? 0.0) / ss.data!.exchangeRate))}''',
+                      ss.data!,
                       style: context.medium.copyWith(
                         color: Colors.white,
                         fontSize: 13.w,

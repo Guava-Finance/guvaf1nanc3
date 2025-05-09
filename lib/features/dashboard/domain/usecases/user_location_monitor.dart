@@ -76,7 +76,6 @@ class UserLocationMonitorUsecase extends UseCase<bool, Null> {
     if (result) {
       myAccount.deviceInfo.addAll(ipInfo.toJson());
 
-      // todo: automatically change the country
       final modifiedMyAccount = myAccount.copyWith(
         deviceInfo: myAccount.deviceInfo,
       );
