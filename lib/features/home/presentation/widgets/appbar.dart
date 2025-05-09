@@ -45,7 +45,7 @@ class HomeAppbar extends ConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'Vwegba',
+                    text: '######',
                     style: context.medium.copyWith(
                       color: BrandColors.textColor,
                       fontSize: 16.sp,

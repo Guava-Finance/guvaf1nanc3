@@ -56,6 +56,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
     _isDisposed = true;
     debouncer.dispose(); // Ensure the debouncer is properly disposed
     controller.dispose();
+    
     super.dispose();
   }
 
