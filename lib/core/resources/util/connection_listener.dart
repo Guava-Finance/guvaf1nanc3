@@ -34,7 +34,6 @@ class ConnectivityNotifier extends StateNotifier<bool> {
   }
 
   Future<void> _initialize() async {
-    AppLogger.log('connectivity initialized');
     final result = await Connectivity().checkConnectivity();
     _handleStatusChange(result);
   }

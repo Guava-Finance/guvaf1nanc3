@@ -26,16 +26,7 @@ class _ActionTasksState extends ConsumerState<ActionTasks> {
     super.initState();
 
     // Start auto-scrolling with a delay to allow UI to build
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // final hasBackedUp = await ref.read(userHasBackedUpPhrase.future);
-
-      // _startAutoScroll();
-
-      // if (hasBackedUp) {
-      //   widgetActions.removeAt(1);
-      //   setState(() {});
-      // }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
   @override

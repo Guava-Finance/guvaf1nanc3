@@ -71,6 +71,7 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
         bannerKey: Strings.kycVerification,
         icon: R.ASSETS_ICONS_KYC_ICON_SVG,
         onTap: () {
+          // todo: check for camera & file permission first
           navkey.currentContext!.push(pKyc);
           HapticFeedback.lightImpact();
         },

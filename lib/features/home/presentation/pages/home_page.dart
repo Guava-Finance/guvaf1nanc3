@@ -34,18 +34,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debouncer.run(() async {
         if (mounted) {
-          if (ref.exists(homeNotifierProvider)) {
-            // todo: make sure all permission has been allowed
-            if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
-              ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
-                balanceWidgetKey,
-                walletDetailWidgetKey,
-                avatarWidgetKey,
-                scannerWidgetKey,
-                transferWidgetKey,
-                receiveWidgetKey,
-              ]);
-            }
+          // todo: make sure all permission has been allowed
+          if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
+            ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
+              balanceWidgetKey,
+              walletDetailWidgetKey,
+              avatarWidgetKey,
+              scannerWidgetKey,
+              transferWidgetKey,
+              receiveWidgetKey,
+            ]);
           }
         }
       });

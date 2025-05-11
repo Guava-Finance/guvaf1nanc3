@@ -36,7 +36,7 @@ class QuickMenu extends StatelessWidget {
             description: 'Send money to other wallets, banks and across border',
             targetPadding: EdgeInsets.all(12.sp),
             child: CircularIconButton(
-              action: 'Transfer',
+              action: 'Send',
               icon: R.ASSETS_ICONS_TRANSFER_ICON_SVG,
               color: BrandColors.washedRed,
               onTap: () {
