@@ -160,6 +160,8 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                             return CustomTextfield(
                               readOnly: true,
                               onTap: () {
+                                accountNumberCtrl.clear();
+
                                 CustomListPicker(
                                   title: 'Select Recipient Bank',
                                   options:
@@ -323,68 +325,75 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   });
                 },
               ).padHorizontal,
-              10.verticalSpace,
-              Consumer(
-                builder: (context, ref, child) {
-                  final purpose = ref.watch(lisOfTransferPurpose);
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  10.verticalSpace,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final purpose = ref.watch(lisOfTransferPurpose);
 
-                  return purpose.when(
-                    data: (d) {
-                      return CustomTextfield(
-                        readOnly: true,
-                        onTap: () {
-                          CustomListPicker(
-                            title: 'What is the purpose',
-                            options: (d ?? []).map((e) => e.title).toList(),
-                            onTap: (p0) {
-                              purposeCtrl.value = TextEditingValue(text: p0);
+                      return purpose.when(
+                        data: (d) {
+                          return CustomTextfield(
+                            readOnly: true,
+                            onTap: () {
+                              CustomListPicker(
+                                title: 'What is the purpose',
+                                options: (d ?? []).map((e) => e.title).toList(),
+                                onTap: (p0) {
+                                  purposeCtrl.value =
+                                      TextEditingValue(text: p0);
 
-                              final data = (d ?? []).firstWhere((e) {
-                                return e.title.toLowerCase() ==
-                                    p0.toLowerCase();
-                              });
+                                  final data = (d ?? []).firstWhere((e) {
+                                    return e.title.toLowerCase() ==
+                                        p0.toLowerCase();
+                                  });
 
-                              ref.read(selectedPurpose.notifier).state = data;
+                                  ref.read(selectedPurpose.notifier).state =
+                                      data;
 
-                              setState(() {});
+                                  setState(() {});
+                                },
+                              ).bottomSheet;
                             },
-                          ).bottomSheet;
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: SvgPicture.asset(
+                              R.ASSETS_ICONS_ARROW_FORWARD_SVG,
+                            ),
+                          );
                         },
-                        hintText: 'Purpose of transaction',
-                        controller: purposeCtrl,
-                        suffixIcon: SvgPicture.asset(
-                          R.ASSETS_ICONS_ARROW_FORWARD_SVG,
-                        ),
+                        error: (_, __) {
+                          return CustomTextfield(
+                            readOnly: true,
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                ref.invalidate(lisOfTransferPurpose);
+                              },
+                              icon: Icon(Icons.refresh),
+                            ),
+                          );
+                        },
+                        loading: () {
+                          return CustomTextfield(
+                            readOnly: true,
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: CupertinoActivityIndicator(
+                              radius: 12.r,
+                              color: BrandColors.primary,
+                            ),
+                          );
+                        },
                       );
                     },
-                    error: (_, __) {
-                      return CustomTextfield(
-                        readOnly: true,
-                        hintText: 'Purpose of transaction',
-                        controller: purposeCtrl,
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            ref.invalidate(lisOfTransferPurpose);
-                          },
-                          icon: Icon(Icons.refresh),
-                        ),
-                      );
-                    },
-                    loading: () {
-                      return CustomTextfield(
-                        readOnly: true,
-                        hintText: 'Purpose of transaction',
-                        controller: purposeCtrl,
-                        suffixIcon: CupertinoActivityIndicator(
-                          radius: 12.r,
-                          color: BrandColors.primary,
-                        ),
-                      );
-                    },
-                  );
-                },
-              ).padHorizontal,
-              20.verticalSpace,
+                  ).padHorizontal,
+                  20.verticalSpace,
+                ],
+              ),
               ValueListenableBuilder(
                 valueListenable: isLoading,
                 builder: (_, data, child) {

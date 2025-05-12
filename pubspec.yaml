@@ -76,6 +76,7 @@ dependencies:
   local_auth: ^2.3.0
   connectivity_plus: ^6.1.4
   flutter_assets_cleaner: ^0.0.9
+  app_settings: ^6.1.1
 
 dev_dependencies:
   flutter_test:
