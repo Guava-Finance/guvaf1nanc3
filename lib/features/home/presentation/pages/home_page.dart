@@ -9,6 +9,7 @@ import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/home/presentation/pages/sub/actions.dart';
 import 'package:guava/features/home/presentation/pages/sub/category.dart';
 import 'package:guava/features/home/presentation/pages/sub/home.wallet.dart';
+import 'package:guava/features/home/presentation/pages/sub/pay_anyone.dart';
 import 'package:guava/features/home/presentation/pages/sub/quick_menu.dart';
 import 'package:guava/features/home/presentation/pages/sub/txn_session.dart';
 import 'package:guava/features/home/presentation/pages/sub/wallet_balance.dart';
@@ -114,6 +115,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         WalletBalance(),
                         24.verticalSpace,
                         QuickMenu(),
+                        16.verticalSpace,
+                        PayAnyone(),
                         16.verticalSpace,
                         ActionTasks(),
                         24.verticalSpace,
