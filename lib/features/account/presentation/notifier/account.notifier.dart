@@ -6,6 +6,7 @@ import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:hashlib/hashlib.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account.notifier.g.dart';
@@ -204,6 +205,12 @@ class AccountNotifier extends _$AccountNotifier {
 
   Future<String?> username() async {
     return await ref.read(myUsernameProvider.future);
+  }
+
+  Future<String> appInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    return 'v${packageInfo.version} [${packageInfo.buildNumber}]';
   }
 }
 

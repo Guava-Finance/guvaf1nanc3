@@ -8,6 +8,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/account/presentation/notifier/account.notifier.dart';
 import 'package:guava/features/account/presentation/widgets/profile_session.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
@@ -188,12 +189,20 @@ class AccountPage extends ConsumerWidget {
                       ),
                     ),
                     100.verticalSpace,
-                    Text(
-                      'Version 2.4.2345 (764)',
-                      style: context.medium.copyWith(
-                        color: BrandColors.washedTextColor,
-                        fontSize: 12.sp,
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return FutureBuilder(
+                            future: ref.read(accountNotifierProvider).appInfo(),
+                            builder: (_, ss) {
+                              return Text(
+                                ss.data ?? 'v0.0.0 (0)',
+                                style: context.medium.copyWith(
+                                  color: BrandColors.washedTextColor,
+                                  fontSize: 12.sp,
+                                ),
+                              );
+                            });
+                      },
                     ),
                     12.verticalSpace,
                     Text(
