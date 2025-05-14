@@ -49,7 +49,7 @@ class CategorySession extends StatelessWidget {
                 color: BrandColors.washedGreen,
               ),
               CategoryTile(
-                title: 'Inite Friends',
+                title: 'Invite Friends',
                 icon: R.ASSETS_ICONS_INVITE_ICON_SVG,
                 color: BrandColors.washedRed,
               ),

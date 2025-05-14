@@ -9,6 +9,8 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
@@ -51,6 +53,23 @@ class _BankTransferState extends ConsumerState<BankTransfer>
     purposeCtrl = TextEditingController();
 
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(accountDetail.notifier).state = null;
+
+      final country = ref.read(userCountry);
+
+      if (!(country?.isOffRampEnabled ?? false)) {
+        ref.watch(activeTabState.notifier).state = 0;
+
+        context.pop();
+        context.notify.addNotification(
+          NotificationTile(
+            content: 'Bank Transfer is currently unavailable',
+          ),
+        );
+      }
+    });
   }
 
   bool get isValidated {
@@ -89,6 +108,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   return countries.when(
                     data: (data) {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         onTap: () {
                           CustomListPicker(
@@ -117,6 +137,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                     },
                     error: (_, __) {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         hintText: 'Select Country',
                         controller: countryCtrl,
@@ -133,6 +154,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                     },
                     loading: () {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         hintText: 'Select Country',
                         controller: countryCtrl,
@@ -158,6 +180,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                         return banks.when(
                           data: (data) {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               onTap: () {
                                 accountNumberCtrl.clear();
@@ -189,6 +212,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                           },
                           error: (_, __) {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               hintText: 'Select Bank',
                               controller: bankCtrl,
@@ -205,6 +229,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                           },
                           loading: () {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               hintText: 'Select Bank',
                               controller: bankCtrl,
@@ -227,6 +252,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomTextfield(
+                      height: 0.h,
                       hintText: 'Enter 10 digit account number',
                       controller: accountNumberCtrl,
                       inputType: TextInputType.number,
@@ -235,9 +261,10 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                       ],
                       onChanged: (p0) async {
                         ref.watch(accountDetail.notifier).state = null;
+                        final country = ref.read(userCountry);
 
-                        // todo: get bank account length from config
-                        if ((p0 ?? '').length == 10) {
+                        if ((p0 ?? '').length ==
+                            (country?.bankAccountLenght ?? 10)) {
                           context.focusScope.unfocus();
 
                           tn.accountResolutionData['account'] = p0;
@@ -297,6 +324,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                 },
               ),
               CustomTextfield(
+                height: 0.h,
                 readOnly: true,
                 hintText: 'Enter amount',
                 controller: amountCtrl,
@@ -336,6 +364,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                       return purpose.when(
                         data: (d) {
                           return CustomTextfield(
+                            height: 0.h,
                             readOnly: true,
                             onTap: () {
                               CustomListPicker(
@@ -366,6 +395,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                         },
                         error: (_, __) {
                           return CustomTextfield(
+                            height: 0.h,
                             readOnly: true,
                             hintText: 'Purpose of transaction',
                             controller: purposeCtrl,
@@ -379,6 +409,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                         },
                         loading: () {
                           return CustomTextfield(
+                            height: 0.h,
                             readOnly: true,
                             hintText: 'Purpose of transaction',
                             controller: purposeCtrl,

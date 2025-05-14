@@ -8,6 +8,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -49,6 +50,23 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
     }
 
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(accountDetail.notifier).state = null;
+
+      final country = ref.read(userCountry);
+
+      if (!(country?.isWalletTransferEnabled ?? false)) {
+        ref.watch(activeTabState.notifier).state = 1;
+
+        context.pop();
+        context.notify.addNotification(
+          NotificationTile(
+            content: 'Wallet Transfer currently unavailable',
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -56,7 +74,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
     _isDisposed = true;
     debouncer.dispose(); // Ensure the debouncer is properly disposed
     controller.dispose();
-    
+
     super.dispose();
   }
 
@@ -100,6 +118,7 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
               Expanded(
                 child: CustomTextfield(
                   hintText: 'To: username or address',
+                  height: 2.h,
                   controller: controller,
                   onChanged: (p0) {
                     if (_isDisposed) return; // Safety check

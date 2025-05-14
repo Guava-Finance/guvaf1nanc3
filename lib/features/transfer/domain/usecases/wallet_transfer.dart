@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/rate_rule.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -30,9 +29,7 @@ final wallTransferUsecaseProvider = Provider<WallTransferUsecase>((ref) {
 });
 
 final calcTransactionFee = FutureProvider<double>((ref) async {
-  AppLogger.log('Calculating fee');
   final usdcAmount = ref.watch(usdcAountTransfer);
-  AppLogger.log('usdc amount: $usdcAmount');
 
   final config = await ref.watch(configServiceProvider).getConfig();
   final storage = ref.watch(securedStorageServiceProvider);
@@ -45,8 +42,6 @@ final calcTransactionFee = FutureProvider<double>((ref) async {
 
   final myAccount = AccountModel.fromJson(jsonDecode(myAccountData));
   final countryCode = myAccount.deviceInfo['country'].toString().toLowerCase();
-
-  AppLogger.log('Country code: $countryCode');
 
   if (config == null) {
     throw Exception('App config is missing');
@@ -61,8 +56,6 @@ final calcTransactionFee = FutureProvider<double>((ref) async {
   } else {
     country = config.countries.first;
   }
-
-  AppLogger.log(country.rates.offRamp.calculateTransactionFee(usdcAmount));
 
   return country.rates.offRamp.calculateTransactionFee(usdcAmount);
 });

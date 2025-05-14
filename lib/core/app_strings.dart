@@ -52,6 +52,10 @@ class Strings {
   static const mnenomicShow = '/mnenomics-show-page';
   static const mnenomicValidation = '/mnenomics-validation-page';
   static const mnenomicBackupComplete = '/mnenomics-backup-complete-page';
+  static const profilePage = '/profile-page';
+  static const settingsPage = '/settings-page';
+  static const privacyPolicyPage = '/privacy-policy-page';
+  static const supportPage = '/support-oage';
 
   // SolanaPay
   static const solanaPayReview = '/solana-pay-review-page';

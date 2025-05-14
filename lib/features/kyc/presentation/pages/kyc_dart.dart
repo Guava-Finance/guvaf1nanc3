@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,10 +10,12 @@ import 'package:guava/core/resources/mixins/loading.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/liveliness.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
+import 'package:guava/core/resources/util/permission.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class KycPage extends ConsumerStatefulWidget {
   const KycPage({super.key});
@@ -92,46 +95,58 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomButton(
-            onTap: () async {
-              final wallet = await ref.read(walletAddressProvider.future);
-              ref.read(livelinessServiceProvider).initKyc(
-                    walletAddress: wallet,
-                    onSuccess: (p0) {
-                      navkey.currentContext!.notify.addNotification(
-                        NotificationTile(
-                          notificationType: NotificationType.success,
-                          title: 'KYC Success',
-                          content: 'Please wait while we verify your documents',
-                        ),
-                      );
-
-                      context.go(pKycDone);
-                    },
-                    onError: (p0) {
-                      navkey.currentContext!.notify.addNotification(
-                        NotificationTile(
-                          notificationType: NotificationType.error,
-                          title: 'KYC Failed',
-                          content: p0.toString(),
-                        ),
-                      );
-                    },
-                    onClose: (p0) {
-                      navkey.currentContext!.notify.addNotification(
-                        NotificationTile(
-                          notificationType: NotificationType.information,
-                          title: 'KYC Closed',
-                          content: p0.toString(),
-                        ),
-                      );
-                    },
-                  );
-            },
+            onTap: () async => startKYC(),
             title: 'Get started',
           ),
           30.verticalSpace,
         ],
       ).padHorizontal,
     );
+  }
+
+  void startKYC() async {
+    final mng = ref.read(permissionManagerProvider);
+
+    if (await mng.verifyPermission(Permission.camera, AppSettingsType.camera)) {
+      if (await mng.verifyPermission(Permission.mediaLibrary)) {
+        if (await mng.verifyPermission(Permission.microphone)) {
+          if (await mng.verifyPermission(Permission.photos)) {
+            final wallet = await ref.read(walletAddressProvider.future);
+            ref.read(livelinessServiceProvider).initKyc(
+                  walletAddress: wallet,
+                  onSuccess: (p0) {
+                    navkey.currentContext!.notify.addNotification(
+                      NotificationTile(
+                        notificationType: NotificationType.success,
+                        title: 'KYC Success',
+                        content: 'Please wait while we verify your documents',
+                      ),
+                    );
+
+                    context.go(pKycDone);
+                  },
+                  onError: (p0) {
+                    navkey.currentContext!.notify.addNotification(
+                      NotificationTile(
+                        notificationType: NotificationType.error,
+                        title: 'KYC Failed',
+                        content: p0.toString(),
+                      ),
+                    );
+                  },
+                  onClose: (p0) {
+                    navkey.currentContext!.notify.addNotification(
+                      NotificationTile(
+                        notificationType: NotificationType.information,
+                        title: 'KYC Closed',
+                        content: p0.toString(),
+                      ),
+                    );
+                  },
+                );
+          }
+        }
+      }
+    }
   }
 }

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/widgets/profile_session.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:guava/widgets/custom_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});
@@ -41,8 +45,10 @@ class AccountPage extends ConsumerWidget {
                           child: SizedBox(
                             height: 52.h,
                             child: CustomButton(
-                              onTap: () {},
-                              title: 'Edit profile',
+                              onTap: () {
+                                context.push(pProfile);
+                              },
+                              title: 'View profile',
                               textColor: Colors.white,
                               filled: false,
                               showBorder: true,
@@ -87,6 +93,10 @@ class AccountPage extends ConsumerWidget {
                       child: Column(
                         children: [
                           ListTile(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              context.push(pSettings);
+                            },
                             contentPadding: EdgeInsets.zero,
                             leading: CustomIcon(
                               icon: R.ASSETS_ICONS_SETTINGS_SVG,
@@ -106,6 +116,10 @@ class AccountPage extends ConsumerWidget {
                             color: BrandColors.textColor.withValues(alpha: 0.1),
                           ),
                           ListTile(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              context.push(pPrivacyPolicy);
+                            },
                             contentPadding: EdgeInsets.zero,
                             leading: CustomIcon(
                               icon: R.ASSETS_ICONS_LOCK_SVG,
@@ -125,6 +139,10 @@ class AccountPage extends ConsumerWidget {
                             color: BrandColors.textColor.withValues(alpha: 0.1),
                           ),
                           ListTile(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              context.push(pSupport);
+                            },
                             contentPadding: EdgeInsets.zero,
                             leading: CustomIcon(
                               icon: R.ASSETS_ICONS_SUPPORT_SVG,
@@ -144,6 +162,15 @@ class AccountPage extends ConsumerWidget {
                             color: BrandColors.textColor.withValues(alpha: 0.1),
                           ),
                           ListTile(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              launchUrl(
+                                Uri.parse(
+                                  'https://guava.finance',
+                                ),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
                             contentPadding: EdgeInsets.zero,
                             leading: CustomIcon(
                               icon: R.ASSETS_ICONS_TERMS_SVG,
@@ -170,7 +197,7 @@ class AccountPage extends ConsumerWidget {
                     ),
                     12.verticalSpace,
                     Text(
-                      'Copyright @Guava 2025. All rights reserved.',
+                      '''Copyright © Guava ${DateTime.now().year}. All rights reserved.''',
                       style: context.medium.copyWith(
                         color: BrandColors.washedTextColor,
                         fontSize: 10.sp,

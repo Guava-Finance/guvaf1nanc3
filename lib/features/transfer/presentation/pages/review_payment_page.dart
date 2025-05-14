@@ -11,7 +11,12 @@ import 'package:guava/features/transfer/presentation/pages/sub/payment_review.da
 import 'package:guava/widgets/custom_button.dart';
 
 class ReviewPaymentPage extends ConsumerStatefulWidget {
-  const ReviewPaymentPage({super.key});
+  const ReviewPaymentPage({
+    super.key,
+    this.fromPayAnyone = false,
+  });
+
+  final bool fromPayAnyone;
 
   @override
   ConsumerState<ReviewPaymentPage> createState() => _ReviewPaymentPageState();
@@ -34,7 +39,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
             24.verticalSpace,
             FeeReview(),
             20.verticalSpace,
-            if (activeState == 1) ...{
+            if (activeState == 1 || widget.fromPayAnyone) ...{
               PaymentReview(),
             },
             Spacer(),
@@ -47,7 +52,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                     await withLoading(() async {
                       late bool result;
 
-                      if (activeState == 0) {
+                      if (activeState == 0 && !widget.fromPayAnyone) {
                         result = await ref
                             .read(transferNotifierProvider)
                             .makeWalletTransfer();

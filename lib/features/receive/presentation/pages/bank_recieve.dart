@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -43,6 +45,19 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(usdcAountTransfer.notifier).state = 0.0;
+
+      ref.watch(accountDetail.notifier).state = null;
+
+      final country = ref.read(userCountry);
+
+      if (!(country?.isOffRampEnabled ?? false)) {
+        context.pop();
+        context.notify.addNotification(
+          NotificationTile(
+            content: 'Bank Transfer is currently unavailable',
+          ),
+        );
+      }
     });
   }
 
@@ -279,10 +294,15 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
 
                   return balanceAsync.when(
                     data: (data) {
+                      final fmt = NumberFormat.currency(
+                        symbol: data.symbol,
+                        decimalDigits: 2,
+                      );
+
                       return PaymentItem(
                         title: 'Our exchange rate',
                         value:
-                            '''1 USDC to ${(1 / data.exchangeRate).toStringAsFixed(2)}''',
+                            '''1 USDC to ${(1 * data.exchangeRate).toStringAsFixed(2)}''',
                         valueWidget: Text.rich(
                           TextSpan(
                             children: [
@@ -295,11 +315,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
                               ),
                               TextSpan(text: ' 1'),
                               TextSpan(text: ' to '),
-                              TextSpan(text: data.symbol),
-                              TextSpan(
-                                text:
-                                    (1 / data.exchangeRate).toStringAsFixed(2),
-                              ),
+                              TextSpan(text: fmt.format(data.exchangeRate)),
                             ],
                           ),
                           style: context.textTheme.bodyMedium!.copyWith(

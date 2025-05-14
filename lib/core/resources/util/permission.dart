@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/routes/router.dart';
@@ -41,7 +42,28 @@ class PermissionManager {
     return await requestPermission(Permission.notification);
   }
 
-  // todo: do a fallback permission check
+  Future<bool> verifyPermission(
+    Permission permission, [
+    AppSettingsType? settingsType,
+  ]) async {
+    // Check if already granted to avoid unnecessary request
+    if (await permission.isGranted) return true;
+
+    // Request the permission
+    final status = await permission.request();
+
+    // If granted, return true immediately
+    if (status.isGranted) return true;
+
+    // If denied in any form and settingsType provided, open settings
+    if (settingsType != null) {
+      await AppSettings.openAppSettings(type: settingsType);
+    }
+
+    // Return false for any denial state
+    return false;
+  }
+
   /// Request both camera and notification permissions
   Future<Map<Permission, PermissionStatus>>
       requestCameraAndNotificationPermissions() async {
@@ -63,13 +85,7 @@ class PermissionManager {
   Future<bool> hasNotificationPermission() async {
     return await isPermissionGranted(Permission.notification);
   }
-
-  /// Open app settings
-  Future<bool> openAppSettings() async {
-    // todo: use the call system endpoint
-    return await openAppSettings();
-  }
-
+  
   /// Show permission request dialog with rationale
   Future<PermissionStatus> requestPermissionWithRationale({
     required Permission permission,

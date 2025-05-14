@@ -37,7 +37,11 @@ final List<RouteBase> paymentRoutes = [
   GoRoute(
     name: Strings.reviewPayment.pathToName,
     path: Strings.reviewPayment,
-    builder: (context, state) => const ReviewPaymentPage(),
+    builder: (context, state) {
+      return ReviewPaymentPage(
+        fromPayAnyone: (state.extra as bool?) ?? false,
+      );
+    },
   ),
   GoRoute(
     name: Strings.paymentStatus.pathToName,

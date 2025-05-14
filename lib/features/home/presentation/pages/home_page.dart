@@ -24,7 +24,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final debouncer = Debouncer(duration: Duration(seconds: 5));
+  final debouncer = Debouncer(duration: Duration(seconds: 7));
 
   final scaffldKey = GlobalKey();
 
@@ -35,13 +35,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debouncer.run(() async {
         if (mounted) {
-          // todo: make sure all permission has been allowed
           if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
             ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
               balanceWidgetKey,
               walletDetailWidgetKey,
               avatarWidgetKey,
               scannerWidgetKey,
+              payAnyoneWidgetKey,
               transferWidgetKey,
               receiveWidgetKey,
             ]);

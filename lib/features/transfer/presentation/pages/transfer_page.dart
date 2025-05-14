@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/routes/router.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/pages/wallet_transfer.dart';
@@ -56,6 +57,7 @@ class _TransferPageState extends ConsumerState<TransferPage> {
       ref.read(accountDetail.notifier).state = null;
       ref.read(usdcAountTransfer.notifier).state = 0.0;
       ref.read(localAountTransfer.notifier).state = 0.0;
+      ref.read(payingAnyone.notifier).state = false;
 
       setState(() {});
 

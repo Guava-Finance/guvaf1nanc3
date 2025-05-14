@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_core.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -64,7 +65,9 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
         children: [
           24.verticalSpace,
           Text(
-            isConfirmingPin ? 'Confirm your Pin' : 'Set up your PIN',
+            isConfirmingPin
+                ? 'Confirm your Pin'
+                : '${context.canPop() ? 'Change' : 'Set'} up your PIN',
             style: context.textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w600,

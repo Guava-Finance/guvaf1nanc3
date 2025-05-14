@@ -41,6 +41,10 @@ const String pAccessPin = Strings.accessPin;
 const String pMnenomicShow = Strings.mnenomicShow;
 const String pMnenomicValidation = Strings.mnenomicValidation;
 const String pMnenomicBackupComplete = Strings.mnenomicBackupComplete;
+const String pProfile = Strings.profilePage;
+const String pSettings = Strings.settingsPage;
+const String pPrivacyPolicy = Strings.privacyPolicyPage;
+const String pSupport = Strings.supportPage;
 
 // Solana Pay
 const String pSolanaPayReview = Strings.solanaPayReview;

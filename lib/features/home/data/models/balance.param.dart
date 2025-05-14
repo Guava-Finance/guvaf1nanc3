@@ -16,11 +16,13 @@ class BalanceParam {
         num.tryParse(json['usdcBalance']?.toString() ?? '')?.toDouble() ?? 0.0;
     final rate =
         num.tryParse(json['exchangeRate']?.toString() ?? '')?.toDouble() ?? 1.0;
+    final localBal =
+        num.tryParse(json['localBalance']?.toString() ?? '')?.toDouble() ?? 1.0;
 
     return BalanceParam(
       usdcBalance: usdc,
       exchangeRate: rate,
-      localBalance: usdc / rate,
+      localBalance: localBal,
       symbol: json['symbol'] ?? '₦',
     );
   }

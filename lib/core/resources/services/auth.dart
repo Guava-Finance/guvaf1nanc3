@@ -46,6 +46,19 @@ class BiometricService {
     return (result ?? '').isNotEmpty;
   }
 
+  Future<void> disableBiometric() async {
+    await storageService.removeFromStorage(
+      key: Strings.biometric,
+    );
+  }
+
+  Future<void> enableBiometric() async {
+    await storageService.writeToStorage(
+      key: Strings.biometric,
+      value: DateTime.now().toIso8601String(),
+    );
+  }
+
   Future<bool> authenticate() async {
     try {
       final bool didAuthenticate = await authentication.authenticate(

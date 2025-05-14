@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/services/solana.dart';
 import 'package:guava/core/resources/services/storage.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:hashlib/hashlib.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -193,6 +194,16 @@ class AccountNotifier extends _$AccountNotifier {
     final cachedPinHash = await storage.readFromStorage(Strings.accessCode);
 
     return pinHash.base64() == cachedPinHash;
+  }
+
+  Future<String> userWallet() async {
+    final sol = ref.read(solanaServiceProvider);
+
+    return await sol.walletAddress();
+  }
+
+  Future<String?> username() async {
+    return await ref.read(myUsernameProvider.future);
   }
 }
 

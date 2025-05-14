@@ -13,6 +13,11 @@ class CountryEntity extends Equatable {
   final List<String>? kycPartners;
   final List<String>? kybPartners;
   final RatesEntity rates;
+  final int? bankAccountLenght;
+  final bool isWalletTransferEnabled;
+  final bool isOnRampEnabled;
+  final bool isOffRampEnabled;
+  final bool isKycEnabled;
 
   const CountryEntity({
     required this.name,
@@ -25,6 +30,11 @@ class CountryEntity extends Equatable {
     required this.kycPartners,
     required this.kybPartners,
     required this.rates,
+    required this.bankAccountLenght,
+    required this.isWalletTransferEnabled,
+    required this.isOnRampEnabled,
+    required this.isOffRampEnabled,
+    required this.isKycEnabled,
   });
 
   @override
@@ -38,5 +48,10 @@ class CountryEntity extends Equatable {
         phoneLength,
         kycPartners,
         rates,
+        isKycEnabled,
+        isOffRampEnabled,
+        isOnRampEnabled,
+        isWalletTransferEnabled,
+        bankAccountLenght,
       ];
 }

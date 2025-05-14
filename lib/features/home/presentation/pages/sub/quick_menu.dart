@@ -48,10 +48,10 @@ class QuickMenu extends StatelessWidget {
           Showcase(
             key: receiveWidgetKey,
             description:
-                'Receive money from other banks, wallet and acros border',
+                'Receive money from other banks, wallet and across border',
             targetPadding: EdgeInsets.all(12.sp),
             child: CircularIconButton(
-              action: 'Recieve',
+              action: 'Receive',
               icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
               color: BrandColors.washedGreen,
               onTap: () {

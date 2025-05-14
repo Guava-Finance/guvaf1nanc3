@@ -35,6 +35,14 @@ final isUsernameAvailableProvider = StateProvider<bool?>((ref) {
   return null;
 });
 
+final payingAnyone = StateProvider<bool>((ref) {
+  return false;
+});
+
+final shakedPayAnyone = StateProvider<bool>((ref) {
+  return false;
+});
+
 final avatarProvider = FutureProvider<String>((ref) async {
   final wallet = await ref.watch(solanaServiceProvider).walletAddress();
   // todo: download svg avatar to memory and pull from memory unless not found
@@ -71,7 +79,6 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
         bannerKey: Strings.kycVerification,
         icon: R.ASSETS_ICONS_KYC_ICON_SVG,
         onTap: () {
-          // todo: check for camera & file permission first
           navkey.currentContext!.push(pKyc);
           HapticFeedback.lightImpact();
         },
@@ -223,7 +230,7 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
 
     // If it's a wallet debit (USDC), convert to local
     if (data.type == 'wallet' && data.category == 'debit') {
-      final localAmount = amount / exchangeRate;
+      final localAmount = amount * exchangeRate;
       return fmt.format(localAmount);
     }
 
@@ -244,17 +251,32 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   Future<String> usdcAmount(TransactionsHistory data) async {
     final balance = await ref.read(balanceUsecaseProvider.future);
     final exchangeRate = balance.exchangeRate;
+    final fmt = NumberFormat.currency(symbol: balance.symbol, decimalDigits: 2);
 
     double amount = data.amount ?? 0.0;
 
     // Wallet or deposit are already in USDC
     if (data.type == 'wallet') {
-      return '\$${amount.toStringAsFixed(6)}';
+      return fmt.format(amount);
     }
 
     // Other types (bank, credit) are in NGN and need conversion
-    final usdc = amount * exchangeRate;
-    return '\$${usdc.toStringAsFixed(6)}';
+    final usdc = amount / exchangeRate;
+    return usdc.toStringAsFixed(6);
+  }
+
+  String get getTimeOfDayGreeting {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 12) {
+      return 'Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Evening';
+    } else {
+      return 'Night';
+    }
   }
 }
 
@@ -263,6 +285,7 @@ GlobalKey walletDetailWidgetKey = GlobalKey();
 GlobalKey avatarWidgetKey = GlobalKey();
 GlobalKey scannerWidgetKey = GlobalKey();
 GlobalKey transferWidgetKey = GlobalKey();
+GlobalKey payAnyoneWidgetKey = GlobalKey();
 GlobalKey receiveWidgetKey = GlobalKey();
 GlobalKey allTransactionsButtonWidgetKey = GlobalKey();
 GlobalKey transactionSessionWidgetKey = GlobalKey();

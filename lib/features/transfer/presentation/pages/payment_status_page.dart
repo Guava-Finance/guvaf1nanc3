@@ -9,6 +9,7 @@ import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/transfer/domain/usecases/address_book.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_bank_transfer.dart';
@@ -36,6 +37,7 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
       ref.invalidate(balanceUsecaseProvider);
       ref.invalidate(walletAddressProvider);
       ref.invalidate(myTransactionHistory);
+      ref.invalidate(payingAnyone);
 
       // refetch the recent transfer addresses
       ref.invalidate(recentWalletTransfers);

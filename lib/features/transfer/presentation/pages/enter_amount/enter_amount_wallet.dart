@@ -59,7 +59,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
         final balanceAsync = await ref.read(balanceUsecaseProvider.future);
         final amount = NumberFormat().tryParse(amountCtrl.text)?.toDouble();
 
-        usdcAmount = (amount ?? 0.0) * balanceAsync.exchangeRate;
+        usdcAmount = (amount ?? 0.0) / balanceAsync.exchangeRate;
 
         isValidated =
             (amount ?? 0.0) > 0 && (amount ?? 0.0) <= balanceAsync.localBalance;

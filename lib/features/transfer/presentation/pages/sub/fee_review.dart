@@ -19,8 +19,8 @@ class FeeReview extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final balance = ref.watch(balanceUsecaseProvider);
-        final localAmount = ref.watch(localAountTransfer.notifier).state;
-        final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
+        final localAmount = ref.watch(localAountTransfer);
+        final usdcAmount = ref.watch(usdcAountTransfer);
         final fee = ref.watch(calcTransactionFee);
 
         return Container(

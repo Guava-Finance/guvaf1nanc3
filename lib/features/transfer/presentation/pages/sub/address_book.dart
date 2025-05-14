@@ -63,7 +63,7 @@ class AddressBook extends StatelessWidget {
                       : ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: (data ?? []).take(5).length,
+                          itemCount: data!.take(5).length,
                           separatorBuilder: (ctx, i) => Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
                             child: Divider(
@@ -74,7 +74,7 @@ class AddressBook extends StatelessWidget {
                           ),
                           itemBuilder: (ctx, i) {
                             return AddressTile(
-                              data: (data ?? [])[i],
+                              data: data[i],
                             );
                           },
                         ),
@@ -86,7 +86,7 @@ class AddressBook extends StatelessWidget {
               loading: () {
                 return Center(
                   child: CupertinoActivityIndicator(
-                    radius: 16.r,
+                    radius: 12.r,
                     color: BrandColors.primary,
                   ),
                 );

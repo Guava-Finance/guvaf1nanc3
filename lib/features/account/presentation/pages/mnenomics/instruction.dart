@@ -43,7 +43,7 @@ class _MnenomicsInstructionsPageState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            widget.isBackUp ? 'Backup recovery phrase' : 'Show recovry phrase',
+            widget.isBackUp ? 'Backup recovery phrase' : 'Show recovery phrase',
             style: context.textTheme.bodyMedium?.copyWith(
               color: BrandColors.textColor,
               fontSize: 18.sp,
@@ -53,7 +53,7 @@ class _MnenomicsInstructionsPageState
           ),
           12.verticalSpace,
           Text(
-            '''Your 12 key-phrase is the only way to recover your\nfunds if you lose access to your wallet.''',
+            '''Your 12/24 key-phrase is the only way to recover your\nfunds if you lose access to your wallet.''',
             textAlign: TextAlign.center,
             style: context.textTheme.bodyMedium?.copyWith(
               color: BrandColors.washedTextColor,

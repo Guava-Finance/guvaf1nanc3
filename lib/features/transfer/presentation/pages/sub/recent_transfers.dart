@@ -83,7 +83,7 @@ class RecentTransfers extends StatelessWidget {
               loading: () {
                 return Center(
                   child: CupertinoActivityIndicator(
-                    radius: 16.r,
+                    radius: 12.r,
                     color: BrandColors.primary,
                   ),
                 );
