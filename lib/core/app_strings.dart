@@ -14,6 +14,14 @@ class Strings {
   static const String myCachedBalance = 'my_cachec_balance';
   static const String myConfig = 'my_config_';
   static const String myUsername = 'my_username_';
+  static const String backupMnenomic = 'is_mnenomic_backed_up';
+  static const String pinFailureCount = 'pin_failure_count';
+  static const String pinFailureDate = 'pin_failure_date';
+  static const String biometric = 'biometric_enabled';
+
+  // Showcase keys
+  static const String homeShowcase = 'has_home_be_showcased';
+  static const String transferShowcase = 'has_transfer_be_showcased';
 
   //Pages
   static const root = '/';
@@ -28,6 +36,7 @@ class Strings {
   static const recieve = '/recieve';
   static const enterAmountWallet = '/enterAmountWallet';
   static const enterAmountBank = '/enterAmountBank';
+  static const enterAmountReceive = '/enterAmountReceive';
   static const reviewPayment = '/reviewPayment';
   static const paymentStatus = '/paymentStatus';
   static const transaction = '/transaction';
@@ -36,6 +45,21 @@ class Strings {
   static const setUsername = '/set-username';
   static const kycPage = '/kyc-page';
   static const kycDonePage = '/kyc-done-page';
+  static const scannerPage = '/wallet-scanner-page';
+  static const accountPayable = '/account-payable-page';
+  static const mnenomicInstruction = '/mnenomics-instruction-page';
+  static const accessPin = '/app-access-pin-page';
+  static const mnenomicShow = '/mnenomics-show-page';
+  static const mnenomicValidation = '/mnenomics-validation-page';
+  static const mnenomicBackupComplete = '/mnenomics-backup-complete-page';
+  static const profilePage = '/profile-page';
+  static const settingsPage = '/settings-page';
+  static const privacyPolicyPage = '/privacy-policy-page';
+  static const supportPage = '/support-oage';
+
+  // SolanaPay
+  static const solanaPayReview = '/solana-pay-review-page';
+  static const solanaPayStatus = '/solana-pay-status-page';
 
   // Home Banners
   static const connectWallet = 'WalletConnect';

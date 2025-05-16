@@ -48,9 +48,10 @@ class TransferRepositoryImpl implements TransferRepository {
   }
 
   @override
-  Future<AppState> initBankTransfer(Map<String, dynamic> data) async {
+  Future<AppState> initBankTransfer(
+      String wallet, Map<String, dynamic> data) async {
     final result = await wrapper.format(() async {
-      return await remote.submitBankTransfer(data);
+      return await remote.submitBankTransfer(wallet, data);
     });
 
     return result;
@@ -118,6 +119,15 @@ class TransferRepositoryImpl implements TransferRepository {
   Future<AppState> saveAddress(String wallet, Map<String, dynamic> data) async {
     final result = await wrapper.format(() async {
       return await remote.saveAddress(wallet, data);
+    });
+
+    return result;
+  }
+
+  @override
+  Future<AppState> purpose() async {
+    final result = await wrapper.format(() async {
+      return await remote.purpose();
     });
 
     return result;

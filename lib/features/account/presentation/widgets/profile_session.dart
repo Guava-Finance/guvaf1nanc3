@@ -39,13 +39,16 @@ class AccountProfileSession extends StatelessWidget {
                     width: 3.w,
                   ),
                 ),
-                child: CircleAvatar(
-                  maxRadius: 12.r,
-                  backgroundColor: BrandColors.textColor,
-                  child: CustomIcon(
-                    icon: R.ASSETS_ICONS_CAMERA_SVG,
-                    width: 11.w,
-                    height: 11.h,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: CircleAvatar(
+                    maxRadius: 12.r,
+                    backgroundColor: BrandColors.textColor,
+                    child: CustomIcon(
+                      icon: R.ASSETS_ICONS_CAMERA_SVG,
+                      width: 11.w,
+                      height: 11.h,
+                    ),
                   ),
                 ),
               ),
@@ -60,19 +63,65 @@ class AccountProfileSession extends StatelessWidget {
             fontSize: 18.sp,
           ),
         ),
-        3.verticalSpace,
+        12.verticalSpace,
         Consumer(
           builder: (context, ref, child) {
             final username = ref.watch(myUsernameProvider);
 
             return username.when(
               data: (data) {
-                return Text(
-                  '@$data',
-                  style: context.medium.copyWith(
-                    color: BrandColors.washedTextColor,
-                    fontSize: 14.sp,
-                  ),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                            BrandColors.washedTextColor.withValues(alpha: .1),
+                        borderRadius: BorderRadius.circular(30.r),
+                      ),
+                      child: Text(
+                        '@$data',
+                        style: context.medium.copyWith(
+                          color: BrandColors.washedTextColor,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                    8.horizontalSpace,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: BrandColors.primary,
+                        borderRadius: BorderRadius.circular(30.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomIcon(
+                            icon: R.ASSETS_ICONS_COIN_SVG,
+                            color: BrandColors.backgroundColor,
+                            width: 14.w,
+                            height: 14.h,
+                          ),
+                          3.horizontalSpace,
+                          Text(
+                            '0.0',
+                            style: context.medium.copyWith(
+                              color: BrandColors.backgroundColor,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               },
               error: (_, __) => 0.verticalSpace,

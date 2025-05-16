@@ -165,6 +165,7 @@ class _ImportRecoveryPhraseState extends ConsumerState<ImportRecoveryPhrase> {
                   8.verticalSpace,
                   GestureDetector(
                     onTap: () {
+                      HapticFeedback.lightImpact();
                       Clipboard.getData('text/plain').then((e) {
                         if (e != null) {
                           controller.value = TextEditingValue(

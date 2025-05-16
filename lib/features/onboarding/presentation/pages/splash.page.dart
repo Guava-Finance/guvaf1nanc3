@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
@@ -31,12 +31,15 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         final isAccessCodeSet = await ref.read(isAccessPinSetProovider.future);
 
         if (isAccessCodeSet) {
-          context.go(pDashboard);
+          context.push(pAccessPin, extra: true).then((v) {
+            if (v != null && (v as bool)) {
+              context.toPath(pDashboard);
+            }
+          });
         } else {
           _pinSetup(ref.read(onboardingNotifierProvider));
         }
       } catch (e) {
-        AppLogger.log(e);
         context.push(pOnboarding);
       }
 

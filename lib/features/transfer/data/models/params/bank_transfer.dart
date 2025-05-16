@@ -3,6 +3,7 @@ class BankTransferParam {
   final String? amount;
   final String? country;
   final String? bank;
+  final String? bankCode;
   final String? accountName;
   final String? accountNumber;
   final String? purpose;
@@ -14,6 +15,7 @@ class BankTransferParam {
     this.amount,
     this.country,
     this.bank,
+    this.bankCode,
     this.accountName,
     this.accountNumber,
     this.purpose,
@@ -27,6 +29,7 @@ class BankTransferParam {
       amount: json['amount'],
       country: json['country'],
       bank: json['bank'],
+      bankCode: json['bank_code'],
       accountName: json['account_name'],
       accountNumber: json['account_number'],
       purpose: json['purpose'],
@@ -41,6 +44,7 @@ class BankTransferParam {
       'amount': amount,
       'country': country,
       'bank': bank,
+      'bank_code': bankCode,
       'account_name': accountName,
       'account_number': accountNumber,
       'purpose': purpose,
@@ -54,6 +58,7 @@ class BankTransferParam {
     String? amount,
     String? country,
     String? bank,
+    String? bankCode,
     String? accountName,
     String? accountNumber,
     String? purpose,
@@ -65,6 +70,7 @@ class BankTransferParam {
       amount: amount ?? this.amount,
       country: country ?? this.country,
       bank: bank ?? this.bank,
+      bankCode: bankCode ?? this.bankCode,
       accountName: accountName ?? this.accountName,
       accountNumber: accountNumber ?? this.accountNumber,
       purpose: purpose ?? this.purpose,

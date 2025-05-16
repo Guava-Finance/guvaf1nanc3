@@ -1,50 +1,65 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:guava/features/receive/presentation/notifier/recieve.state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/extensions/state.dart';
+import 'package:guava/core/resources/network/state.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/routes/router.dart';
+import 'package:guava/features/receive/domain/entities/account_payable.dart';
+import 'package:guava/features/receive/domain/usecases/make_a_deposit.dart';
+import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recieve.notifier.g.dart';
 
+final activeReceiveTabState = StateProvider<int>((ref) {
+  return 0;
+});
+
+final depositAmount = StateProvider<double>((ref) => 0.0);
+
+final accountPayable = StateProvider<AccountPayable?>((ref) => null);
+
 @riverpod
 class RecieveNotifier extends _$RecieveNotifier {
   @override
-  RecieveState build() {
-    pageController = PageController();
+  RecieveNotifier build() {
+    pageController = PageController(
+      initialPage: ref.watch(activeReceiveTabState),
+    );
+
     ref.onDispose(() => pageController.dispose());
-    return const RecieveState();
+    return this;
   }
 
   late PageController pageController;
 
-  void updateRecieveType(String type) {
-    state = state.copyWith(selectedRecieveType: type);
-
-    if (type.toLowerCase().contains('wallet')) {
-      pageController.jumpToPage(0);
-      state = state.copyWith(currentPage: 0);
-    } else if (type.toLowerCase().contains('bank')) {
-      pageController.jumpToPage(1);
-      state = state.copyWith(currentPage: 1);
-    }
-  }
-
-  void forward() {
-    pageController.nextPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeIn,
-    );
-    state = state.copyWith(currentPage: state.currentPage + 1);
-  }
-
-  void backward() {
-    pageController.previousPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOut,
-    );
-    state = state.copyWith(currentPage: state.currentPage - 1);
-  }
-
   void jumpTo(int page) {
     pageController.jumpToPage(page);
-    state = state.copyWith(currentPage: page);
+    ref.watch(activeReceiveTabState.notifier).state = page;
+  }
+
+  Future<bool> initDeposit() async {
+    final amount = ref.watch(localAountTransfer);
+
+    final result = await ref.watch(makeADepositProvider).call(params: amount);
+
+    if (result.isError) {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          content: result.errorMessage,
+          notificationType: NotificationType.error,
+        ),
+      );
+
+      return false;
+    } else {
+      ref.watch(accountPayable.notifier).state =
+          (result as LoadedState<AccountPayable>).data;
+      return true;
+    }
   }
 }

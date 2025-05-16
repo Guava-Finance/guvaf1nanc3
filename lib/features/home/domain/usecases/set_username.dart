@@ -36,7 +36,8 @@ class SetUsernameUsecase extends UseCase<AppState, String> {
     final result = await repository.setUsername(wallet, params);
 
     // saved username locally
-    if (!result.isError) unawaited(_cachedUsername(params));
+    // if (!result.isError) unawaited(_cachedUsername(params));
+    if (!result.isError) await _cachedUsername(params);
 
     return result;
   }

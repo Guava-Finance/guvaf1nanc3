@@ -55,7 +55,7 @@ class RecentTransfers extends StatelessWidget {
                       ? Text(
                           'No activity',
                           style: context.textTheme.bodyMedium?.copyWith(
-                            fontSize: 10.sp,
+                            fontSize: 12.sp,
                             color: BrandColors.washedTextColor,
                           ),
                           textAlign: TextAlign.center,
@@ -83,7 +83,7 @@ class RecentTransfers extends StatelessWidget {
               loading: () {
                 return Center(
                   child: CupertinoActivityIndicator(
-                    radius: 16.r,
+                    radius: 12.r,
                     color: BrandColors.primary,
                   ),
                 );

@@ -11,7 +11,12 @@ import 'package:guava/features/transfer/presentation/pages/sub/payment_review.da
 import 'package:guava/widgets/custom_button.dart';
 
 class ReviewPaymentPage extends ConsumerStatefulWidget {
-  const ReviewPaymentPage({super.key});
+  const ReviewPaymentPage({
+    super.key,
+    this.fromPayAnyone = false,
+  });
+
+  final bool fromPayAnyone;
 
   @override
   ConsumerState<ReviewPaymentPage> createState() => _ReviewPaymentPageState();
@@ -21,7 +26,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
     with Loader {
   @override
   Widget build(BuildContext context) {
-    final activeState = ref.watch(activeTabState.notifier).state;
+    final activeState = ref.watch(activeTabState);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +39,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
             24.verticalSpace,
             FeeReview(),
             20.verticalSpace,
-            if (activeState == 1) ...{
+            if (activeState == 1 || widget.fromPayAnyone) ...{
               PaymentReview(),
             },
             Spacer(),
@@ -45,9 +50,17 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                   title: 'Complete Transfer',
                   onTap: () async {
                     await withLoading(() async {
-                      final result = await ref
-                          .read(transferNotifierProvider)
-                          .makeWalletTransfer();
+                      late bool result;
+
+                      if (activeState == 0 && !widget.fromPayAnyone) {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeWalletTransfer();
+                      } else {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeABankTransfer();
+                      }
 
                       if (result) {
                         navkey.currentContext!.go(pPaymentStatus);
@@ -58,7 +71,7 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                 );
               },
             ),
-            30.verticalSpace,
+            15.verticalSpace,
           ],
         ).padHorizontal,
       ),

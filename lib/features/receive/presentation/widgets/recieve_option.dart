@@ -4,32 +4,32 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 
 class RecieveOption extends StatelessWidget {
-  const RecieveOption(
-      {required this.onChanged,
-      required this.selected,
-      required this.value,
-      super.key});
+  const RecieveOption({
+    required this.onChanged,
+    required this.selected,
+    required this.value,
+    super.key,
+  });
 
-  final ValueChanged<String> onChanged;
-  final String selected;
+  final VoidCallback onChanged;
+  final bool selected;
   final String value;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = selected == value;
     return GestureDetector(
-      onTap: () => onChanged(value),
+      onTap: () => onChanged(),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: isSelected ? BrandColors.light : Colors.transparent,
+          color: selected ? BrandColors.light : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
           value,
           style: context.textTheme.bodyMedium!.copyWith(
-            color: isSelected
+            color: selected
                 ? BrandColors.backgroundColor
                 : BrandColors.washedTextColor,
             fontWeight: FontWeight.w500,

@@ -5,7 +5,6 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/presentation/widgets/txn_tile.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
-import 'package:guava/widgets/utility_widget.dart';
 
 class TransactionDetail extends StatelessWidget {
   const TransactionDetail({

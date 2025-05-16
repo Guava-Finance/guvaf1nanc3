@@ -50,7 +50,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
     {
       'title': 'Welcome to Guava',
       'subtitle': '',
-      'background_icon': '',
+      'background_icon': R.ASSETS_ICONS_GUAVA_LOGO_SVG,
       'sub_icons_n_positions': []
     },
     {
@@ -160,9 +160,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
     return result;
   }
 
-  String accessPin = '';
-
-  Future<void> savedAccessPin() async {
+  Future<void> savedAccessPin(String accessPin) async {
     // gets the HashDigest and saved the base64 format
     final pin = sha256.string(accessPin);
 

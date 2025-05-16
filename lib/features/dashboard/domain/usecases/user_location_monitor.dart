@@ -12,18 +12,22 @@ import 'package:guava/features/onboarding/data/repositories/repo.dart';
 import 'package:guava/features/onboarding/domain/repositories/repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final userLocationMonitorUsecaseProvider = FutureProvider<bool>(
-  (ref) {
-    final data = UserLocationMonitorUsecase(
-      infoService: ref.watch(ipInfoServiceProvider),
-      storageService: ref.watch(securedStorageServiceProvider),
-      solanaService: ref.watch(solanaServiceProvider),
-      onboardingRepository: ref.watch(onboardingRepositoryProvider),
-    );
+final locationMonitorProvider = FutureProvider<bool>((ref) {
+  final data = ref.watch(userLocationMonitorUsecaseProvider);
 
-    return data.call(params: null);
-  },
-);
+  return data.call(params: null);
+});
+
+// ignore: lines_longer_than_80_chars
+final userLocationMonitorUsecaseProvider =
+    Provider<UserLocationMonitorUsecase>((ref) {
+  return UserLocationMonitorUsecase(
+    infoService: ref.watch(ipInfoServiceProvider),
+    storageService: ref.watch(securedStorageServiceProvider),
+    solanaService: ref.watch(solanaServiceProvider),
+    onboardingRepository: ref.watch(onboardingRepositoryProvider),
+  );
+});
 
 class UserLocationMonitorUsecase extends UseCase<bool, Null> {
   UserLocationMonitorUsecase({
@@ -72,7 +76,6 @@ class UserLocationMonitorUsecase extends UseCase<bool, Null> {
     if (result) {
       myAccount.deviceInfo.addAll(ipInfo.toJson());
 
-      // todo: automatically change the country
       final modifiedMyAccount = myAccount.copyWith(
         deviceInfo: myAccount.deviceInfo,
       );

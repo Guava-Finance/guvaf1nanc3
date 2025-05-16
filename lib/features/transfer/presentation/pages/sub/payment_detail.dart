@@ -7,7 +7,6 @@ import 'package:guava/features/transfer/domain/usecases/countries_usecase.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/widgets/payment_item.dart';
-import 'package:guava/widgets/utility_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends ConsumerWidget {
@@ -17,12 +16,12 @@ class PaymentDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeState = ref.watch(activeTabState.notifier).state;
-    final usdcAmount = ref.watch(usdcAountTransfer.notifier).state;
-    final purpose = ref.watch(transferPurpose.notifier).state;
-    final acctDetail = ref.watch(accountDetail.notifier).state;
-    final country = ref.watch(selectedCountry.notifier).state;
-    final txnId = ref.watch(transactionId.notifier).state;
+    final activeState = ref.watch(activeTabState);
+    final usdcAmount = ref.watch(usdcAountTransfer);
+    final purpose = ref.watch(transferPurpose);
+    final acctDetail = ref.watch(accountDetail);
+    final country = ref.watch(selectedCountry);
+    final txnId = ref.watch(transactionId);
 
     return Container(
       width: double.infinity,
@@ -48,7 +47,8 @@ class PaymentDetail extends ConsumerWidget {
           15.verticalSpace,
           PaymentItem(
             title: 'USDC',
-            value: '$usdcAmount USDC',
+            value: '$usdcAmount',
+            isUsdc: true,
           ),
           15.verticalSpace,
           Consumer(
@@ -59,7 +59,8 @@ class PaymentDetail extends ConsumerWidget {
                 data: (data) {
                   return PaymentItem(
                     title: 'Fee',
-                    value: '$data USDC',
+                    value: '$data',
+                    isUsdc: true,
                   );
                 },
                 error: (_, __) {

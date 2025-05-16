@@ -58,56 +58,61 @@ class ScanBarcode extends ConsumerWidget {
                 24.verticalSpace,
                 FutureBuilder(
                   future: username,
-                  builder: (context, snapshot) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (snapshot.data != null) ...{
-                        Text(
-                          snapshot.data ?? '',
-                          style: context.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18.sp,
-                            color: BrandColors.textColor,
-                          ),
-                        ),
-                        6.verticalSpace,
-                        GestureDetector(
-                          onTap: () {
-                            Clipboard.setData(
-                                    ClipboardData(text: snapshot.data ?? ''))
-                                .then((_) {
-                              navkey.currentContext!.notify.addNotification(
-                                NotificationTile(
-                                  content: 'Username copied successfully...',
-                                  duration: 3,
+                  builder: (context, uss) => uss.data == null
+                      ? 0.verticalSpace
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (uss.data != null) ...{
+                              Text(
+                                uss.data ?? '',
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18.sp,
+                                  color: BrandColors.textColor,
                                 ),
-                              );
-                            });
-                          },
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${snapshot.data ?? ''}@guava',
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.sp,
-                                    color: BrandColors.washedTextColor,
+                              ),
+                              6.verticalSpace,
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(
+                                          ClipboardData(text: uss.data ?? ''))
+                                      .then((_) {
+                                    navkey.currentContext!.notify
+                                        .addNotification(
+                                      NotificationTile(
+                                        content:
+                                            'Username copied successfully...',
+                                        duration: 3,
+                                      ),
+                                    );
+                                  });
+                                },
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '${uss.data ?? ''}@guava',
+                                        style: context.textTheme.bodyMedium!
+                                            .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14.sp,
+                                          color: BrandColors.washedTextColor,
+                                        ),
+                                      ),
+                                      4.horizontalSpace,
+                                      SvgPicture.asset(
+                                        R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                4.horizontalSpace,
-                                SvgPicture.asset(
-                                  R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            },
+                          ],
                         ),
-                      },
-                    ],
-                  ),
                 ),
                 Spacer(),
                 InkWell(

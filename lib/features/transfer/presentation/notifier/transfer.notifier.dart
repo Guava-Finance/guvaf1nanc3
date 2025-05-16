@@ -1,18 +1,21 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/transfer/data/models/params/bank_transfer.dart';
 import 'package:guava/features/transfer/data/models/params/wallet_transfer.dart';
 import 'package:guava/features/transfer/domain/entities/account_detail.dart';
+import 'package:guava/features/transfer/domain/entities/purpose.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_account.dart';
 import 'package:guava/features/transfer/domain/usecases/resolve_address.dart';
 import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
+import 'package:guava/features/transfer/domain/usecases/solana_pay.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,12 +36,14 @@ final transferPurpose = StateProvider<String>((ref) => '');
 final transactionId = StateProvider<String>((ref) => '');
 final addressLabel = StateProvider<String>((ref) => '');
 
+final selectedPurpose = StateProvider<TransferPurpose?>((ref) => null);
+
 @riverpod
 class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
   @override
   TransferNotifier build() {
     pageController = PageController(
-      initialPage: ref.read(activeTabState.notifier).state,
+      initialPage: ref.watch(activeTabState),
     );
 
     ref.onDispose(() => pageController.dispose());
@@ -49,6 +54,20 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
   void jumpTo(int page) {
     pageController.jumpToPage(page);
+    ref.watch(activeTabState.notifier).state = page;
+  }
+
+  Future<bool> hasShowcasedTransfer() async {
+    return ref
+        .watch(securedStorageServiceProvider)
+        .doesExistInStorage(Strings.transferShowcase);
+  }
+
+  Future<void> hasShowcased() async {
+    await ref.watch(securedStorageServiceProvider).writeToStorage(
+          key: Strings.transferShowcase,
+          value: DateTime.now().toIso8601String(),
+        );
   }
 
   Future<void> resolveAddress(String address) async {
@@ -79,7 +98,7 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
 
   Map<String, dynamic> bankTransferData = {};
 
-  Future<void> makeABankTransfer() async {
+  Future<bool> makeABankTransfer() async {
     final result = await ref.read(bankTransferUsecaseProvider).call(
           params: BankTransferParam.fromJson(bankTransferData),
         );
@@ -91,8 +110,13 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
           notificationType: NotificationType.error,
         ),
       );
+
+      return false;
     } else {
-      AppLogger.log((result as LoadedState).data);
+      ref.read(transactionId.notifier).state =
+          (result as LoadedState).data['transaction_id'];
+
+      return true;
     }
   }
 
@@ -153,4 +177,27 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
       return true;
     }
   }
+
+  Future<bool> processSolanaPay() async {
+    final result = await ref.read(solanaPayUsecaseProvider).call(params: null);
+
+    if (result.isError) {
+      navkey.currentContext!.notify.addNotification(
+        NotificationTile(
+          content: result.errorMessage,
+          notificationType: NotificationType.error,
+        ),
+      );
+
+      return false;
+    } else {
+      ref.read(transactionId.notifier).state =
+          (result as LoadedState<String>).data;
+
+      return true;
+    }
+  }
 }
+
+final transferToggleWidgetKey = GlobalKey();
+final recipientWidgetKey = GlobalKey();

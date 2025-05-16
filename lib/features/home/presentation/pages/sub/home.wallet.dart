@@ -11,7 +11,9 @@ import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class WalletDetails extends ConsumerStatefulWidget {
   const WalletDetails({super.key});
@@ -54,62 +56,66 @@ class _WalletDetailsState extends ConsumerState<WalletDetails> {
             ),
           ),
         ),
-        Consumer(
-          builder: (context, ref, _) {
-            final walletAsync = ref.watch(walletAddressProvider);
+        Showcase(
+          key: walletDetailWidgetKey,
+          description: 'Click to copy your wallet address',
+          child: Consumer(
+            builder: (context, ref, _) {
+              final walletAsync = ref.watch(walletAddressProvider);
 
-            return walletAsync.when(
-              data: (walletAddress) => InkWell(
-                borderRadius: BorderRadius.circular(8.r),
-                onTap: () {
-                  Clipboard.setData(ClipboardData(text: walletAddress))
-                      .then((_) {
-                    navkey.currentContext!.notify.addNotification(
-                      NotificationTile(
-                        notificationType: NotificationType.success,
-                        content: 'Wallet address copied successfully...',
-                        duration: 2,
+              return walletAsync.when(
+                data: (walletAddress) => InkWell(
+                  borderRadius: BorderRadius.circular(8.r),
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: walletAddress))
+                        .then((_) {
+                      navkey.currentContext!.notify.addNotification(
+                        NotificationTile(
+                          notificationType: NotificationType.success,
+                          content: 'Wallet address copied successfully...',
+                          duration: 2,
+                        ),
+                      );
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 6.h,
+                      horizontal: 10.w,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: BrandColors.containerColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
-                    );
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 6.h,
-                    horizontal: 10.w,
-                  ),
-                  decoration: ShapeDecoration(
-                    color: BrandColors.containerColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          walletAddress.toMaskedFormat(),
+                          style: context.medium.copyWith(
+                            color: BrandColors.washedTextColor,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        6.horizontalSpace,
+                        CustomIcon(
+                          icon: R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
+                          height: 16.h,
+                          width: 16.w,
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Text(
-                        walletAddress.toMaskedFormat(),
-                        style: context.medium.copyWith(
-                          color: BrandColors.washedTextColor,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      6.horizontalSpace,
-                      CustomIcon(
-                        icon: R.ASSETS_ICONS_COPY_BUTTON_ICON_SVG,
-                        height: 16.h,
-                        width: 16.w,
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-              loading: () => CupertinoActivityIndicator(
-                color: BrandColors.primary,
-                radius: 12.r,
-              ),
-              error: (e, _) => 0.verticalSpace,
-            );
-          },
+                loading: () => CupertinoActivityIndicator(
+                  color: BrandColors.primary,
+                  radius: 12.r,
+                ),
+                error: (e, _) => 0.verticalSpace,
+              );
+            },
+          ),
         ),
       ],
     ).padHorizontal;

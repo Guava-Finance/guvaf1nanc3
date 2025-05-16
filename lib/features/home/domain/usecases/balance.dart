@@ -130,7 +130,7 @@ class BalanceUsecase extends UseCase<AppState, Null> {
       return LoadedState(BalanceParam.fromJson({
         'usdcBalance': usdc,
         'exchangeRate': excRate,
-        'localBalance': usdc / excRate,
+        'localBalance': (usdc * excRate),
         'symbol': currencySymbol,
       }));
     } catch (e) {
@@ -154,7 +154,7 @@ class BalanceUsecase extends UseCase<AppState, Null> {
     await storageService.writeToStorage(
       key: Strings.myCachedBalance,
       value: jsonEncode({
-        'localBalance': (usdc / excRate),
+        'localBalance': (usdc * excRate),
         'usdcBalance': usdc,
         'symbol': currencySymbol,
         'exchangeRate': currencySymbol,

@@ -27,9 +27,15 @@ class R {
   static const String ASSETS_ICONS_ADDRESS_BOOK_SVG =
       'assets/icons/address-book.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/afternoon.svg)
+  static const String ASSETS_ICONS_AFTERNOON_SVG = 'assets/icons/afternoon.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/arrow-forward.svg)
   static const String ASSETS_ICONS_ARROW_FORWARD_SVG =
       'assets/icons/arrow-forward.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/bank.svg)
+  static const String ASSETS_ICONS_BANK_SVG = 'assets/icons/bank.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/biometric.svg)
   static const String ASSETS_ICONS_BIOMETRIC_SVG = 'assets/icons/biometric.svg';
@@ -41,6 +47,9 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/camera.svg)
   static const String ASSETS_ICONS_CAMERA_SVG = 'assets/icons/camera.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/checkbox.svg)
+  static const String ASSETS_ICONS_CHECKBOX_SVG = 'assets/icons/checkbox.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/checkmark.svg)
   static const String ASSETS_ICONS_CHECKMARK_SVG = 'assets/icons/checkmark.svg';
 
@@ -50,6 +59,9 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/close.svg)
   static const String ASSETS_ICONS_CLOSE_SVG = 'assets/icons/close.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/coin.svg)
+  static const String ASSETS_ICONS_COIN_SVG = 'assets/icons/coin.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/contact-card.svg)
   static const String ASSETS_ICONS_CONTACT_CARD_SVG =
       'assets/icons/contact-card.svg';
@@ -57,6 +69,9 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/copy-button-icon.svg)
   static const String ASSETS_ICONS_COPY_BUTTON_ICON_SVG =
       'assets/icons/copy-button-icon.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/evening.svg)
+  static const String ASSETS_ICONS_EVENING_SVG = 'assets/icons/evening.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/exchange.svg)
   static const String ASSETS_ICONS_EXCHANGE_SVG = 'assets/icons/exchange.svg';
@@ -67,6 +82,14 @@ class R {
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/filter.svg)
   static const String ASSETS_ICONS_FILTER_SVG = 'assets/icons/filter.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/guava-logo-flavor-one.svg)
+  static const String ASSETS_ICONS_GUAVA_LOGO_FLAVOR_ONE_SVG =
+      'assets/icons/guava-logo-flavor-one.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/guava-logo.svg)
+  static const String ASSETS_ICONS_GUAVA_LOGO_SVG =
+      'assets/icons/guava-logo.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/hardware.svg)
   static const String ASSETS_ICONS_HARDWARE_SVG = 'assets/icons/hardware.svg';
@@ -89,6 +112,10 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/kyc-icon.svg)
   static const String ASSETS_ICONS_KYC_ICON_SVG = 'assets/icons/kyc-icon.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/lock-with%20floater.svg)
+  static const String ASSETS_ICONS_LOCK_WITH_FLOATER_SVG =
+      'assets/icons/lock-with floater.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/lock.svg)
   static const String ASSETS_ICONS_LOCK_SVG = 'assets/icons/lock.svg';
 
@@ -96,9 +123,18 @@ class R {
   static const String ASSETS_ICONS_LOW_FEES_FLOATER_SVG =
       'assets/icons/low-fees-floater.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/morning.svg)
+  static const String ASSETS_ICONS_MORNING_SVG = 'assets/icons/morning.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/nfc-floater.svg)
   static const String ASSETS_ICONS_NFC_FLOATER_SVG =
       'assets/icons/nfc-floater.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/ngn-flag.svg)
+  static const String ASSETS_ICONS_NGN_FLAG_SVG = 'assets/icons/ngn-flag.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/night.svg)
+  static const String ASSETS_ICONS_NIGHT_SVG = 'assets/icons/night.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/no-hdden-charge-floater.svg)
   static const String ASSETS_ICONS_NO_HDDEN_CHARGE_FLOATER_SVG =
@@ -157,6 +193,10 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/search.svg)
   static const String ASSETS_ICONS_SEARCH_SVG = 'assets/icons/search.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/secured_by.svg)
+  static const String ASSETS_ICONS_SECURED_BY_SVG =
+      'assets/icons/secured_by.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/security-floater.svg)
   static const String ASSETS_ICONS_SECURITY_FLOATER_SVG =
       'assets/icons/security-floater.svg';
@@ -171,6 +211,10 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/solana-floater.svg)
   static const String ASSETS_ICONS_SOLANA_FLOATER_SVG =
       'assets/icons/solana-floater.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/solana-sol-icon.svg)
+  static const String ASSETS_ICONS_SOLANA_SOL_ICON_SVG =
+      'assets/icons/solana-sol-icon.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/statement-icon.svg)
   static const String ASSETS_ICONS_STATEMENT_ICON_SVG =
@@ -192,6 +236,9 @@ class R {
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/transfer-icon.svg)
   static const String ASSETS_ICONS_TRANSFER_ICON_SVG =
       'assets/icons/transfer-icon.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/usd-coin.svg)
+  static const String ASSETS_ICONS_USD_COIN_SVG = 'assets/icons/usd-coin.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/username-icon.svg)
   static const String ASSETS_ICONS_USERNAME_ICON_SVG =
@@ -217,110 +264,8 @@ class R {
   static const String ASSETS_ICONS_YOUR_CONTROL_SVG =
       'assets/icons/your-control.svg';
 
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/arrow.png)
-  static const String ASSETS_IMAGES_ARROW_PNG = 'assets/images/arrow.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/barcode.png)
-  static const String ASSETS_IMAGES_BARCODE_PNG = 'assets/images/barcode.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/camera.png)
-  static const String ASSETS_IMAGES_CAMERA_PNG = 'assets/images/camera.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/checkmark.png)
-  static const String ASSETS_IMAGES_CHECKMARK_PNG =
-      'assets/images/checkmark.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/close.png)
-  static const String ASSETS_IMAGES_CLOSE_PNG = 'assets/images/close.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/connect_wallet.png)
-  static const String ASSETS_IMAGES_CONNECT_WALLET_PNG =
-      'assets/images/connect_wallet.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/copy_button.png)
-  static const String ASSETS_IMAGES_COPY_BUTTON_PNG =
-      'assets/images/copy_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/escrow.png)
-  static const String ASSETS_IMAGES_ESCROW_PNG = 'assets/images/escrow.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/guava_pay_btn.png)
-  static const String ASSETS_IMAGES_GUAVA_PAY_BTN_PNG =
-      'assets/images/guava_pay_btn.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider1.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER1_PNG =
-      'assets/images/home_slider1.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider2.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER2_PNG =
-      'assets/images/home_slider2.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider3.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER3_PNG =
-      'assets/images/home_slider3.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/home_slider4.png)
-  static const String ASSETS_IMAGES_HOME_SLIDER4_PNG =
-      'assets/images/home_slider4.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/invite.png)
-  static const String ASSETS_IMAGES_INVITE_PNG = 'assets/images/invite.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/mob_coins.png)
-  static const String ASSETS_IMAGES_MOB_COINS_PNG =
-      'assets/images/mob_coins.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/ngn_trans.png)
-  static const String ASSETS_IMAGES_NGN_TRANS_PNG =
-      'assets/images/ngn_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/notification_button.png)
-  static const String ASSETS_IMAGES_NOTIFICATION_BUTTON_PNG =
-      'assets/images/notification_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/pending_trans.png)
-  static const String ASSETS_IMAGES_PENDING_TRANS_PNG =
-      'assets/images/pending_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/receive_btn.png)
-  static const String ASSETS_IMAGES_RECEIVE_BTN_PNG =
-      'assets/images/receive_btn.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/savings.png)
-  static const String ASSETS_IMAGES_SAVINGS_PNG = 'assets/images/savings.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/scan_button.png)
-  static const String ASSETS_IMAGES_SCAN_BUTTON_PNG =
-      'assets/images/scan_button.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/security.png)
-  static const String ASSETS_IMAGES_SECURITY_PNG = 'assets/images/security.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/settings.png)
-  static const String ASSETS_IMAGES_SETTINGS_PNG = 'assets/images/settings.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/stable_coins.png)
-  static const String ASSETS_IMAGES_STABLE_COINS_PNG =
-      'assets/images/stable_coins.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/statement.png)
-  static const String ASSETS_IMAGES_STATEMENT_PNG =
-      'assets/images/statement.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/successful_trans.png)
-  static const String ASSETS_IMAGES_SUCCESSFUL_TRANS_PNG =
-      'assets/images/successful_trans.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/support.png)
-  static const String ASSETS_IMAGES_SUPPORT_PNG = 'assets/images/support.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/terms.png)
-  static const String ASSETS_IMAGES_TERMS_PNG = 'assets/images/terms.png';
-
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/transfer_btn.png)
-  static const String ASSETS_IMAGES_TRANSFER_BTN_PNG =
-      'assets/images/transfer_btn.png';
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/images/app.png)
+  static const String ASSETS_IMAGES_APP_PNG = 'assets/images/app.png';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/shorebird.yaml)
   static const String SHOREBIRD_YAML = 'shorebird.yaml';

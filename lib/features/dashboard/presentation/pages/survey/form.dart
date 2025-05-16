@@ -7,6 +7,7 @@ import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/features/dashboard/presentation/widgets/survey/tile.dart';
+import 'package:guava/widgets/custom_button.dart';
 
 class GuavafiSurvey extends ConsumerStatefulWidget {
   const GuavafiSurvey({super.key});
@@ -78,24 +79,9 @@ class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // todo: change to primary button component
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 12.h,
-              horizontal: 24.w,
-            ),
-            decoration: BoxDecoration(
-              color: context.theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(30.r),
-            ),
-            child: Center(
-              child: Text(
-                'Submit',
-                style: context.textTheme.headlineSmall?.copyWith(
-                  color: context.theme.colorScheme.onPrimary,
-                ),
-              ),
-            ),
+          CustomButton(
+            title: 'Submit',
+            onTap: () {},
           ),
           12.verticalSpace,
         ],

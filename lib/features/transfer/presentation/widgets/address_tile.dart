@@ -33,7 +33,9 @@ class AddressTile extends ConsumerWidget {
               backgroundColor: BrandColors.lightGreen.withValues(alpha: .7),
               child: Center(
                 child: Text(
-                  data.username.split('').first.toUpperCase(),
+                  data.username.isEmpty
+                      ? ''
+                      : data.username.split('').first.toUpperCase(),
                   style: context.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: 16.sp,

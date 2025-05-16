@@ -1,16 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/app_core.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/auth.dart';
+import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/onboarding/presentation/notifier/onboard.notifier.dart';
 import 'package:guava/features/onboarding/presentation/widgets/number_pad.dart';
 import 'package:pinput/pinput.dart';
 
-// todo: verify pin to access dashboard and verify pin on lifecylec resume
 class SetupPinPage extends ConsumerStatefulWidget {
   const SetupPinPage({
     this.onComplete,
@@ -60,7 +65,9 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
         children: [
           24.verticalSpace,
           Text(
-            isConfirmingPin ? 'Confirm your Pin' : 'Set up your PIN',
+            isConfirmingPin
+                ? 'Confirm your Pin'
+                : '${context.canPop() ? 'Change' : 'Set'} up your PIN',
             style: context.textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -112,20 +119,25 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
                   pinCtrl.clear();
                   confirmPinCtrl.clear();
 
-                  // todo: show pin mismatch error
+                  context.notify.addNotification(
+                    NotificationTile(
+                      content: 'Pin mismatch. Please try again',
+                      notificationType: NotificationType.error,
+                    ),
+                  );
                 } else {
-                  await on.savedAccessPin();
-
-                  Future.microtask(() {
-                    if (mounted) {
-                      // ignore: use_build_context_synchronously
-                      context.go(pDashboard);
-                    }
-                  });
+                  await on.savedAccessPin(value);
+                  setupBiometric();
                 }
                 // submit pin
               } else {
                 setState(() => isConfirmingPin = true);
+
+                navkey.currentContext!.notify.addNotification(
+                  NotificationTile(
+                    content: 'Confirm your pin. Re-enter your pin',
+                  ),
+                );
               }
             },
           ),
@@ -138,5 +150,38 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
         ],
       ).padHorizontal,
     );
+  }
+
+  void setupBiometric() {
+    Future.microtask(() async {
+      if (mounted) {
+        final auth = ref.read(biometricProvider);
+
+        if ((await auth.hasDeviceSupport()) &&
+            (await auth.isDeviceBiometricEnabled())) {
+          final result = await auth.authenticate();
+
+          if (result) {
+            unawaited(_biometricEnabled());
+            navkey.currentContext!.toPath(pDashboard);
+          } else {
+            navkey.currentContext!.toPath(pDashboard);
+            navkey.currentContext!.notify.addNotification(
+              NotificationTile(
+                content: 'Failed to setup biometric.',
+                notificationType: NotificationType.error,
+              ),
+            );
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> _biometricEnabled() async {
+    await ref.read(securedStorageServiceProvider).writeToStorage(
+          key: Strings.biometric,
+          value: DateTime.now().toIso8601String(),
+        );
   }
 }

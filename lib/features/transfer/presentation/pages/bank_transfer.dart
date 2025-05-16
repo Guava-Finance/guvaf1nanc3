@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,15 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/transfer/domain/usecases/banks_usecase.dart';
 import 'package:guava/features/transfer/domain/usecases/countries_usecase.dart';
+import 'package:guava/features/transfer/domain/usecases/purpose.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/bank_tab_view.dart';
 import 'package:guava/widgets/app_icon.dart';
@@ -33,8 +34,7 @@ class BankTransfer extends ConsumerStatefulWidget {
 
 class _BankTransferState extends ConsumerState<BankTransfer>
     with TickerProviderStateMixin, Loader {
-  late final TextEditingController controller,
-      countryCtrl,
+  late final TextEditingController countryCtrl,
       bankCtrl,
       accountNumberCtrl,
       amountCtrl,
@@ -46,7 +46,6 @@ class _BankTransferState extends ConsumerState<BankTransfer>
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
 
-    controller = TextEditingController();
     countryCtrl = TextEditingController();
     bankCtrl = TextEditingController();
     accountNumberCtrl = TextEditingController();
@@ -55,15 +54,40 @@ class _BankTransferState extends ConsumerState<BankTransfer>
 
     super.initState();
 
-    controller.addListener(() {
-      setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(accountDetail.notifier).state = null;
+
+      final country = ref.read(userCountry);
+
+      if (!(country?.isOffRampEnabled ?? false)) {
+        ref.watch(activeTabState.notifier).state = 0;
+
+        context.pop();
+        context.notify.addNotification(
+          NotificationTile(
+            content: 'Bank Transfer is currently unavailable',
+          ),
+        );
+      }
     });
+  }
+
+  bool get isValidated {
+    final controllers = [
+      countryCtrl,
+      bankCtrl,
+      accountNumberCtrl,
+      amountCtrl,
+      purposeCtrl,
+    ];
+
+    return (ref.watch(accountDetail) != null &&
+        controllers.every((e) => e.text.isNotEmpty));
   }
 
   @override
   void dispose() {
     _tabController!.dispose();
-    controller.dispose();
 
     super.dispose();
   }
@@ -84,6 +108,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   return countries.when(
                     data: (data) {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         onTap: () {
                           CustomListPicker(
@@ -112,6 +137,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                     },
                     error: (_, __) {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         hintText: 'Select Country',
                         controller: countryCtrl,
@@ -128,6 +154,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                     },
                     loading: () {
                       return CustomTextfield(
+                        height: 0.h,
                         readOnly: true,
                         hintText: 'Select Country',
                         controller: countryCtrl,
@@ -153,8 +180,11 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                         return banks.when(
                           data: (data) {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               onTap: () {
+                                accountNumberCtrl.clear();
+
                                 CustomListPicker(
                                   title: 'Select Recipient Bank',
                                   options:
@@ -165,8 +195,6 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                                     final bank = data!.firstWhere((e) =>
                                         e.name.toLowerCase() ==
                                         p0.toLowerCase());
-
-                                    AppLogger.log(bank);
 
                                     tn.accountResolutionData['bank'] =
                                         bank.code;
@@ -184,6 +212,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                           },
                           error: (_, __) {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               hintText: 'Select Bank',
                               controller: bankCtrl,
@@ -200,6 +229,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                           },
                           loading: () {
                             return CustomTextfield(
+                              height: 0.h,
                               readOnly: true,
                               hintText: 'Select Bank',
                               controller: bankCtrl,
@@ -222,14 +252,19 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomTextfield(
+                      height: 0.h,
                       hintText: 'Enter 10 digit account number',
                       controller: accountNumberCtrl,
+                      inputType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       onChanged: (p0) async {
-                        // todo: get bank account length from config
-                        if ((p0 ?? '').length == 10) {
+                        ref.watch(accountDetail.notifier).state = null;
+                        final country = ref.read(userCountry);
+
+                        if ((p0 ?? '').length ==
+                            (country?.bankAccountLenght ?? 10)) {
                           context.focusScope.unfocus();
 
                           tn.accountResolutionData['account'] = p0;
@@ -237,6 +272,8 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                           await withLoading(() async {
                             await tn.resolveAccount();
                           });
+
+                          setState(() {});
                         }
                       },
                     ).padHorizontal,
@@ -246,7 +283,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
               ),
               Consumer(
                 builder: (context, ref, child) {
-                  final detail = ref.watch(accountDetail.notifier).state;
+                  final detail = ref.watch(accountDetail);
 
                   return detail == null
                       ? 0.verticalSpace
@@ -287,6 +324,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                 },
               ),
               CustomTextfield(
+                height: 0.h,
                 readOnly: true,
                 hintText: 'Enter amount',
                 controller: amountCtrl,
@@ -294,57 +332,109 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                   final balance = await ref.read(balanceUsecaseProvider.future);
 
                   navkey.currentContext!.push(pEnterAmountBank).then((v) {
-                    final amount =
-                        NumberFormat().tryParse(v.toString())?.toDouble() ??
-                            0.0;
+                    if (((v as String?) ?? '').isNotEmpty) {
+                      final amount =
+                          NumberFormat().tryParse(v.toString())?.toDouble() ??
+                              0.0;
 
-                    ref.read(localAountTransfer.notifier).state = amount;
-                    ref.read(usdcAountTransfer.notifier).state =
-                        (amount * balance.exchangeRate);
+                      ref.read(localAountTransfer.notifier).state = amount;
+                      ref.read(usdcAountTransfer.notifier).state =
+                          (amount * balance.exchangeRate);
 
-                    amountCtrl.value = TextEditingValue(
-                      text:
-                          NumberFormat.currency(symbol: balance.symbol).format(
-                        amount,
-                      ),
-                    );
+                      amountCtrl.value = TextEditingValue(
+                        text: NumberFormat.currency(symbol: balance.symbol)
+                            .format(
+                          amount,
+                        ),
+                      );
+
+                      setState(() {});
+                    }
                   });
                 },
               ).padHorizontal,
-              10.verticalSpace,
-              CustomTextfield(
-                readOnly: true,
-                onTap: () {
-                  CustomListPicker(
-                    title: 'What is the purpose',
-                    options: [
-                      'School',
-                      'Food',
-                      'Transportation',
-                      'Airtime & Data',
-                      'Miscelleanous',
-                      'Others'
-                    ],
-                    onTap: (p0) {
-                      purposeCtrl.value = TextEditingValue(text: p0);
-                      ref.read(transferPurpose.notifier).state = p0;
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  10.verticalSpace,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final purpose = ref.watch(lisOfTransferPurpose);
 
-                      setState(() {});
+                      return purpose.when(
+                        data: (d) {
+                          return CustomTextfield(
+                            height: 0.h,
+                            readOnly: true,
+                            onTap: () {
+                              CustomListPicker(
+                                title: 'What is the purpose',
+                                options: (d ?? []).map((e) => e.title).toList(),
+                                onTap: (p0) {
+                                  purposeCtrl.value =
+                                      TextEditingValue(text: p0);
+
+                                  final data = (d ?? []).firstWhere((e) {
+                                    return e.title.toLowerCase() ==
+                                        p0.toLowerCase();
+                                  });
+
+                                  ref.read(selectedPurpose.notifier).state =
+                                      data;
+
+                                  setState(() {});
+                                },
+                              ).bottomSheet;
+                            },
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: SvgPicture.asset(
+                              R.ASSETS_ICONS_ARROW_FORWARD_SVG,
+                            ),
+                          );
+                        },
+                        error: (_, __) {
+                          return CustomTextfield(
+                            height: 0.h,
+                            readOnly: true,
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                ref.invalidate(lisOfTransferPurpose);
+                              },
+                              icon: Icon(Icons.refresh),
+                            ),
+                          );
+                        },
+                        loading: () {
+                          return CustomTextfield(
+                            height: 0.h,
+                            readOnly: true,
+                            hintText: 'Purpose of transaction',
+                            controller: purposeCtrl,
+                            suffixIcon: CupertinoActivityIndicator(
+                              radius: 12.r,
+                              color: BrandColors.primary,
+                            ),
+                          );
+                        },
+                      );
                     },
-                  ).bottomSheet;
-                },
-                hintText: 'Purpose of transaction',
-                controller: purposeCtrl,
-                suffixIcon: SvgPicture.asset(R.ASSETS_ICONS_ADD_CIRCLE_SVG),
-              ).padHorizontal,
-              20.verticalSpace,
+                  ).padHorizontal,
+                  20.verticalSpace,
+                ],
+              ),
               ValueListenableBuilder(
                 valueListenable: isLoading,
                 builder: (_, data, child) {
                   return CustomButton(
-                    onTap: () {},
+                    onTap: () {
+                      context.push(pReviewPayemet);
+                    },
                     title: 'Continue',
                     isLoading: data,
+                    disable: !isValidated,
                   ).padHorizontal;
                 },
               ),

@@ -1,3 +1,4 @@
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/features/onboarding/data/models/config/rates.model.dart';
 import 'package:guava/features/onboarding/domain/entities/config/country.entity.dart';
 import 'package:guava/features/onboarding/domain/entities/config/rate.entity.dart';
@@ -14,9 +15,16 @@ class CountryModel extends CountryEntity {
     required super.kycPartners,
     required super.kybPartners,
     required super.rates,
+    required super.bankAccountLenght,
+    required super.isWalletTransferEnabled,
+    required super.isOnRampEnabled,
+    required super.isOffRampEnabled,
+    required super.isKycEnabled,
   });
 
   factory CountryModel.fromJson(Map<String, dynamic> json) {
+    AppLogger.log(json);
+
     return CountryModel(
       name: json['name'],
       countryCode: json['country_code'],
@@ -34,6 +42,14 @@ class CountryModel extends CountryEntity {
           ? null
           : List<String>.from(json['kyb_partners']),
       rates: RatesModel.fromJson(json['rates']),
+      bankAccountLenght: json['bank_account_length'] == null
+          ? null
+          : int.parse((json['bank_account_length']).toString()),
+      isKycEnabled: json['is_kyc_enabled'].toString() == 'true',
+      isOffRampEnabled: json['is_off_ramp_enabled'].toString() == 'true',
+      isOnRampEnabled: json['is_on_ramp_enabled'].toString() == 'true',
+      isWalletTransferEnabled:
+          json['is_wallet_transfer_enabled'].toString() == 'true',
     );
   }
 
@@ -48,6 +64,11 @@ class CountryModel extends CountryEntity {
       'phone_length': phoneLength,
       'kyc_partners': kycPartners,
       'rates': (rates as RatesModel).toJson(),
+      'is_wallet_transfer_enabled': isWalletTransferEnabled,
+      'is_on_ramp_enabled': isOnRampEnabled,
+      'is_off_ramp_enabled': isOffRampEnabled,
+      'is_kyc_enabled': isKycEnabled,
+      'bank_account_length': bankAccountLenght,
     };
   }
 
@@ -62,6 +83,11 @@ class CountryModel extends CountryEntity {
     List<String>? kycPartners,
     List<String>? kybPartners,
     RatesEntity? rates,
+    int? backAccountLength,
+    bool? isWalletTransferEnabled,
+    bool? isOnRampEnabled,
+    bool? isOffRampEnabled,
+    bool? isKycEnabled,
   }) {
     return CountryModel(
       name: name ?? this.name,
@@ -74,6 +100,12 @@ class CountryModel extends CountryEntity {
       kycPartners: kycPartners ?? this.kycPartners,
       kybPartners: kybPartners ?? this.kybPartners,
       rates: rates ?? this.rates,
+      bankAccountLenght: backAccountLength ?? bankAccountLenght,
+      isKycEnabled: isKycEnabled ?? this.isKycEnabled,
+      isOffRampEnabled: isOffRampEnabled ?? this.isOffRampEnabled,
+      isOnRampEnabled: isOnRampEnabled ?? this.isOnRampEnabled,
+      isWalletTransferEnabled:
+          isWalletTransferEnabled ?? this.isWalletTransferEnabled,
     );
   }
 }

@@ -1,1 +1,31 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"guavafinance-7d405","appId":"1:894739389977:android:711c14dbba0c615e175488","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"guavafinance-7d405","appId":"1:894739389977:ios:e643f154b5784b32175488","uploadDebugSymbols":true,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"guavafinance-7d405","configurations":{"android":"1:894739389977:android:711c14dbba0c615e175488","ios":"1:894739389977:ios:e643f154b5784b32175488","web":"1:894739389977:web:2803271f2f7d6b6c175488"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "guavafinance-7d405",
+                    "appId": "1:894739389977:android:711c14dbba0c615e175488",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "guavafinance-7d405",
+                    "appId": "1:894739389977:ios:e643f154b5784b32175488",
+                    "uploadDebugSymbols": true,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "guavafinance-7d405",
+                    "configurations": {
+                        "android": "1:894739389977:android:711c14dbba0c615e175488",
+                        "ios": "1:894739389977:ios:e643f154b5784b32175488",
+                        "web": "1:894739389977:web:2803271f2f7d6b6c175488"
+                    }
+                }
+            }
+        }
+    }
+}

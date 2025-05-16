@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -11,10 +9,11 @@ import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
+import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
+import 'package:guava/features/transfer/domain/usecases/address_book.dart';
 import 'package:guava/features/transfer/domain/usecases/bank_beneficiary.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_bank_transfer.dart';
 import 'package:guava/features/transfer/domain/usecases/recent_wallet_transfer.dart';
-import 'package:guava/features/transfer/domain/usecases/save_to_address_book.dart';
 import 'package:guava/features/transfer/presentation/notifier/transfer.notifier.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/address-book_new.dart';
 import 'package:guava/features/transfer/presentation/pages/sub/payment_detail.dart';
@@ -38,11 +37,12 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
       ref.invalidate(balanceUsecaseProvider);
       ref.invalidate(walletAddressProvider);
       ref.invalidate(myTransactionHistory);
+      ref.invalidate(payingAnyone);
 
       // refetch the recent transfer addresses
       ref.invalidate(recentWalletTransfers);
       ref.invalidate(recentBankTransfersProvider);
-      ref.invalidate(addressBookProvider);
+      ref.invalidate(myAddressBook);
       ref.invalidate(bankBeneficiaryProvider);
     });
   }
@@ -86,9 +86,13 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
             Center(
               child: Column(
                 children: [
-                  Image.asset(
-                    R.ASSETS_IMAGES_CHECKMARK_PNG,
-                    height: 32.h,
+                  CircleAvatar(
+                    maxRadius: 16.r,
+                    backgroundColor: BrandColors.primary,
+                    child: Icon(
+                      Icons.check,
+                      color: BrandColors.backgroundColor,
+                    ),
                   ),
                   15.verticalSpace,
                   Text(
@@ -159,13 +163,10 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
                       onSaved: (p0) {
                         setState(() => isSavedToAddresBook = p0);
 
-                        ref.invalidate(addressBookProvider);
+                        ref.invalidate(myAddressBook);
                       },
                     ).bottomSheet;
                   }
-                  // todo: go to a new page that calls the profile
-                  // from wallet address endpoint then the user give's
-                  // his own name to remember the address
                 },
                 backgroundColor: BrandColors.containerColor,
                 textColor: BrandColors.washedTextColor,
@@ -175,7 +176,7 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
             CustomButton(
               title: 'Done',
               onTap: () {
-                context.go(pDashboard);
+                context.toPath(pDashboard);
               },
             )
           ],
