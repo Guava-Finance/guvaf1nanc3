@@ -108,44 +108,40 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
     final mng = ref.read(permissionManagerProvider);
 
     if (await mng.verifyPermission(Permission.camera, AppSettingsType.camera)) {
-      if (await mng.verifyPermission(Permission.mediaLibrary)) {
-        if (await mng.verifyPermission(Permission.microphone)) {
-          if (await mng.verifyPermission(Permission.photos)) {
-            final wallet = await ref.read(walletAddressProvider.future);
-            ref.read(livelinessServiceProvider).initKyc(
-                  walletAddress: wallet,
-                  onSuccess: (p0) {
-                    navkey.currentContext!.notify.addNotification(
-                      NotificationTile(
-                        notificationType: NotificationType.success,
-                        title: 'KYC Success',
-                        content: 'Please wait while we verify your documents',
-                      ),
-                    );
-
-                    context.go(pKycDone);
-                  },
-                  onError: (p0) {
-                    navkey.currentContext!.notify.addNotification(
-                      NotificationTile(
-                        notificationType: NotificationType.error,
-                        title: 'KYC Failed',
-                        content: p0.toString(),
-                      ),
-                    );
-                  },
-                  onClose: (p0) {
-                    navkey.currentContext!.notify.addNotification(
-                      NotificationTile(
-                        notificationType: NotificationType.information,
-                        title: 'KYC Closed',
-                        content: p0.toString(),
-                      ),
-                    );
-                  },
+      if (await mng.verifyPermission(Permission.photos)) {
+        final wallet = await ref.read(walletAddressProvider.future);
+        ref.read(livelinessServiceProvider).initKyc(
+              walletAddress: wallet,
+              onSuccess: (p0) {
+                navkey.currentContext!.notify.addNotification(
+                  NotificationTile(
+                    notificationType: NotificationType.success,
+                    title: 'KYC Success',
+                    content: 'Please wait while we verify your documents',
+                  ),
                 );
-          }
-        }
+
+                context.go(pKycDone);
+              },
+              onError: (p0) {
+                navkey.currentContext!.notify.addNotification(
+                  NotificationTile(
+                    notificationType: NotificationType.error,
+                    title: 'KYC Failed',
+                    content: p0.toString(),
+                  ),
+                );
+              },
+              onClose: (p0) {
+                navkey.currentContext!.notify.addNotification(
+                  NotificationTile(
+                    notificationType: NotificationType.information,
+                    title: 'KYC Closed',
+                    content: p0.toString(),
+                  ),
+                );
+              },
+            );
       }
     }
   }
