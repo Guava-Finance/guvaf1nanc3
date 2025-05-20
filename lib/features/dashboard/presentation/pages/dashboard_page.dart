@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/util/connection_listener.dart';
 import 'package:guava/core/resources/util/permission.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -26,6 +28,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.mixpanel.track(MixpanelEvents.viewedDashboard);
       // ref.invalidate(balanceUsecaseProvider);
 
       unawaited(performBackgroundChecks());

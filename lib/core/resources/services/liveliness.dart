@@ -21,7 +21,9 @@ class LivelinessService {
   }) async {
     final BuildContext context = navkey.currentState!.context;
 
-    context.mixpanel.track(MixpanelEvents.kycStarted);
+    context.mixpanel.track(MixpanelEvents.kycStarted, properties: {
+      'KYC Partner': 'Dojah.io',
+    });
     context.mixpanel.timetrack(MixpanelEvents.kycSubmitted);
 
     _dojahKYC = DojahKYC(

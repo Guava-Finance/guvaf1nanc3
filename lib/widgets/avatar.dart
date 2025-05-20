@@ -16,42 +16,37 @@ class AppAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'MY_PROFILE_PHOTO',
-      transitionOnUserGestures: true,
-      
-      child: Consumer(
-        builder: (context, ref, child) {
-          final avatarAsync = ref.watch(avatarProvider);
+    return Consumer(
+      builder: (context, ref, child) {
+        final avatarAsync = ref.watch(avatarProvider);
 
-          return avatarAsync.when(
-            data: (avatar) {
-              return CircleAvatar(
-                maxRadius: radius.r,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(radius.r),
-                  child: SvgPicture.network(
-                    avatar,
-                    width: (radius * 2).w,
-                    height: (radius * 2).h,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
+        return avatarAsync.when(
+          data: (avatar) {
+            return CircleAvatar(
+              maxRadius: radius.r,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(radius.r),
+                child: SvgPicture.network(
+                  avatar,
+                  width: (radius * 2).w,
+                  height: (radius * 2).h,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
                 ),
-              );
-            },
-            error: (e, _) {
-              return 0.verticalSpace;
-            },
-            loading: () {
-              return CupertinoActivityIndicator(
-                color: BrandColors.primary,
-                radius: 12.r,
-              );
-            },
-          );
-        },
-      ),
+              ),
+            );
+          },
+          error: (e, _) {
+            return 0.verticalSpace;
+          },
+          loading: () {
+            return CupertinoActivityIndicator(
+              color: BrandColors.primary,
+              radius: 12.r,
+            );
+          },
+        );
+      },
     );
   }
 }

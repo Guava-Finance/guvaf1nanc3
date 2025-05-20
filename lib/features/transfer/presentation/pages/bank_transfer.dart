@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
@@ -454,6 +455,13 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                 builder: (_, data, child) {
                   return CustomButton(
                     onTap: () {
+                      navkey.currentContext!.mixpanel.track(
+                        MixpanelEvents.transferToBankInitiated,
+                      );
+                      navkey.currentContext!.mixpanel.timetrack(
+                        MixpanelEvents.transferToBankCompleted,
+                      );
+                      
                       context.push(pReviewPayemet);
                     },
                     title: 'Continue',

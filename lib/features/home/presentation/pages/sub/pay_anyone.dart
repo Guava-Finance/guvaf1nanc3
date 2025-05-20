@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
@@ -558,6 +559,17 @@ class _PayAnyoneState extends ConsumerState<PayAnyone> with Loader {
                             builder: (_, data, child) {
                               return CustomButton(
                                 onTap: () {
+                                  navkey.currentContext!.mixpanel.track(
+                                    MixpanelEvents.transferToBankInitiated,
+                                    properties: {
+                                      'Destination': 'pay_anyone_widget'
+                                    },
+                                  );
+
+                                  navkey.currentContext!.mixpanel.timetrack(
+                                    MixpanelEvents.transferToBankCompleted,
+                                  );
+
                                   context.push(pReviewPayemet, extra: true);
                                 },
                                 title: 'Continue',

@@ -104,6 +104,10 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
           params: BankTransferParam.fromJson(bankTransferData),
         );
 
+    navkey.currentContext!.mixpanel.track(
+      MixpanelEvents.transferToBankCompleted,
+    );
+
     if (result.isError) {
       navkey.currentContext!.notify.addNotification(
         NotificationTile(

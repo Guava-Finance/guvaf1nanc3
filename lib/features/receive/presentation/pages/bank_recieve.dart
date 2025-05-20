@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -383,6 +384,13 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
                   final result = await rn.initDeposit();
 
                   if (result) {
+                    navkey.currentContext!.mixpanel.track(
+                      MixpanelEvents.depositInitiated,
+                    );
+                    navkey.currentContext!.mixpanel.timetrack(
+                      MixpanelEvents.depositCompleted,
+                    );
+
                     navkey.currentContext!.push(pAccountPayable);
                   }
                 });

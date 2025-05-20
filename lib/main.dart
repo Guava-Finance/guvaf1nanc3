@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/notification/wrapper/blur.dart';
+import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/core/styles/theme/theme.dart';
@@ -55,20 +56,27 @@ void main() async {
   }).sendPort);
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.mixpanel.track(MixpanelEvents.appOpened);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final wallet = await ref.read(walletAddressProvider.future);
+
+      await navkey.currentContext!.mixpanel.init();
+
+      navkey.currentContext!.mixpanel.identify(wallet);
+      navkey.currentContext!.mixpanel.setSuperProp(wallet);
+
+      navkey.currentContext!.mixpanel.track(MixpanelEvents.appOpened);
     });
   }
 

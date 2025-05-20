@@ -1,26 +1,52 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final mixpanel = Provider<Mixpanel>((ref) => Mixpanel(Env.mixpanelToken));
+final mixpanel = FutureProvider<Mixpanel>(
+  (ref) async => await Mixpanel.init(
+    Env.mixpanelToken,
+    trackAutomaticEvents: true,
+  ),
+);
 
 final mixpanelProvider = Provider<MixPanel>((ref) {
-  return MixPanel(mixpanel: ref.watch(mixpanel));
+  return MixPanel();
 });
 
+// final mixpanelProvider = Provider<MixPanel>((ref) {
+//   final mixpanelAsync = ref.watch(mixpanel);
+
+//   return mixpanelAsync.maybeWhen(
+//     data: (mixpanel) => MixPanel(mixpanel: mixpanel),
+//     orElse: () => throw Exception('Mixpanel not initialized'),
+//   );
+// });
+
 class MixPanel {
-  MixPanel({
-    required this.mixpanel,
-  });
+  MixPanel();
 
-  final Mixpanel mixpanel;
+  late Mixpanel mixpanel;
 
-  void identify(String email) {
+  bool isMixpanelInitialized = false;
+
+  Future<void> init() async {
+    if (!isMixpanelInitialized) {
+      mixpanel = await Mixpanel.init(
+        Env.mixpanelToken,
+        trackAutomaticEvents: true,
+      );
+
+      isMixpanelInitialized = true;
+    }
+  }
+
+  void identify(String walletAddress) {
     // tie events to a particular user
-    mixpanel.identify(email);
+    mixpanel.identify(walletAddress);
     mixpanel.setUseIpAddressForGeolocation(true);
-    FirebaseCrashlytics.instance.setUserIdentifier(email);
+    FirebaseCrashlytics.instance.setUserIdentifier(walletAddress);
   }
 
   void track(String event, {properties}) {
@@ -33,7 +59,7 @@ class MixPanel {
 
   void setSuperProp(String walletAddress) {
     mixpanel.registerSuperPropertiesOnce({
-      'wallet_address': walletAddress,
+      'Wallet Address': walletAddress,
     });
   }
 
