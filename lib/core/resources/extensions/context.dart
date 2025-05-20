@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/notification/wrapper/blur.dart';
 import 'package:guava/core/resources/notification/wrapper/notification.wrapper.dart';
@@ -59,7 +60,8 @@ extension CxtExtension on BuildContext {
 
   Object get arg => ModalRoute.of(this)!.settings.arguments!;
 
-  // MixPanel get mixpanel => sl<MixPanel>();
+  MixPanel get mixpanel =>
+      ProviderScope.containerOf(this).read(mixpanelProvider);
 
   bool get shouldLockDueToInactivity {
     final appLastActive =

@@ -43,9 +43,6 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
         final result = await auth.authenticate();
 
         if (result) {
-          AppLogger.log(ref.read(appStateProvider));
-          AppLogger.log(ref.read(appLastActiveProvider));
-
           navkey.currentContext!.pop(result);
         } else {
           navkey.currentContext!.notify.addNotification(
@@ -133,10 +130,12 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
       child: Scaffold(
         appBar: AppBar(
           leading: widget.isPhoneLock ? 0.verticalSpace : null,
-          title: PageIndicator(
-            totalPages: 4,
-            currentPage: 1,
-          ),
+          title: widget.isPhoneLock
+              ? 0.verticalSpace
+              : PageIndicator(
+                  totalPages: 4,
+                  currentPage: 1,
+                ),
         ),
         body: Column(children: [
           24.verticalSpace,

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/extensions/string.dart';
@@ -187,6 +188,10 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
           content: (result as LoadedState).data['message'],
           notificationType: NotificationType.success,
         ),
+      );
+
+      navkey.currentContext!.mixpanel.track(
+        MixpanelEvents.usernameSet,
       );
     }
 

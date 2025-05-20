@@ -1,6 +1,9 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -55,6 +58,10 @@ class PermissionManager {
     // If granted, return true immediately
     if (status.isGranted) return true;
 
+    navkey.currentContext!.notify.addNotification(NotificationTile(
+      content: '${permissionName(permission)} permission is required',
+    ));
+
     // If denied in any form and settingsType provided, open settings
     if (settingsType != null) {
       await AppSettings.openAppSettings(type: settingsType);
@@ -62,6 +69,21 @@ class PermissionManager {
 
     // Return false for any denial state
     return false;
+  }
+
+  String permissionName(Permission permission) {
+    switch (permission) {
+      case Permission.camera:
+        return 'Camera';
+      case Permission.photos:
+        return 'Photos';
+      case Permission.notification:
+        return 'Notification';
+      case Permission.mediaLibrary:
+        return 'MediaLibrary';
+      default:
+        return 'App Permission';
+    }
   }
 
   /// Request both camera and notification permissions
@@ -85,7 +107,7 @@ class PermissionManager {
   Future<bool> hasNotificationPermission() async {
     return await isPermissionGranted(Permission.notification);
   }
-  
+
   /// Show permission request dialog with rationale
   Future<PermissionStatus> requestPermissionWithRationale({
     required Permission permission,

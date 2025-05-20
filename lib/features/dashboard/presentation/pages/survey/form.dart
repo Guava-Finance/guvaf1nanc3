@@ -19,7 +19,7 @@ class GuavafiSurvey extends ConsumerStatefulWidget {
 class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
   @override
   Widget build(BuildContext context) {
-    final mixpanel = ref.read(mixpanelProvider);
+    // final mixpanel = ref.read(mixpanelProvider);
 
     // todo: implement global text style once available
     return Scaffold(
@@ -49,13 +49,13 @@ class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
                   isActive: true,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    mixpanel.track(
-                      MixPanelKeys.featureSurvey,
-                      properties: {
-                        'feature': 'spend_n_save',
-                        'country': '',
-                      },
-                    );
+                    // mixpanel.track(
+                    //   MixPanelKeys.featureSurvey,
+                    //   properties: {
+                    //     'feature': 'spend_n_save',
+                    //     'country': '',
+                    //   },
+                    // );
                   },
                 ),
                 SurveyTile(

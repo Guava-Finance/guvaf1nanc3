@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -134,6 +135,13 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
           params: WalletTransferParam.fromJson(walletTransferData),
         );
 
+    // send event to mixpanel
+    if (ref.watch(isUsingUsername)) {
+      navkey.currentContext!.mixpanel.track(MixpanelEvents.sendViaUsername);
+    } else {
+      navkey.currentContext!.mixpanel.track(MixpanelEvents.sendViaWallet);
+    }
+
     if (result.isError) {
       navkey.currentContext!.notify.addNotification(
         NotificationTile(
@@ -142,10 +150,15 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
         ),
       );
 
+      navkey.currentContext!.mixpanel.track(MixpanelEvents.transactionFailed);
+
       return false;
     } else {
+      navkey.currentContext!.mixpanel.track(MixpanelEvents.transactionSuccess);
+
       ref.read(transactionId.notifier).state =
           (result as LoadedState<Map<String, dynamic>>).data['transaction_id'];
+
       return true;
     }
   }
@@ -193,6 +206,10 @@ class TransferNotifier extends _$TransferNotifier with ChangeNotifier {
     } else {
       ref.read(transactionId.notifier).state =
           (result as LoadedState<String>).data;
+
+      navkey.currentContext!.mixpanel.track(
+        MixpanelEvents.sendViaSolanaPay,
+      );
 
       return true;
     }

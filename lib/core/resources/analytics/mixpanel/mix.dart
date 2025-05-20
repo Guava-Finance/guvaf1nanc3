@@ -27,9 +27,13 @@ class MixPanel {
     mixpanel.track(event, properties: properties);
   }
 
-  void setSuperProp(String email) {
+  void timetrack(String event) {
+    mixpanel.timeEvent(event);
+  }
+
+  void setSuperProp(String walletAddress) {
     mixpanel.registerSuperPropertiesOnce({
-      'email': email,
+      'wallet_address': walletAddress,
     });
   }
 

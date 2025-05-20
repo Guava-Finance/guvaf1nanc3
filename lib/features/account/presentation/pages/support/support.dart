@@ -21,7 +21,7 @@ class SupportPage extends ConsumerStatefulWidget {
 class _SupportPageState extends ConsumerState<SupportPage> {
   @override
   Widget build(BuildContext context) {
-    final an = ref.watch(accountNotifierProvider);
+    // final an = ref.watch(accountNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('Support')),

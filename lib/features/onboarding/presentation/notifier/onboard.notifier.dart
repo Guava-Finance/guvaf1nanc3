@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -157,6 +158,7 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       );
     }
 
+    navkey.currentContext!.mixpanel.track(MixpanelEvents.walletCreated);
     return result;
   }
 
@@ -184,6 +186,11 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
       );
     }
 
+    navkey.currentContext!.mixpanel.track(
+      MixpanelEvents.walletRestored,
+      properties: {'wallet_recovery': 'mnemonic'},
+    );
+
     return result;
   }
 
@@ -200,6 +207,11 @@ class OnboardingNotifier extends _$OnboardingNotifier with ChangeNotifier {
         ),
       );
     }
+
+    navkey.currentContext!.mixpanel.track(
+      MixpanelEvents.walletRestored,
+      properties: {'wallet_recovery': 'private_key'},
+    );
 
     return result;
   }

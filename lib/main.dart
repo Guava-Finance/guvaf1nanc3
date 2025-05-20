@@ -9,12 +9,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/notification/wrapper/blur.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/core/styles/theme/theme.dart';
 import 'package:guava/firebase_options.dart';
-
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -27,8 +28,6 @@ void main() async {
       systemNavigationBarColor: BrandColors.scaffoldColor,
       systemNavigationBarIconBrightness: Brightness.light,
     ));
-
-    // await configureDependencies();
 
     /// Init Firebase setup
     await Firebase.initializeApp(
@@ -67,6 +66,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.mixpanel.track(MixpanelEvents.appOpened);
+    });
   }
 
   @override

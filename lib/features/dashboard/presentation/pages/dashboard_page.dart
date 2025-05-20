@@ -61,7 +61,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: screens[selectedIndex],
+        body: IndexedStack(
+          index: selectedIndex,
+          children: screens,
+        ),
         bottomNavigationBar: Container(
           height: Platform.isIOS ? 100.h : 70.h,
           decoration: BoxDecoration(
