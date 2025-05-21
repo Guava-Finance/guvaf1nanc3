@@ -90,8 +90,6 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
   // check whether username is created
   final username = await storage.readFromStorage(Strings.myUsername);
 
-  AppLogger.log(username);
-
   if (username == null) {
     widgets.add(ActionBanners(
       title: 'Create your @username',

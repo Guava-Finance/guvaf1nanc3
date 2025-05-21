@@ -29,7 +29,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.mixpanel.track(MixpanelEvents.viewedDashboard);
-      // ref.invalidate(balanceUsecaseProvider);
 
       unawaited(performBackgroundChecks());
 

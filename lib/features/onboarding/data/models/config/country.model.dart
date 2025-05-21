@@ -23,8 +23,6 @@ class CountryModel extends CountryEntity {
   });
 
   factory CountryModel.fromJson(Map<String, dynamic> json) {
-    AppLogger.log(json);
-
     return CountryModel(
       name: json['name'],
       countryCode: json['country_code'],

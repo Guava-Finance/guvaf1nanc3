@@ -231,6 +231,8 @@ final class SolanaService {
     }
   }
 
+  Future<void> destroyWallet() async {}
+
   /// The splToken address is passed and the balance is gotten from
   /// Solana blockchain via RPC network call
   Future<TokenAmount> checkBalance() async {

@@ -65,6 +65,7 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
           ),
           40.verticalSpace,
           CustomTextfield(
+            height: 0,
             hintText: '',
             controller: usernameCtrl,
             label: 'Username',

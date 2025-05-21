@@ -136,7 +136,7 @@ class _SupportPageState extends ConsumerState<SupportPage> {
                     onTap: () {
                       HapticFeedback.lightImpact();
                       launchUrl(
-                        Uri.parse('https://gauav.finance'),
+                        Uri.parse('https://guava.finance'),
                         mode: LaunchMode.externalApplication,
                       );
                     },
