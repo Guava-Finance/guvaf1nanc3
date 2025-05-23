@@ -103,7 +103,6 @@ class _PayAnyoneState extends ConsumerState<PayAnyone> with Loader {
           child: Showcase(
             key: payAnyoneWidgetKey,
             description: 'Instantly make a transfer to anyone',
-            targetPadding: EdgeInsets.symmetric(horizontal: 16.w),
             child: AnimatedContainer(
               duration: Durations.medium2,
               width: double.infinity,

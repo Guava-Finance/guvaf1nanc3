@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart';
@@ -11,6 +12,8 @@ import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:guava/core/resources/services/config.dart';
+import 'package:guava/features/home/data/models/spl_token.dart';
+import 'package:guava/features/home/data/models/token_account.dart';
 import 'package:guava/features/transfer/data/models/params/solana_pay.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
@@ -30,6 +33,7 @@ final solanaServiceProvider = Provider<SolanaService>((ref) {
     storageService: ref.watch(securedStorageServiceProvider),
     networkInterceptor: ref.watch(networkInterceptorProvider),
     configService: ref.watch(configServiceProvider),
+    ref: ref,
   );
 });
 
@@ -39,12 +43,90 @@ final class SolanaService {
     required this.storageService,
     required this.networkInterceptor,
     required this.configService,
+    required this.ref,
   });
 
   final RpcClient rpcClient;
   final SecuredStorageService storageService;
   final NetworkInterceptor networkInterceptor;
   final ConfigService configService;
+  final Ref ref;
+
+  Future<TokenAccount> getSolBalanceAsTokenAccount() async {
+    final wallet = await _getWallet();
+
+    final lamports = await rpcClient.getBalance(wallet.address);
+    const solDecimals = 9;
+
+    final solToken = SplToken(
+      chainId: 101,
+      address: 'So11111111111111111111111111111111111111112',
+      symbol: 'SOL',
+      name: 'Solana',
+      decimals: solDecimals,
+      logoURI:
+          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
+      tags: ['native'],
+      extensions: {},
+    );
+
+    AppLogger.log(lamports.value);
+
+    return TokenAccount(
+      mint: solToken.address,
+      owner: wallet.address,
+      amount: (lamports.value / pow(10, solDecimals)),
+      splToken: solToken,
+    );
+  }
+
+  Future<List<TokenAccount>> allAssets() async {
+    final wallet = await _getWallet();
+
+    final result = await rpcClient.getTokenAccountsByOwner(
+      wallet.address,
+      TokenAccountsFilter.byProgramId(
+        'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+      ),
+      encoding: Encoding.base64,
+    );
+
+    return result.value
+        .map((e) =>
+            _decodeTokenAccount((e.account.data?.toJson() as List).first))
+        .toList();
+  }
+
+  TokenAccount _decodeTokenAccount(String base64Data) {
+    final data = base64.decode(base64Data);
+
+    final mint = data.sublist(0, 32);
+    final owner = data.sublist(32, 64);
+    final amountBytes = data.sublist(64, 72);
+
+    final amount =
+        ByteData.sublistView(amountBytes).getUint64(0, Endian.little);
+
+    final mintStr = base58encode(mint);
+    final ownerStr = base58encode(owner);
+
+    final splToken = ref.read(splTokenAccounts)[mintStr];
+
+    double readableAmount = amount.toDouble();
+
+    if (splToken != null) {
+      readableAmount = amount / pow(10, splToken.decimals);
+    } else {
+      readableAmount = amount / lamportsPerSol;
+    }
+
+    return TokenAccount(
+      mint: mintStr,
+      owner: ownerStr,
+      amount: readableAmount,
+      splToken: splToken,
+    );
+  }
 
   /// Using [bip39] either 12 or 24 secret phrases is generated
   /// The secret phrase i.e. [mnemonics] would be kept
@@ -231,17 +313,13 @@ final class SolanaService {
     }
   }
 
-  Future<void> destroyWallet() async {}
-
   /// The splToken address is passed and the balance is gotten from
   /// Solana blockchain via RPC network call
   Future<TokenAmount> checkBalance() async {
     final Ed25519HDPublicKey tokenAddress = await _getTokenAddress();
 
     final TokenAmountResult tokenBalance =
-        await rpcClient.getTokenAccountBalance(
-      tokenAddress.toBase58(),
-    );
+        await rpcClient.getTokenAccountBalance(tokenAddress.toBase58());
 
     return tokenBalance.value;
   }

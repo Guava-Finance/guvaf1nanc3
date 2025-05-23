@@ -49,7 +49,9 @@ class MixPanel {
     FirebaseCrashlytics.instance.setUserIdentifier(walletAddress);
   }
 
-  void track(String event, {properties}) {
+  void track(String event, {properties}) async {
+    if (!isMixpanelInitialized) await init();
+
     mixpanel.track(event, properties: properties);
   }
 

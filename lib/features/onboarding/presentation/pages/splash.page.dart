@@ -21,7 +21,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () async {
+    Future.delayed(Duration.zero, () async {
       try {
         await (ref.read(configServiceProvider)).fetchConfig();
         // Wait for wallet address to be available

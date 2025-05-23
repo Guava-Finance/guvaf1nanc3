@@ -3,12 +3,9 @@
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-    
 	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 	<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
 	<application android:label="Guava Finance" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
 		<activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
 			<!--
@@ -21,6 +18,40 @@
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			
+			<meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+			<!-- App Link sample -->
+			<intent-filter android:autoVerify="true">
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="https" android:host="pay.guava.finance" />
+			</intent-filter>
+			<!-- Deep Link sample -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<!--
+				Add optional android:host to distinguish your app
+				from others in case of conflicting scheme name
+				-->
+				<data android:scheme="guava.finance" />
+				<!-- <data android:scheme="sample" /> -->
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="solana" />
+			</intent-filter>
+			<!-- Default solana-wallet URI from a browser or native dapp -->
+			<intent-filter android:order="1">
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="solana-wallet" />
 			</intent-filter>
 		</activity>
 		<!--

@@ -19,6 +19,8 @@ class Strings {
   static const String pinFailureDate = 'pin_failure_date';
   static const String biometric = 'biometric_enabled';
 
+  static const String splTokenList = 'spl_token_list';
+
   // Showcase keys
   static const String homeShowcase = 'has_home_be_showcased';
   static const String transferShowcase = 'has_transfer_be_showcased';
