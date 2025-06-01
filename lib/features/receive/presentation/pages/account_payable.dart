@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/string.dart';
@@ -31,6 +33,10 @@ class _AccountPayablePageState extends ConsumerState<AccountPayablePage> {
 
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     final amount = ref.watch(localAountTransfer);
 
     return Scaffold(
@@ -503,6 +509,10 @@ class _AccountPayablePageState extends ConsumerState<AccountPayablePage> {
             onTap: () {
               ref.invalidate(balanceUsecaseProvider);
               ref.invalidate(myTransactionHistory);
+
+              navkey.currentContext!.mixpanel.track(
+                MixpanelEvents.depositCompleted,
+              );
 
               context.toPath(pDashboard);
               context.notify.addNotification(

@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/core/app_core.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -44,6 +46,10 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
     confirmPinCtrl = TextEditingController();
 
     super.initState();
+
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
   }
 
   @override
@@ -155,6 +161,8 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
   void setupBiometric() {
     Future.microtask(() async {
       if (mounted) {
+        bool isBiometricSet = false;
+
         final auth = ref.read(biometricProvider);
 
         if ((await auth.hasDeviceSupport()) &&
@@ -163,8 +171,11 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
 
           if (result) {
             unawaited(_biometricEnabled());
+            isBiometricSet = true;
             navkey.currentContext!.toPath(pDashboard);
           } else {
+            isBiometricSet = false;
+
             navkey.currentContext!.toPath(pDashboard);
             navkey.currentContext!.notify.addNotification(
               NotificationTile(
@@ -173,7 +184,16 @@ class _SetupPinPageState extends ConsumerState<SetupPinPage> {
               ),
             );
           }
+        } else {
+          isBiometricSet = false;
+
+          navkey.currentContext!.toPath(pDashboard);
         }
+
+        navkey.currentContext!.mixpanel.track(
+          MixpanelEvents.passcodeSet,
+          properties: {'is_biometric_enabled': isBiometricSet},
+        );
       }
     });
   }

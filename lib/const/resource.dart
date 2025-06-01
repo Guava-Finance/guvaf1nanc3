@@ -260,6 +260,17 @@ class R {
   static const String ASSETS_ICONS_WORLDWIDE_FLOATER_SVG =
       'assets/icons/worldwide-floater.svg';
 
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/x-social-media-follow.svg)
+  static const String ASSETS_ICONS_X_SOCIAL_MEDIA_FOLLOW_SVG =
+      'assets/icons/x-social-media-follow.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/x-social-media-logo-icon.svg)
+  static const String ASSETS_ICONS_X_SOCIAL_MEDIA_LOGO_ICON_SVG =
+      'assets/icons/x-social-media-logo-icon.svg';
+
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/x.svg)
+  static const String ASSETS_ICONS_X_SVG = 'assets/icons/x.svg';
+
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/your-control.svg)
   static const String ASSETS_ICONS_YOUR_CONTROL_SVG =
       'assets/icons/your-control.svg';

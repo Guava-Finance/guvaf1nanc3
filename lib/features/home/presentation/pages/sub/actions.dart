@@ -18,7 +18,7 @@ class _ActionTasksState extends ConsumerState<ActionTasks> {
   late final PageController controller;
 
   Timer? _autoScrollTimer;
-  final bool _isForward = true;
+  // final bool _isForward = true;
 
   @override
   initState() {

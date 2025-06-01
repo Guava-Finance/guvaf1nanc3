@@ -41,6 +41,8 @@ class RestoreAWalletMnemonicsUsecase extends UseCase<AppState, String> {
       if (!solanaService.isMnemonicValid(params)) {
         return ErrorState('Invalid mnemonic');
       }
+      await storageService.removeFromStorage(removeAll: true);
+      await configService.fetchConfig();
 
       final config = await configService.getConfig();
 

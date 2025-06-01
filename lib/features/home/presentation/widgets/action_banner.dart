@@ -61,11 +61,13 @@ class ActionBanners extends StatelessWidget {
                           5.verticalSpace,
                           Row(
                             children: [
-                              Text(
-                                subtitle,
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12.sp,
+                              Expanded(
+                                child: Text(
+                                  subtitle,
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
                               ),
                               3.horizontalSpace,

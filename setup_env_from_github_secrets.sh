@@ -23,5 +23,6 @@ echo "PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY" >> .env
 echo "PUB_NUB_SUBCRIBE_KEY=$PUB_NUB_SUBCRIBE_KEY" >> .env
 echo "APP_ID=$APP_ID" >> .env
 echo "AMPLITUDE_API_KEY=$AMPLITUDE_API_KEY" >> .env
+echo "SPL_TOKEN_URL=$SPL_TOKEN_URL" >> .env
 
 echo ".env file created successfully from GitHub Secrets!"

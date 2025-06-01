@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
@@ -32,6 +33,10 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
     usernameCtrl = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       ref.read(isUsernameAvailableProvider.notifier).state = null;
     });
 
@@ -65,6 +70,7 @@ class _SetUsernameState extends ConsumerState<SetUsername> with Loader {
           ),
           40.verticalSpace,
           CustomTextfield(
+            height: 0,
             hintText: '',
             controller: usernameCtrl,
             label: 'Username',

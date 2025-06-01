@@ -18,6 +18,9 @@ class Strings {
   static const String pinFailureCount = 'pin_failure_count';
   static const String pinFailureDate = 'pin_failure_date';
   static const String biometric = 'biometric_enabled';
+  static const String fcmToken = 'my_device_fcm_token';
+
+  static const String splTokenList = 'spl_token_list';
 
   // Showcase keys
   static const String homeShowcase = 'has_home_be_showcased';
@@ -56,6 +59,8 @@ class Strings {
   static const settingsPage = '/settings-page';
   static const privacyPolicyPage = '/privacy-policy-page';
   static const supportPage = '/support-oage';
+  static const authorizeTxn = '/authorize-txn-page';
+  static const guavaPayDisclaimer = '/guava-pay-disclaimer-page';
 
   // SolanaPay
   static const solanaPayReview = '/solana-pay-review-page';
@@ -66,4 +71,5 @@ class Strings {
   static const createUsername = 'UsernameCreation';
   static const backupPhrase = 'MnenomicsBackup';
   static const kycVerification = 'KYCVerification';
+  static const followUs = 'followUs';
 }

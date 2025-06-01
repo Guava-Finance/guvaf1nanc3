@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,10 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
-import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -40,6 +42,8 @@ class _BankTransferState extends ConsumerState<BankTransfer>
       amountCtrl,
       purposeCtrl;
 
+  Timer? timer;
+
   TabController? _tabController;
 
   @override
@@ -60,14 +64,32 @@ class _BankTransferState extends ConsumerState<BankTransfer>
       final country = ref.read(userCountry);
 
       if (!(country?.isOffRampEnabled ?? false)) {
-        ref.watch(activeTabState.notifier).state = 0;
-
-        context.pop();
-        context.notify.addNotification(
-          NotificationTile(
-            content: 'Bank Transfer is currently unavailable',
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: Text('Off-ramp Unavailable'),
+            content: Text(
+              '''Outbound bank transfers are currently unavailable. Please send using wallet address or username.''',
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: BrandColors.backgroundColor,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                  ref.watch(transferNotifierProvider).jumpTo(0);
+                },
+                child: Text('I Understand'),
+              ),
+            ],
           ),
-        );
+        ).then((v) {
+          timer = Timer(Durations.medium4, () {
+            ref.watch(transferNotifierProvider).jumpTo(0);
+          });
+        });
       }
     });
   }
@@ -88,6 +110,7 @@ class _BankTransferState extends ConsumerState<BankTransfer>
   @override
   void dispose() {
     _tabController!.dispose();
+    timer?.cancel();
 
     super.dispose();
   }
@@ -430,6 +453,13 @@ class _BankTransferState extends ConsumerState<BankTransfer>
                 builder: (_, data, child) {
                   return CustomButton(
                     onTap: () {
+                      navkey.currentContext!.mixpanel.track(
+                        MixpanelEvents.transferToBankInitiated,
+                      );
+                      navkey.currentContext!.mixpanel.timetrack(
+                        MixpanelEvents.transferToBankCompleted,
+                      );
+                      
                       context.push(pReviewPayemet);
                     },
                     title: 'Continue',

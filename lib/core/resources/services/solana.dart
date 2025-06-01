@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart';
@@ -11,6 +12,10 @@ import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:guava/core/resources/services/config.dart';
+import 'package:guava/core/resources/services/encrypt.dart';
+import 'package:guava/features/home/data/models/spl_token.dart';
+import 'package:guava/features/home/data/models/token_account.dart';
+import 'package:guava/features/onboarding/data/models/account.dart';
 import 'package:guava/features/transfer/data/models/params/solana_pay.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
@@ -30,6 +35,7 @@ final solanaServiceProvider = Provider<SolanaService>((ref) {
     storageService: ref.watch(securedStorageServiceProvider),
     networkInterceptor: ref.watch(networkInterceptorProvider),
     configService: ref.watch(configServiceProvider),
+    ref: ref,
   );
 });
 
@@ -39,12 +45,88 @@ final class SolanaService {
     required this.storageService,
     required this.networkInterceptor,
     required this.configService,
+    required this.ref,
   });
 
   final RpcClient rpcClient;
   final SecuredStorageService storageService;
   final NetworkInterceptor networkInterceptor;
   final ConfigService configService;
+  final Ref ref;
+
+  Future<TokenAccount> getSolBalanceAsTokenAccount() async {
+    final wallet = await _getWallet();
+
+    final lamports = await rpcClient.getBalance(wallet.address);
+    const solDecimals = 9;
+
+    final solToken = SplToken(
+      chainId: 101,
+      address: 'So11111111111111111111111111111111111111112',
+      symbol: 'SOL',
+      name: 'Solana',
+      decimals: solDecimals,
+      logoURI:
+          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
+      tags: ['native'],
+      extensions: {},
+    );
+
+    return TokenAccount(
+      mint: solToken.address,
+      owner: wallet.address,
+      amount: (lamports.value / pow(10, solDecimals)),
+      splToken: solToken,
+    );
+  }
+
+  Future<List<TokenAccount>> allAssets() async {
+    final wallet = await _getWallet();
+
+    final result = await rpcClient.getTokenAccountsByOwner(
+      wallet.address,
+      TokenAccountsFilter.byProgramId(
+        'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+      ),
+      encoding: Encoding.base64,
+    );
+
+    return result.value
+        .map((e) =>
+            _decodeTokenAccount((e.account.data?.toJson() as List).first))
+        .toList();
+  }
+
+  TokenAccount _decodeTokenAccount(String base64Data) {
+    final data = base64.decode(base64Data);
+
+    final mint = data.sublist(0, 32);
+    final owner = data.sublist(32, 64);
+    final amountBytes = data.sublist(64, 72);
+
+    final amount =
+        ByteData.sublistView(amountBytes).getUint64(0, Endian.little);
+
+    final mintStr = base58encode(mint);
+    final ownerStr = base58encode(owner);
+
+    final splToken = ref.read(splTokenAccounts)[mintStr];
+
+    double readableAmount = amount.toDouble();
+
+    if (splToken != null) {
+      readableAmount = amount / pow(10, splToken.decimals);
+    } else {
+      readableAmount = amount / lamportsPerSol;
+    }
+
+    return TokenAccount(
+      mint: mintStr,
+      owner: ownerStr,
+      amount: readableAmount,
+      splToken: splToken,
+    );
+  }
 
   /// Using [bip39] either 12 or 24 secret phrases is generated
   /// The secret phrase i.e. [mnemonics] would be kept
@@ -141,7 +223,7 @@ final class SolanaService {
     throw Exception('Oops! Nothing here');
   }
 
-  Future<bool> doesSPLTokenAccountExist(String tokenMintAddress) async {
+  Future<bool> doesSPLTokenAccountExist() async {
     try {
       // Get the associated token account address for this mint and owner
       final address = await _getTokenAddress();
@@ -209,6 +291,55 @@ final class SolanaService {
     return transactionId;
   }
 
+  Future<String?> checkAndEnableATAForWallet(String walletAddress,
+      [String? mintAddress]) async {
+    try {
+      final config = await configService.getConfig();
+      final wallet = await _getWallet();
+
+      // Use provided mint address or default to USDC mint
+      final tokenMint = Ed25519HDPublicKey.fromBase58(
+        mintAddress ?? config!.walletSettings.usdcMintAddress,
+      );
+
+      // Get the associated token account address for this mint and owner
+      final ataAddress = await findAssociatedTokenAddress(
+        owner: Ed25519HDPublicKey.fromBase58(walletAddress),
+        mint: tokenMint,
+      );
+
+      // Check if the token account exists
+      final accountInfo = await rpcClient.getAccountInfo(
+        ataAddress.toBase58(),
+        encoding: Encoding.jsonParsed,
+      );
+
+      // If account doesn't exist, create it
+      if (accountInfo.value == null) {
+        final instruction = AssociatedTokenAccountInstruction.createAccount(
+          funder: wallet.publicKey,
+          address: ataAddress,
+          owner: Ed25519HDPublicKey.fromBase58(walletAddress),
+          mint: tokenMint,
+        );
+
+        // Sign and send the transaction
+        final transactionId = await rpcClient.signAndSendTransaction(
+          Message.only(instruction),
+          [wallet],
+        );
+
+        return transactionId;
+      }
+
+      // If account exists, return null
+      return null;
+    } catch (e) {
+      AppLogger.log('Error in checkAndEnableATAForWallet: $e');
+      rethrow;
+    }
+  }
+
   /// The user's Sol balance is checked to know if it can cover the gas fee
   /// else the user would be pre-funded before proceed to send the transaction.
   /// The amount would be converted to [lamport] to unit of measurement for solana ///
@@ -237,9 +368,7 @@ final class SolanaService {
     final Ed25519HDPublicKey tokenAddress = await _getTokenAddress();
 
     final TokenAmountResult tokenBalance =
-        await rpcClient.getTokenAccountBalance(
-      tokenAddress.toBase58(),
-    );
+        await rpcClient.getTokenAccountBalance(tokenAddress.toBase58());
 
     return tokenBalance.value;
   }
@@ -304,15 +433,19 @@ final class SolanaService {
       );
     }
 
-    final MemoInstruction memoInstruction = MemoInstruction(
-      memo: narration ??
-          'Transfer of $amount USDC on ${DateTime.now().toIso8601String()}',
-      signers: <Ed25519HDPublicKey>[wallet.publicKey],
-    );
+    MemoInstruction? memoInstruction;
+
+    if (narration != null) {
+      memoInstruction = MemoInstruction(
+        memo: narration,
+        signers: <Ed25519HDPublicKey>[wallet.publicKey],
+      );
+    }
 
     final Message message = Message(
       instructions: [
-        memoInstruction,
+        await _getGuavaWatermark(),
+        if (narration != null) memoInstruction!,
         instruction,
         if (transactionFee != null) txnFeeInstruction,
       ],
@@ -332,6 +465,23 @@ final class SolanaService {
     return base58encode(signedTx.toByteArray().toList());
   }
 
+  Future<encoder.Instruction> _getGuavaWatermark() async {
+    final wallet = await _getWallet();
+    final myAccountData = await storageService.readFromStorage(
+      Strings.myAccount,
+    );
+
+    final myAccount = AccountModel.fromJson(jsonDecode(myAccountData!));
+    final crypt = ref.read(encryptionServiceProvider);
+
+    return MemoInstruction(
+      memo: crypt.encryptData(
+        '''Powered by Guava: ${myAccount.deviceInfo['loc']} ${myAccount.deviceInfo['identifierForVendor'] ?? ''}''',
+      ),
+      signers: <Ed25519HDPublicKey>[wallet.publicKey],
+    );
+  }
+
   bool isMnemonicValid(String mnemonic) {
     return validateMnemonic(mnemonic);
   }
@@ -346,6 +496,12 @@ final class SolanaService {
       // If an exception occurs, the address is invalid
       return false;
     }
+  }
+
+  Future<void> destroyMyWaller() async {
+    final wallet = await _getWallet();
+
+    return wallet.destroy();
   }
 
   Future<Ed25519HDKeyPair> _getWallet() async {
@@ -580,7 +736,7 @@ final class SolanaService {
       mint: tokenMintPubKey,
     );
 
-    if (!(await doesSPLTokenAccountExist(payUrl.splToken!))) {
+    if (!(await doesSPLTokenAccountExist())) {
       // In case the company doesn't have the SPLToken account
       // create it
       await enableUSDCForWallet(payUrl.splToken!);

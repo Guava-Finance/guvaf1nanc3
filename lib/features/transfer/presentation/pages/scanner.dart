@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/scanner_result.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -38,6 +40,10 @@ class _WalletScannerPageState extends ConsumerState<WalletScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Scan QR Code'),
@@ -80,12 +86,22 @@ class _WalletScannerPageState extends ConsumerState<WalletScannerPage> {
           ref.watch(solanaPayParam.notifier).state =
               scanData.code.parseSolanaPayUrl;
           navkey.currentContext!.push(pSolanaPayReview);
+
+          navkey.currentContext!.mixpanel.timetrack(
+            MixpanelEvents.sendViaSolanaPay,
+          );
+
           return;
         }
 
         if (scanData.code.parseWalletAddress != null) {
           // follows normal wallet transfer flow
           navkey.currentContext!.pop(scanData.code);
+
+          navkey.currentContext!.mixpanel.timetrack(
+            MixpanelEvents.sendViaWallet,
+          );
+
           return;
         }
 

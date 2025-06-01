@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/rate_rule.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -95,12 +96,18 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
         throw Exception('Recipient address not found');
       }
 
+      await solanaService.checkAndEnableATAForWallet(
+        params.recipientAddress!,
+        config.walletSettings.usdcMintAddress,
+      );
+
       final signedTx = await solanaService.transferUSDC(
         amount: usdcAmount,
         receiverAddress: params.recipientAddress!,
         transactionFee: txFee,
-        narration: 'Transfer of USDC ${DateTime.now().toIso8601String()}',
       );
+
+      AppLogger.log(signedTx);
 
       final newParam = params.copyWith(
         amount: usdcAmount.toString(),
@@ -123,6 +130,7 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
       }
 
       return result;
+      // return ErrorState('');
     } catch (e) {
       return ErrorState(e.toString());
     }

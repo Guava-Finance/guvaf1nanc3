@@ -5,6 +5,7 @@ import 'package:guava/core/resources/util/navigator_observer.dart';
 import 'package:guava/core/routes/cache.dart';
 import 'package:guava/core/routes/features/account.dart';
 import 'package:guava/core/routes/features/dashboard.dart';
+import 'package:guava/core/routes/features/guava_pay.dart';
 import 'package:guava/core/routes/features/kyc.dart';
 import 'package:guava/core/routes/features/onboarding.dart';
 import 'package:guava/core/routes/features/payment.dart';
@@ -44,11 +45,15 @@ const String pMnenomicBackupComplete = Strings.mnenomicBackupComplete;
 const String pProfile = Strings.profilePage;
 const String pSettings = Strings.settingsPage;
 const String pPrivacyPolicy = Strings.privacyPolicyPage;
+const String pAuthorizeTxn = Strings.authorizeTxn;
 const String pSupport = Strings.supportPage;
 
 // Solana Pay
 const String pSolanaPayReview = Strings.solanaPayReview;
 const String pSolanaPayStatus = Strings.solanaPayStatus;
+
+// Guava Pay
+const String pGuavaPayDisclaimer = Strings.guavaPayDisclaimer;
 
 /// GlobalKey for the Navigator state of the [AppName]
 final GlobalKey<NavigatorState> navkey = GlobalKey();
@@ -74,6 +79,7 @@ final router = GoRouter(
     ...transactionRoutes,
     ...kycRoutes,
     ...solanaPayRoutes,
+    ...guavaPayRoutes,
   ],
   redirect: (context, state) {
     // Check if this route exists in cache

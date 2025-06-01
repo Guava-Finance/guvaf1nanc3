@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -29,6 +31,10 @@ class _MnemonicBackupValidationPageState
     super.initState();
     // Clear any previously selected words
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       ref.read(selectedWordsProvider.notifier).state = {};
     });
   }
@@ -232,6 +238,10 @@ class _MnemonicBackupValidationPageState
               content: 'Backup Verification success...',
               notificationType: NotificationType.success,
             ),
+          );
+
+          navkey.currentContext!.mixpanel.track(
+            MixpanelEvents.seedPhraseBackedUp,
           );
 
           ref.invalidate(pendingActions);

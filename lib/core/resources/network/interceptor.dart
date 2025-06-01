@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/encrypt.dart';
 import 'package:guava/core/resources/env/env.dart';
+import 'package:guava/core/resources/services/pubnub.dart';
 
 final dioProvider = Provider<Dio>(
   (context) => Dio(
@@ -18,6 +19,7 @@ final dioProvider = Provider<Dio>(
 final networkInterceptorProvider = Provider<NetworkInterceptor>(
   (ref) => NetworkInterceptor(
     dio: ref.read(dioProvider),
+    ref: ref,
   ),
 );
 
@@ -30,6 +32,7 @@ class NetworkInterceptor {
 
   NetworkInterceptor({
     required this.dio,
+    required this.ref,
   }) {
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -46,6 +49,7 @@ class NetworkInterceptor {
   }
 
   final Dio dio;
+  final Ref ref;
 
   String token = '';
 
@@ -55,6 +59,8 @@ class NetworkInterceptor {
     RequestOptions options,
     RequestInterceptorHandler requestInterceptorHandler,
   ) async {
+    await setToken(options);
+
     metric = performance.newHttpMetric(
       '${options.baseUrl}/${options.path}',
       whatHttpMethod(options.method),
@@ -69,7 +75,6 @@ class NetworkInterceptor {
     responsesTime[options.path] = DateTime.now();
     Map<String, dynamic> logData = {};
 
-    await setToken(options);
     logData['UNENCRYPTED_REQUEST_DATA'] = options.data;
 
     // Encrypt request data if it exists
@@ -274,10 +279,17 @@ class NetworkInterceptor {
     return response.data;
   }
 
-  setToken(RequestOptions options) {
+  setToken(RequestOptions options) async {
+    String wallet = '';
+
+    try {
+      wallet = await ref.read(walletAddressProvider.future);
+    } catch (_) {}
+
     options.headers = {
       'Content-Type': 'application/json',
       'X-App-ID': Env.appId,
+      if (wallet.isNotEmpty) 'X-Wallet-Public-Key': wallet,
       ...options.headers,
     };
   }

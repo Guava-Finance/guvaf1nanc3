@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
@@ -28,6 +30,23 @@ class ShowMnenomicsPage extends ConsumerStatefulWidget {
 }
 
 class _ShowMnenomicsPageState extends ConsumerState<ShowMnenomicsPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
+      if (!widget.isBackUp) {
+        navkey.currentContext!.mixpanel.track(
+          MixpanelEvents.seedPhraseViewed,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,7 +182,6 @@ class _ShowMnenomicsPageState extends ConsumerState<ShowMnenomicsPage> {
               children: [
                 CustomButton(
                   onTap: () {
-                    // Store required indices for validation in a provider before navigation
                     final mnemonic = ref.read(myMnenomics).valueOrNull;
                     if (mnemonic != null) {
                       final phraseLength = mnemonic.split(' ').length;
@@ -171,12 +189,10 @@ class _ShowMnenomicsPageState extends ConsumerState<ShowMnenomicsPage> {
                           ? 8
                           : 4; // 8 words for 24-word phrase, 4 for 12-word
 
-                      // Generate random indices to validate (1-based indices for user display)
                       final indices = ref
                           .read(accountNotifierProvider)
                           .generateRandomIndices(phraseLength, requiredCount);
 
-                      // Save these indices to a provider for the validation page
                       ref.read(validationIndicesProvider.notifier).state =
                           indices;
 

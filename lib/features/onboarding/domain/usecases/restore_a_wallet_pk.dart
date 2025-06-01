@@ -39,6 +39,9 @@ class RestoreAWalletPKUsecase extends UseCase<AppState, String> {
   @override
   Future<AppState> call({required String params}) async {
     try {
+      await storageService.removeFromStorage(removeAll: true);
+      await configService.fetchConfig();
+
       final config = await configService.getConfig();
 
       if (config == null) {

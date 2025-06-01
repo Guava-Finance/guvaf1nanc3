@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
@@ -9,6 +11,7 @@ import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/home/presentation/pages/sub/actions.dart';
 import 'package:guava/features/home/presentation/pages/sub/category.dart';
 import 'package:guava/features/home/presentation/pages/sub/home.wallet.dart';
+import 'package:guava/features/home/presentation/pages/sub/other_assets.dart';
 import 'package:guava/features/home/presentation/pages/sub/pay_anyone.dart';
 import 'package:guava/features/home/presentation/pages/sub/quick_menu.dart';
 import 'package:guava/features/home/presentation/pages/sub/txn_session.dart';
@@ -33,6 +36,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       debouncer.run(() async {
         if (mounted) {
           if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
@@ -56,6 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final hn = ref.watch(homeNotifierProvider);
+
     return ShowCaseWidget(
       onStart: (p0, p1) {},
       onComplete: (p0, p1) {},
@@ -73,6 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
             allTransactionsButtonWidgetKey,
             transactionSessionWidgetKey,
+            otherAssetsWidgetKey,
           ]);
         }
 
@@ -94,6 +103,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.invalidate(balanceUsecaseProvider);
               ref.invalidate(walletAddressProvider);
               ref.invalidate(myTransactionHistory);
+              ref.invalidate(allAssetBalance);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,11 +133,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                         CategorySession(),
                         24.verticalSpace,
                         TransactionHistorySession(),
+                        24.verticalSpace,
+                        OtherAssets(),
                         50.verticalSpace,
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

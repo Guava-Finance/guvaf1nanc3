@@ -62,4 +62,11 @@ class HomeRepositoryImpl implements HomeRepository {
       return await remoteDataSource.history(wallet);
     });
   }
+
+  @override
+  Future<AppState> setupFCM(String token) async {
+    return await wrapper.format(() async {
+      return await remoteDataSource.setupFCM(token);
+    });
+  }
 }

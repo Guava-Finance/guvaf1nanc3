@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
-import 'package:guava/core/resources/notification/wrapper/blur.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/auth.dart';
+import 'package:guava/core/resources/util/dialog.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/account/presentation/notifier/account.notifier.dart';
@@ -37,15 +37,16 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
     pinCtrl = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       final auth = ref.read(biometricProvider);
 
       if (await auth.isAppBiometricEnabled()) {
         final result = await auth.authenticate();
 
         if (result) {
-          AppLogger.log(ref.read(appStateProvider));
-          AppLogger.log(ref.read(appLastActiveProvider));
-
           navkey.currentContext!.pop(result);
         } else {
           navkey.currentContext!.notify.addNotification(
@@ -70,60 +71,25 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
 
   // Show a warning dialog when attempts are low
   void _showWarningDialog(int attemptsRemaining) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text('Warning'),
-        content: Text(
-          '''Incorrect PIN. You have $attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} '''
-          '''remaining before all wallet data is wiped from this device.''',
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: BrandColors.backgroundColor,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('I Understand'),
-          ),
-        ],
-      ),
-    );
+    ref.read(customDialogProvider).openDialog(
+          title: 'Warning',
+          content:
+              '''Incorrect PIN. You have $attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} '''
+              '''remaining before all wallet data is wiped from this device.''',
+          action: 'I Understand',
+        );
   }
-
-  bool isOkayClicked = false;
 
   // Show a wiped data dialog
   void _showWipedDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text('Security Alert'),
-        content: Text(
-          '''Maximum PIN attempts exceeded. All wallet data has been wiped from this device for security reasons.''',
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: BrandColors.backgroundColor,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              isOkayClicked = true;
-
-              context.pop();
-              navkey.currentContext!.go(pOnboarding);
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    ).then((v) {
-      if (!isOkayClicked) {
-        navkey.currentContext!.go(pOnboarding);
-      }
-    });
+    ref.read(customDialogProvider).openDialog(
+          title: 'Security Alert',
+          content:
+              '''Maximum PIN attempts exceeded. All wallet data has been wiped from this device for security reasons.''',
+          onTap: () {
+            navkey.currentContext!.go(pOnboarding);
+          },
+        );
   }
 
   @override
@@ -133,10 +99,12 @@ class _AppPinValidationState extends ConsumerState<AppPinValidation> {
       child: Scaffold(
         appBar: AppBar(
           leading: widget.isPhoneLock ? 0.verticalSpace : null,
-          title: PageIndicator(
-            totalPages: 4,
-            currentPage: 1,
-          ),
+          title: widget.isPhoneLock
+              ? 0.verticalSpace
+              : PageIndicator(
+                  totalPages: 4,
+                  currentPage: 1,
+                ),
         ),
         body: Column(children: [
           24.verticalSpace,

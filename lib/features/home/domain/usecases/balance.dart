@@ -12,6 +12,7 @@ import 'package:guava/core/resources/services/storage.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/usecase/usecase.dart';
 import 'package:guava/features/home/data/models/balance.param.dart';
+import 'package:guava/features/home/data/models/token_account.dart';
 import 'package:guava/features/home/data/repositories/repo.dart';
 import 'package:guava/features/home/domain/repositories/repo.dart';
 import 'package:guava/features/onboarding/data/models/account.dart';
@@ -19,12 +20,7 @@ import 'package:guava/features/onboarding/domain/entities/config/country.entity.
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final balanceUsecaseProvider = FutureProvider<BalanceParam>((ref) async {
-  final balUsecase = BalanceUsecase(
-    repository: ref.watch(homeRepositoryProvider),
-    solanaService: ref.watch(solanaServiceProvider),
-    storageService: ref.watch(securedStorageServiceProvider),
-    configService: ref.watch(configServiceProvider),
-  );
+  final balUsecase = ref.watch(balanceUsecaseProvidr);
 
   try {
     final result = await balUsecase.call(params: null);
@@ -43,6 +39,18 @@ final balanceUsecaseProvider = FutureProvider<BalanceParam>((ref) async {
   }
 });
 
+final allAssetBalance = FutureProvider<List<TokenAccount>>((ref) async {
+  final solana = ref.watch(solanaServiceProvider);
+  final config = await ref.watch(configServiceProvider).getConfig();
+
+  final solBalance = await solana.getSolBalanceAsTokenAccount();
+  final tokens = await solana.allAssets();
+
+  tokens.removeWhere((e) => e.mint == config?.walletSettings.usdcMintAddress);
+
+  return [solBalance, ...tokens];
+});
+
 final cachedBalanceProivder =
     FutureProvider<Map<String, dynamic>?>((ref) async {
   final data = await ref
@@ -52,6 +60,15 @@ final cachedBalanceProivder =
   if (data != null) return jsonDecode(data);
 
   return null;
+});
+
+final balanceUsecaseProvidr = Provider<BalanceUsecase>((ref) {
+  return BalanceUsecase(
+    repository: ref.watch(homeRepositoryProvider),
+    solanaService: ref.watch(solanaServiceProvider),
+    storageService: ref.watch(securedStorageServiceProvider),
+    configService: ref.watch(configServiceProvider),
+  );
 });
 
 class BalanceUsecase extends UseCase<AppState, Null> {

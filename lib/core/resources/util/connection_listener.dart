@@ -39,8 +39,6 @@ class ConnectivityNotifier extends StateNotifier<bool> {
   }
 
   void _handleStatusChange(List<ConnectivityResult> results) {
-    AppLogger.log(results.first.name);
-
     for (var result in results) {
       final hasConnection = result != ConnectivityResult.none;
       final wasDisconnected = state == false;
@@ -48,7 +46,6 @@ class ConnectivityNotifier extends StateNotifier<bool> {
       state = hasConnection;
 
       if (hasConnection && wasDisconnected) {
-        AppLogger.log('reconnecting');
         // Homepage
         ref.invalidate(balanceUsecaseProvider);
         ref.invalidate(myTransactionHistory);

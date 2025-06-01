@@ -6,4 +6,5 @@ abstract class HomeRepository {
   Future<AppState> checkUsername(String username);
   Future<AppState> setUsername(String wallet, String username);
   Future<AppState> histroy(String wallet);
+  Future<AppState> setupFCM(String token);
 }

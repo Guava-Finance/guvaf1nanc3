@@ -1,4 +1,3 @@
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/features/onboarding/data/models/config/rates.model.dart';
 import 'package:guava/features/onboarding/domain/entities/config/country.entity.dart';
 import 'package:guava/features/onboarding/domain/entities/config/rate.entity.dart';
@@ -23,8 +22,6 @@ class CountryModel extends CountryEntity {
   });
 
   factory CountryModel.fromJson(Map<String, dynamic> json) {
-    AppLogger.log(json);
-
     return CountryModel(
       name: json['name'],
       countryCode: json['country_code'],

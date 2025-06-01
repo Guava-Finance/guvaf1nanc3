@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/mixpanel/const.dart';
-import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/features/dashboard/presentation/widgets/survey/tile.dart';
@@ -19,7 +17,7 @@ class GuavafiSurvey extends ConsumerStatefulWidget {
 class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
   @override
   Widget build(BuildContext context) {
-    final mixpanel = ref.read(mixpanelProvider);
+    // final mixpanel = ref.read(mixpanelProvider);
 
     // todo: implement global text style once available
     return Scaffold(
@@ -49,13 +47,13 @@ class _GuavafiSurveyState extends ConsumerState<GuavafiSurvey> {
                   isActive: true,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    mixpanel.track(
-                      MixPanelKeys.featureSurvey,
-                      properties: {
-                        'feature': 'spend_n_save',
-                        'country': '',
-                      },
-                    );
+                    // mixpanel.track(
+                    //   MixPanelKeys.featureSurvey,
+                    //   properties: {
+                    //     'feature': 'spend_n_save',
+                    //     'country': '',
+                    //   },
+                    // );
                   },
                 ),
                 SurveyTile(

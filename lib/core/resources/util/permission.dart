@@ -1,6 +1,7 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/util/dialog.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -55,13 +56,41 @@ class PermissionManager {
     // If granted, return true immediately
     if (status.isGranted) return true;
 
-    // If denied in any form and settingsType provided, open settings
-    if (settingsType != null) {
-      await AppSettings.openAppSettings(type: settingsType);
-    }
+    ProviderScope.containerOf(
+      navkey.currentContext!,
+      listen: false,
+    ).read(customDialogProvider).openDialog(
+          title: 'Permission required',
+          content:
+              '''Please grant ${permissionName(permission)} permission to Guava''',
+          action: 'Open Settings',
+          onTap: () async {
+            // If denied in any form and settingsType provided, open settings
+            if (settingsType != null) {
+              Future.delayed(Durations.medium2, () async {
+                await AppSettings.openAppSettings(type: settingsType);
+              });
+            }
+          },
+        );
 
     // Return false for any denial state
     return false;
+  }
+
+  String permissionName(Permission permission) {
+    switch (permission) {
+      case Permission.camera:
+        return 'Camera';
+      case Permission.photos:
+        return 'Photos';
+      case Permission.notification:
+        return 'Notification';
+      case Permission.mediaLibrary:
+        return 'MediaLibrary';
+      default:
+        return 'App Permission';
+    }
   }
 
   /// Request both camera and notification permissions
@@ -85,7 +114,7 @@ class PermissionManager {
   Future<bool> hasNotificationPermission() async {
     return await isPermissionGranted(Permission.notification);
   }
-  
+
   /// Show permission request dialog with rationale
   Future<PermissionStatus> requestPermissionWithRationale({
     required Permission permission,

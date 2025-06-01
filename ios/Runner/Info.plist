@@ -40,6 +40,8 @@
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array/>
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

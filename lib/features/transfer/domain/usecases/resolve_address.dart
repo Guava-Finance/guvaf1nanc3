@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/state.dart';
@@ -12,6 +13,8 @@ import 'package:guava/features/transfer/domain/repositories/repo.dart';
 final receipentAddressProvider = StateProvider<String?>((ref) {
   return null;
 });
+
+final isUsingUsername = StateProvider<bool>((ref) => false);
 
 final resolveAddressUsecaseProvider = Provider<ResolveAddressUsecase>((ref) {
   return ResolveAddressUsecase(
@@ -37,6 +40,12 @@ class ResolveAddressUsecase extends UseCase<AppState, String> {
     if (solanaService.isValidAddress(params)) {
       ref.read(receipentAddressProvider.notifier).state = params;
 
+      ref.watch(isUsingUsername.notifier).state = false;
+
+      navkey.currentContext!.mixpanel.timetrack(
+        MixpanelEvents.sendViaWallet,
+      );
+
       return LoadedState(params);
     } else {
       final result =
@@ -55,6 +64,12 @@ class ResolveAddressUsecase extends UseCase<AppState, String> {
       } else {
         ref.read(receipentAddressProvider.notifier).state =
             (result as LoadedState).data['data']['wallet_address'];
+
+        ref.watch(isUsingUsername.notifier).state = true;
+
+        navkey.currentContext!.mixpanel.timetrack(
+          MixpanelEvents.sendViaUsername,
+        );
       }
 
       return result;

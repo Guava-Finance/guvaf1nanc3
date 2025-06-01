@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
@@ -28,6 +30,10 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
   @override
   void initState() {
     super.initState();
+
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
   }
 
   @override
@@ -108,7 +114,8 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
     final mng = ref.read(permissionManagerProvider);
 
     if (await mng.verifyPermission(Permission.camera, AppSettingsType.camera)) {
-      if (await mng.verifyPermission(Permission.photos)) {
+      if (await mng.verifyPermission(
+          Permission.photos, AppSettingsType.settings)) {
         final wallet = await ref.read(walletAddressProvider.future);
         ref.read(livelinessServiceProvider).initKyc(
               walletAddress: wallet,
@@ -121,6 +128,8 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
                   ),
                 );
 
+                context.mixpanel.track(MixpanelEvents.kycSubmitted);
+
                 context.go(pKycDone);
               },
               onError: (p0) {
@@ -131,6 +140,8 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
                     content: p0.toString(),
                   ),
                 );
+
+                context.mixpanel.track(MixpanelEvents.kycError);
               },
               onClose: (p0) {
                 navkey.currentContext!.notify.addNotification(
@@ -140,6 +151,8 @@ class _KycPageState extends ConsumerState<KycPage> with Loader {
                     content: p0.toString(),
                   ),
                 );
+
+                context.mixpanel.track(MixpanelEvents.kycClosed);
               },
             );
       }

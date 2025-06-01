@@ -36,6 +36,9 @@ class CreateAWalletUsecase extends UseCase<AppState, Null> {
 
   @override
   Future<AppState> call({Null params}) async {
+    await storageService.removeFromStorage(removeAll: true);
+    await configService.fetchConfig();
+
     final config = await configService.getConfig();
 
     if (config == null) {

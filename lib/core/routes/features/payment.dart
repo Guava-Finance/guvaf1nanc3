@@ -4,6 +4,7 @@ import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/features/receive/presentation/pages/account_payable.dart';
 import 'package:guava/features/receive/presentation/pages/amount/enter_amount.dart';
 import 'package:guava/features/receive/presentation/pages/recieve_page.dart';
+import 'package:guava/features/transfer/presentation/pages/authorize.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_bank.dart';
 import 'package:guava/features/transfer/presentation/pages/enter_amount/enter_amount_wallet.dart';
 import 'package:guava/features/transfer/presentation/pages/payment_status_page.dart';
@@ -69,5 +70,10 @@ final List<RouteBase> paymentRoutes = [
     name: Strings.accountPayable.pathToName,
     path: Strings.accountPayable,
     builder: (context, state) => const AccountPayablePage(),
+  ),
+  GoRoute(
+    name: Strings.authorizeTxn.pathToName,
+    path: Strings.authorizeTxn,
+    builder: (context, state) => const AuthorizeTransaction(),
   ),
 ];

@@ -48,6 +48,10 @@ class SecuredStorageService {
     return null;
   }
 
+  Future<String?> readFromStorageUndecrypted(String key) async {
+    return await secureStorage.read(key: key);
+  }
+
   Future<bool> doesExistInStorage(String key) async {
     return await secureStorage.containsKey(key: key);
   }

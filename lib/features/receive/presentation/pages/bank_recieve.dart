@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
-import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';
@@ -42,21 +44,47 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
     });
 
     super.initState();
+  }
+
+  Timer? timer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(usdcAountTransfer.notifier).state = 0.0;
-
       ref.watch(accountDetail.notifier).state = null;
 
-      final country = ref.read(userCountry);
+      final country = ref.watch(userCountry);
 
       if (!(country?.isOffRampEnabled ?? false)) {
-        context.pop();
-        context.notify.addNotification(
-          NotificationTile(
-            content: 'Bank Transfer is currently unavailable',
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: Text('On-ramp Unavailable'),
+            content: Text(
+              '''Bank transfer deposits are currently unavailable. Please use your wallet address to make a deposit.''',
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: BrandColors.backgroundColor,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                  ref.watch(recieveNotifierProvider).jumpTo(0);
+                },
+                child: Text('I Understand'),
+              ),
+            ],
           ),
-        );
+        ).then((v) {
+          timer = Timer(Durations.medium4, () {
+            ref.watch(recieveNotifierProvider).jumpTo(0);
+          });
+        });
       }
     });
   }
@@ -65,6 +93,7 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
   void dispose() {
     amountCtrl.dispose();
     receiveCtrl.dispose();
+    timer?.cancel();
 
     super.dispose();
   }
@@ -354,6 +383,13 @@ class _BankRecieveState extends ConsumerState<BankRecieve> with Loader {
                   final result = await rn.initDeposit();
 
                   if (result) {
+                    navkey.currentContext!.mixpanel.track(
+                      MixpanelEvents.depositInitiated,
+                    );
+                    navkey.currentContext!.mixpanel.timetrack(
+                      MixpanelEvents.depositCompleted,
+                    );
+
                     navkey.currentContext!.push(pAccountPayable);
                   }
                 });

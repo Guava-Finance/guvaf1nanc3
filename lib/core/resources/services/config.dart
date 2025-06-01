@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
+import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
 import 'package:guava/core/resources/network/state.dart';
 import 'package:guava/core/resources/network/wrapper.dart';
 import 'package:guava/core/resources/services/storage.dart';
+import 'package:guava/features/home/data/models/spl_token.dart';
 import 'package:guava/features/onboarding/data/models/account.dart';
 import 'package:guava/features/onboarding/data/models/config/config.model.dart';
 import 'package:guava/features/onboarding/domain/entities/config/config.entity.dart';
@@ -26,6 +29,10 @@ final userCountry = StateProvider<CountryEntity?>((ref) {
   return null;
 });
 
+final splTokenAccounts = StateProvider<Map<String, SplToken>>((ref) => {});
+
+final appConfig = StateProvider<AppConfig?>((ref) => null);
+
 class ConfigService {
   ConfigService({
     required this.network,
@@ -42,11 +49,15 @@ class ConfigService {
   Future<void> fetchConfig() async {
     final config = await getConfig();
 
+    ref.watch(appConfig.notifier).state = config;
+
     if (config != null) {
       unawaited(_remoteConfigFetch());
     } else {
       await _remoteConfigFetch();
     }
+
+    unawaited(splTokenFetch());
   }
 
   Future<void> _remoteConfigFetch() async {
@@ -100,5 +111,43 @@ class ConfigService {
     }
 
     return config.countries.first;
+  }
+
+  Future<void> _getNetworkSplTokens() async {
+    try {
+      final res = await Dio().get(Env.splTokenUrl);
+      if (res.statusCode == 200) {
+        final data = res.data;
+        await storageService.writeToStorage(
+          key: Strings.splTokenList,
+          value: data,
+        );
+        final tokens = SplToken.toList(jsonDecode(data)['tokens']);
+        final tokenMap = {for (var t in tokens) t.address: t};
+        ref.read(splTokenAccounts.notifier).state = tokenMap;
+        return;
+      }
+    } catch (_) {}
+
+    final fallback = await storageService.readFromStorage(Strings.splTokenList);
+    if (fallback != null) {
+      final tokens = SplToken.toList(jsonDecode(fallback)['tokens']);
+      final tokenMap = {for (var t in tokens) t.address: t};
+      ref.read(splTokenAccounts.notifier).state = tokenMap;
+    }
+  }
+
+  Future<void> splTokenFetch() async {
+    final cachedData =
+        await storageService.readFromStorage(Strings.splTokenList);
+
+    if (cachedData != null) {
+      final tokens = SplToken.toList(jsonDecode(cachedData)['tokens']);
+      final tokenMap = {for (var t in tokens) t.address: t};
+      ref.read(splTokenAccounts.notifier).state = tokenMap;
+      unawaited(_getNetworkSplTokens());
+    } else {
+      await _getNetworkSplTokens();
+    }
   }
 }
