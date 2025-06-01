@@ -54,27 +54,21 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                 return CustomButton(
                   title: 'Complete Transfer',
                   onTap: () async {
-                    context.push(pAuthorizeTxn).then((v) async {
-                      if (v != null) {
-                        if ((v as bool)) {
-                          await withLoading(() async {
-                            late bool result;
+                    await withLoading(() async {
+                      late bool result;
 
-                            if (activeState == 0 && !widget.fromPayAnyone) {
-                              result = await ref
-                                  .read(transferNotifierProvider)
-                                  .makeWalletTransfer();
-                            } else {
-                              result = await ref
-                                  .read(transferNotifierProvider)
-                                  .makeABankTransfer();
-                            }
+                      if (activeState == 0 && !widget.fromPayAnyone) {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeWalletTransfer();
+                      } else {
+                        result = await ref
+                            .read(transferNotifierProvider)
+                            .makeABankTransfer();
+                      }
 
-                            if (result) {
-                              navkey.currentContext!.go(pPaymentStatus);
-                            }
-                          });
-                        }
+                      if (result) {
+                        navkey.currentContext!.go(pPaymentStatus);
                       }
                     });
                   },

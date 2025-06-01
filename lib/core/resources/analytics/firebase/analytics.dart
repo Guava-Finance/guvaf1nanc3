@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final firebaseAnalyticsProvider = Provider<MyFirebaseAnalytics>((ref) {

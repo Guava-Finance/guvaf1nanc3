@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/firebase/analytics.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
+import 'package:guava/core/resources/services/wallet_connection.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
@@ -11,7 +10,6 @@ import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
 import 'package:guava/features/home/presentation/pages/sub/actions.dart';
 import 'package:guava/features/home/presentation/pages/sub/category.dart';
 import 'package:guava/features/home/presentation/pages/sub/home.wallet.dart';
-import 'package:guava/features/home/presentation/pages/sub/other_assets.dart';
 import 'package:guava/features/home/presentation/pages/sub/pay_anyone.dart';
 import 'package:guava/features/home/presentation/pages/sub/quick_menu.dart';
 import 'package:guava/features/home/presentation/pages/sub/txn_session.dart';
@@ -36,25 +34,31 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(firebaseAnalyticsProvider)
-          .triggerScreenLogged(runtimeType.toString());
+      final connectionStatus = ref.watch(walletConnectionProvider);
+      final error = ref.watch(walletConnectionErrorProvider);
 
-      debouncer.run(() async {
-        if (mounted) {
-          if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
-            ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
-              balanceWidgetKey,
-              walletDetailWidgetKey,
-              avatarWidgetKey,
-              scannerWidgetKey,
-              payAnyoneWidgetKey,
-              transferWidgetKey,
-              receiveWidgetKey,
-            ]);
-          }
-        }
+      Future.delayed(Duration(seconds: 5), () {
+        ref.read(walletConnectionProvider.notifier).connect();
       });
+      //   ref
+      //       .read(firebaseAnalyticsProvider)
+      //       .triggerScreenLogged(runtimeType.toString());
+
+      //   debouncer.run(() async {
+      //     if (mounted) {
+      //       if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
+      //         ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
+      //           balanceWidgetKey,
+      //           walletDetailWidgetKey,
+      //           avatarWidgetKey,
+      //           scannerWidgetKey,
+      //           payAnyoneWidgetKey,
+      //           transferWidgetKey,
+      //           receiveWidgetKey,
+      //         ]);
+      //       }
+      //     }
+      //   });
     });
   }
 
@@ -103,7 +107,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.invalidate(balanceUsecaseProvider);
               ref.invalidate(walletAddressProvider);
               ref.invalidate(myTransactionHistory);
-              ref.invalidate(allAssetBalance);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,8 +136,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         CategorySession(),
                         24.verticalSpace,
                         TransactionHistorySession(),
-                        24.verticalSpace,
-                        OtherAssets(),
                         50.verticalSpace,
                       ],
                     ),

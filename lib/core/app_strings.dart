@@ -28,13 +28,7 @@ class Strings {
 
   //Pages
   static const root = '/';
-  static const onboarding = '/onboarding';
   static const dashboard = '/dashboard';
-  static const setupPin = '/setup-pin';
-  static const addConnectWallet = '/add-connect-wallet';
-  static const importRecoveryPhrase = '/import-recovery-phrase';
-  static const importPrivateKey = '/import-private-key';
-  static const fullscreenLoader = '/fullscreen-loader';
   static const transfer = '/transfer';
   static const recieve = '/recieve';
   static const enterAmountWallet = '/enterAmountWallet';
@@ -45,7 +39,6 @@ class Strings {
   static const transaction = '/transaction';
   static const transactionDetail = '/transactionDetail';
   static const transactionFilter = '/transactionFilter';
-  static const setUsername = '/set-username';
   static const kycPage = '/kyc-page';
   static const kycDonePage = '/kyc-done-page';
   static const scannerPage = '/wallet-scanner-page';
@@ -59,7 +52,6 @@ class Strings {
   static const settingsPage = '/settings-page';
   static const privacyPolicyPage = '/privacy-policy-page';
   static const supportPage = '/support-oage';
-  static const authorizeTxn = '/authorize-txn-page';
   static const guavaPayDisclaimer = '/guava-pay-disclaimer-page';
 
   // SolanaPay

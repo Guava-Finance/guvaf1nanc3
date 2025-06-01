@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
@@ -55,8 +57,14 @@ class QuickMenu extends StatelessWidget {
               icon: R.ASSETS_ICONS_RECIEVE_ICON_SVG,
               color: BrandColors.washedGreen,
               onTap: () {
-                context.push(pRecieve);
-                HapticFeedback.lightImpact();
+                // context.push(pRecieve);
+                // HapticFeedback.lightImpact();
+
+                context.notify.addNotification(
+                  NotificationTile(
+                    content: 'On-ramp is currently unavailable',
+                  ),
+                );
               },
             ),
           ),

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
@@ -21,7 +20,6 @@ import 'package:guava/features/home/domain/entities/transaction_history.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/check_username.dart';
 import 'package:guava/features/home/domain/usecases/set_username.dart';
-import 'package:guava/features/home/domain/usecases/setup_fcm.dart';
 import 'package:guava/features/home/presentation/widgets/action_banner.dart';
 import 'package:guava/features/onboarding/data/models/account.dart';
 import 'package:intl/intl.dart';
@@ -68,6 +66,14 @@ final currentAction = StateProvider<int>((ref) {
 final pendingActions = FutureProvider<List<Widget>>((ref) async {
   List<Widget> widgets = [];
 
+  widgets.add(ActionBanners(
+    title: 'Connect your wallet',
+    subtitle: 'Unlock full functionality',
+    icon: R.ASSETS_ICONS_WALLET_CONNECT_ICON_SVG,
+    bannerKey: Strings.connectWallet,
+    onTap: () {},
+  ));
+
   final storage = ref.read(securedStorageServiceProvider);
 
   // check if kyc is done
@@ -88,50 +94,6 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
       ));
     }
   }
-
-  // check whether username is created
-  final username = await storage.readFromStorage(Strings.myUsername);
-
-  if (username == null) {
-    widgets.add(ActionBanners(
-      title: 'Create your @username',
-      subtitle: 'A unique identity for your wallet',
-      bannerKey: Strings.createUsername,
-      icon: R.ASSETS_ICONS_USERNAME_ICON_SVG,
-      onTap: () {
-        navkey.currentContext!.push(pSetUsername);
-        HapticFeedback.lightImpact();
-      },
-    ));
-  }
-
-  // check whether seed phrase is backed up
-  final backup = await storage.readFromStorage(Strings.mnenomicBackupComplete);
-
-  if (backup == null) {
-    widgets.add(ActionBanners(
-      title: 'Back up your 12/24 Key-phrase!',
-      subtitle: 'Learn more',
-      bannerKey: Strings.backupPhrase,
-      icon: R.ASSETS_ICONS_SECURITY_LOCK_SVG,
-      onTap: () {
-        // true: means backup seed phrase
-        // false: means just see seed phrase
-        navkey.currentContext!.push(pMnenomicInstruction, extra: true);
-        HapticFeedback.lightImpact();
-      },
-    ));
-  }
-
-  // check for cloud backup
-  // todo: cloud backup check
-  widgets.add(ActionBanners(
-    title: 'Connect your wallet',
-    subtitle: 'Unlock full functionality',
-    icon: R.ASSETS_ICONS_WALLET_CONNECT_ICON_SVG,
-    bannerKey: Strings.connectWallet,
-    onTap: () {},
-  ));
 
   widgets.add(ActionBanners(
     title: 'Join the conversation',
@@ -154,8 +116,6 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   @override
   HomeNotifier build() {
     scrollController = ScrollController();
-
-    setupFcm();
 
     return this;
   }
@@ -296,15 +256,6 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
       return 'Evening';
     } else {
       return 'Night';
-    }
-  }
-
-  Future<void> setupFcm() async {
-    final result =
-        await ref.read(setupFcmTokenUsecasesProvider).call(params: null);
-
-    if (result.isError) {
-      AppLogger.log(result.errorMessage);
     }
   }
 }

@@ -37,42 +37,14 @@ class ResolveAddressUsecase extends UseCase<AppState, String> {
 
   @override
   Future<AppState> call({required String params}) async {
-    if (solanaService.isValidAddress(params)) {
-      ref.read(receipentAddressProvider.notifier).state = params;
+    ref.read(receipentAddressProvider.notifier).state = params;
 
-      ref.watch(isUsingUsername.notifier).state = false;
+    ref.watch(isUsingUsername.notifier).state = false;
 
-      navkey.currentContext!.mixpanel.timetrack(
-        MixpanelEvents.sendViaWallet,
-      );
+    navkey.currentContext!.mixpanel.timetrack(
+      MixpanelEvents.sendViaWallet,
+    );
 
-      return LoadedState(params);
-    } else {
-      final result =
-          await repository.resolveUsername(params.toLowerCase().trim());
-
-      if (result.isError) {
-        navkey.currentContext!.notify.addNotification(
-          NotificationTile(
-            notificationType: NotificationType.error,
-            content:
-                '''Failed to resolve. Please check username or wallet address and try again''',
-          ),
-        );
-
-        ref.read(receipentAddressProvider.notifier).state = null;
-      } else {
-        ref.read(receipentAddressProvider.notifier).state =
-            (result as LoadedState).data['data']['wallet_address'];
-
-        ref.watch(isUsingUsername.notifier).state = true;
-
-        navkey.currentContext!.mixpanel.timetrack(
-          MixpanelEvents.sendViaUsername,
-        );
-      }
-
-      return result;
-    }
+    return LoadedState(params);
   }
 }

@@ -81,6 +81,7 @@ dependencies:
   app_links: ^6.4.0
   firebase_in_app_messaging: ^0.8.1+6
   firebase_analytics: ^11.4.6
+  solana_wallet_provider: ^0.1.0
 
 dev_dependencies:
   flutter_test:
