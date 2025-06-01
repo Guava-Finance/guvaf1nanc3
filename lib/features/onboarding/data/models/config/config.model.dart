@@ -1,5 +1,3 @@
-
-
 import 'package:guava/features/onboarding/data/models/config/company_settings.model.dart';
 import 'package:guava/features/onboarding/data/models/config/country.model.dart';
 import 'package:guava/features/onboarding/data/models/config/guava_pay.model.dart';
@@ -13,6 +11,7 @@ import 'package:guava/features/onboarding/domain/entities/config/wallet_settings
 class AppConfigModel extends AppConfig {
   const AppConfigModel({
     required super.appName,
+    required super.isMainnet,
     required super.walletSettings,
     required super.companySettings,
     required super.guavaPay,
@@ -22,6 +21,7 @@ class AppConfigModel extends AppConfig {
   factory AppConfigModel.fromJson(Map<String, dynamic> json) {
     return AppConfigModel(
       appName: json['app_name'],
+      isMainnet: json['environment'].toString() == 'mainnet',
       walletSettings: WalletSettingsModel.fromJson(json['wallet_settings']),
       companySettings: CompanySettingsModel.fromJson(json['company_settings']),
       guavaPay: GuavaPayModel.fromJson(json['guava_pay']),
@@ -34,6 +34,7 @@ class AppConfigModel extends AppConfig {
   Map<String, dynamic> toJson() {
     return {
       'app_name': appName,
+      'environment': isMainnet ? 'mainnet' : 'devnet',
       'wallet_settings': (walletSettings as WalletSettingsModel).toJson(),
       'company_settings': (companySettings as CompanySettingsModel).toJson(),
       'guava_pay': (guavaPay as GuavaPayModel).toJson(),
@@ -43,6 +44,7 @@ class AppConfigModel extends AppConfig {
 
   AppConfigModel copyWith({
     String? appName,
+    bool? isMainnet,
     WalletSettingsEntity? walletSettings,
     CompanySettingsEntity? companySettings,
     GuavaPayEntity? guavaPay,
@@ -50,6 +52,7 @@ class AppConfigModel extends AppConfig {
   }) {
     return AppConfigModel(
       appName: appName ?? this.appName,
+      isMainnet: isMainnet ?? this.isMainnet,
       walletSettings: walletSettings ?? this.walletSettings,
       companySettings: companySettings ?? this.companySettings,
       guavaPay: guavaPay ?? this.guavaPay,

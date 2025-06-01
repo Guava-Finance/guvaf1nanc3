@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -17,6 +18,9 @@ class TransactionPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     context.mixpanel.track(MixpanelEvents.viewedTransactionHistory);
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
 
     return Scaffold(
       appBar: AppBar(

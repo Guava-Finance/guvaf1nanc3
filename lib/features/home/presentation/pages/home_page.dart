@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
+import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
-import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/history.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
@@ -37,6 +36,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       debouncer.run(() async {
         if (mounted) {
           if (!(await ref.watch(homeNotifierProvider).hasShowcasedHome())) {
@@ -60,6 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final hn = ref.watch(homeNotifierProvider);
+
     return ShowCaseWidget(
       onStart: (p0, p1) {},
       onComplete: (p0, p1) {},
@@ -77,6 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ShowCaseWidget.of(scaffldKey.currentContext!).startShowCase([
             allTransactionsButtonWidgetKey,
             transactionSessionWidgetKey,
+            otherAssetsWidgetKey,
           ]);
         }
 

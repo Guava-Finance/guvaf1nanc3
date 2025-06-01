@@ -8,7 +8,6 @@ import 'package:guava/const/resource.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
-import 'package:guava/core/resources/notification/wrapper/tile.dart';
 import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/util/money_controller.dart';
 import 'package:guava/core/routes/router.dart';

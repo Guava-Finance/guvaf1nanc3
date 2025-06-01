@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -46,6 +47,10 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountReceive>
     controller = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       amountCtrl.addListener(() async {
         final balanceAsync = await ref.read(balanceUsecaseProvider.future);
         final amount = NumberFormat().tryParse(amountCtrl.text)?.toDouble();

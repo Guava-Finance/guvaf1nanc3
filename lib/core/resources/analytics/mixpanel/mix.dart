@@ -1,5 +1,4 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

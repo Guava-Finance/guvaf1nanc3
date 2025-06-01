@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -51,6 +52,10 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountWallet>
     controller = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       controller.value = TextEditingValue(
         text: ref.read(receipentAddressProvider.notifier).state ?? '',
       );

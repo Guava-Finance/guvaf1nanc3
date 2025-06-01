@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
 import 'package:guava/core/routes/router.dart';
@@ -26,6 +27,10 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
     with Loader {
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     final activeState = ref.watch(activeTabState);
 
     return Scaffold(
@@ -49,21 +54,27 @@ class _ReviewPaymentPageState extends ConsumerState<ReviewPaymentPage>
                 return CustomButton(
                   title: 'Complete Transfer',
                   onTap: () async {
-                    await withLoading(() async {
-                      late bool result;
+                    context.push(pAuthorizeTxn).then((v) async {
+                      if (v != null) {
+                        if ((v as bool)) {
+                          await withLoading(() async {
+                            late bool result;
 
-                      if (activeState == 0 && !widget.fromPayAnyone) {
-                        result = await ref
-                            .read(transferNotifierProvider)
-                            .makeWalletTransfer();
-                      } else {
-                        result = await ref
-                            .read(transferNotifierProvider)
-                            .makeABankTransfer();
-                      }
+                            if (activeState == 0 && !widget.fromPayAnyone) {
+                              result = await ref
+                                  .read(transferNotifierProvider)
+                                  .makeWalletTransfer();
+                            } else {
+                              result = await ref
+                                  .read(transferNotifierProvider)
+                                  .makeABankTransfer();
+                            }
 
-                      if (result) {
-                        navkey.currentContext!.go(pPaymentStatus);
+                            if (result) {
+                              navkey.currentContext!.go(pPaymentStatus);
+                            }
+                          });
+                        }
                       }
                     });
                   },

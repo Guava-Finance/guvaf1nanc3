@@ -1,9 +1,7 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
-import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/util/dialog.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -58,14 +56,23 @@ class PermissionManager {
     // If granted, return true immediately
     if (status.isGranted) return true;
 
-    navkey.currentContext!.notify.addNotification(NotificationTile(
-      content: '${permissionName(permission)} permission is required',
-    ));
-
-    // If denied in any form and settingsType provided, open settings
-    if (settingsType != null) {
-      await AppSettings.openAppSettings(type: settingsType);
-    }
+    ProviderScope.containerOf(
+      navkey.currentContext!,
+      listen: false,
+    ).read(customDialogProvider).openDialog(
+          title: 'Permission required',
+          content:
+              '''Please grant ${permissionName(permission)} permission to Guava''',
+          action: 'Open Settings',
+          onTap: () async {
+            // If denied in any form and settingsType provided, open settings
+            if (settingsType != null) {
+              Future.delayed(Durations.medium2, () async {
+                await AppSettings.openAppSettings(type: settingsType);
+              });
+            }
+          },
+        );
 
     // Return false for any denial state
     return false;

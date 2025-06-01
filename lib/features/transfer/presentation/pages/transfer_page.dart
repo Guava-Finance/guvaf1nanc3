@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/features/home/presentation/notifier/home.notifier.dart';
@@ -38,6 +39,10 @@ class _TransferPageState extends ConsumerState<TransferPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       // Process initial address if provided through route navigation
       if (widget.initialAddress != null && widget.initialAddress!.isNotEmpty) {
         setState(() {

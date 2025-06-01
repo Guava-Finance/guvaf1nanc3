@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:guava/core/resources/analytics/mixpanel/const.dart';
-import 'package:guava/core/resources/analytics/mixpanel/mix.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/features/dashboard/presentation/widgets/survey/tile.dart';

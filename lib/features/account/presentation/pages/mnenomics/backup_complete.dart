@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/widgets/app_icon.dart';
 
@@ -10,6 +11,10 @@ class MnenomicBackupComplete extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     return Scaffold(
       appBar: AppBar(title: Text('Backup')),
       body: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/mixins/loading.dart';
@@ -19,8 +20,11 @@ class _KycDonePageState extends ConsumerState<KycDonePage> with Loader {
   @override
   void initState() {
     super.initState();
-  }
 
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+  }
 
   @override
   Widget build(BuildContext context) {

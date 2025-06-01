@@ -13,6 +13,7 @@ abstract class HomeRemoteDatasource {
   Future<dynamic> checkUsername(String username);
   Future<dynamic> setUsername(String wallet, String username);
   Future<dynamic> history(String wallet);
+  Future<dynamic> setupFCM(String token);
 }
 
 class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
@@ -58,5 +59,12 @@ class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
       '/transfer/history/$wallet/',
       header: {'X-Wallet-Public-Key': wallet},
     );
+  }
+
+  @override
+  Future setupFCM(String token) async {
+    return await networkInterceptor.post('/notifications/', data: {
+      'fcm_token': token,
+    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/scanner_result.dart';
@@ -39,6 +40,10 @@ class _WalletScannerPageState extends ConsumerState<WalletScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Scan QR Code'),

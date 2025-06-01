@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:hashlib/hashlib.dart';
 
 final encryptionKeyProvider = Provider<String>((r) => Env.aesEncryptionKey);
-final encryptionIvProvider = Provider<String>((r) => Env.aesEncryptionKey);
+final encryptionIvProvider = Provider<String>((r) => Env.aesEncryptionIv);
 
 final encryptionServiceProvider = Provider<EncryptionService>((ref) {
   return EncryptionService(
@@ -71,7 +71,7 @@ class EncryptionService {
     try {
       final encrypter = Encrypter(AES(_key, mode: AESMode.cbc));
       final decrypted = encrypter.decrypt64(encryptedText, iv: _iv);
-      
+
       return decrypted;
     } catch (e) {
       // If we can't decrypt it, return the original

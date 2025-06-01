@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
@@ -34,6 +35,10 @@ class _ShowMnenomicsPageState extends ConsumerState<ShowMnenomicsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(firebaseAnalyticsProvider)
+          .triggerScreenLogged(runtimeType.toString());
+
       if (!widget.isBackUp) {
         navkey.currentContext!.mixpanel.track(
           MixpanelEvents.seedPhraseViewed,

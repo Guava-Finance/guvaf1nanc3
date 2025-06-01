@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/env/env.dart';
 import 'package:guava/core/resources/extensions/state.dart';
 import 'package:guava/core/resources/network/interceptor.dart';
@@ -32,6 +31,8 @@ final userCountry = StateProvider<CountryEntity?>((ref) {
 
 final splTokenAccounts = StateProvider<Map<String, SplToken>>((ref) => {});
 
+final appConfig = StateProvider<AppConfig?>((ref) => null);
+
 class ConfigService {
   ConfigService({
     required this.network,
@@ -47,6 +48,8 @@ class ConfigService {
 
   Future<void> fetchConfig() async {
     final config = await getConfig();
+
+    ref.watch(appConfig.notifier).state = config;
 
     if (config != null) {
       unawaited(_remoteConfigFetch());

@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/const/resource.dart';
+import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/styles/colors.dart';
-import 'package:guava/features/account/presentation/notifier/account.notifier.dart';
 import 'package:guava/widgets/app_icon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,6 +21,10 @@ class SupportPage extends ConsumerStatefulWidget {
 class _SupportPageState extends ConsumerState<SupportPage> {
   @override
   Widget build(BuildContext context) {
+    ref
+        .read(firebaseAnalyticsProvider)
+        .triggerScreenLogged(runtimeType.toString());
+
     // final an = ref.watch(accountNotifierProvider);
 
     return Scaffold(

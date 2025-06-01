@@ -7,6 +7,7 @@ import 'package:guava/features/onboarding/domain/entities/config/wallet_settings
 
 class AppConfig extends Equatable {
   final String appName;
+  final bool isMainnet;
   final WalletSettingsEntity walletSettings;
   final CompanySettingsEntity companySettings;
   final GuavaPayEntity guavaPay;
@@ -14,6 +15,7 @@ class AppConfig extends Equatable {
 
   const AppConfig({
     required this.appName,
+    required this.isMainnet,
     required this.walletSettings,
     required this.companySettings,
     required this.guavaPay,

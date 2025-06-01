@@ -14,6 +14,9 @@ part 'dashboard.notifier.g.dart';
 class DashboardNotifier extends _$DashboardNotifier {
   @override
   DashboardNotifier build() {
+    checkNCreateUSDCAccount();
+    hasLocationChanged();
+
     return this;
   }
 
@@ -23,9 +26,7 @@ class DashboardNotifier extends _$DashboardNotifier {
     // final walletAddress = await ref.read(walletAddressProvider.future);
     final solanaService = ref.read(solanaServiceProvider);
 
-    final tokenAccount = await solanaService.doesSPLTokenAccountExist(
-      config!.walletSettings.usdcMintAddress,
-    );
+    final tokenAccount = await solanaService.doesSPLTokenAccountExist();
 
     // todo: check balance before calling prefund
     // // does prefunding behind the sceen

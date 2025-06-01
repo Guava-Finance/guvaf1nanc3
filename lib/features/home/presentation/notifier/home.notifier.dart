@@ -21,10 +21,12 @@ import 'package:guava/features/home/domain/entities/transaction_history.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';
 import 'package:guava/features/home/domain/usecases/check_username.dart';
 import 'package:guava/features/home/domain/usecases/set_username.dart';
+import 'package:guava/features/home/domain/usecases/setup_fcm.dart';
 import 'package:guava/features/home/presentation/widgets/action_banner.dart';
 import 'package:guava/features/onboarding/data/models/account.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'home.notifier.g.dart';
 
@@ -131,6 +133,19 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
     onTap: () {},
   ));
 
+  widgets.add(ActionBanners(
+    title: 'Join the conversation',
+    subtitle: 'share your thoughts',
+    icon: R.ASSETS_ICONS_X_SOCIAL_MEDIA_LOGO_ICON_SVG,
+    bannerKey: Strings.followUs,
+    onTap: () {
+      launchUrl(
+        Uri.parse('https://x.com/guavafinance'),
+        mode: LaunchMode.externalApplication,
+      );
+    },
+  ));
+
   return widgets;
 });
 
@@ -139,6 +154,8 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   @override
   HomeNotifier build() {
     scrollController = ScrollController();
+
+    setupFcm();
 
     return this;
   }
@@ -281,6 +298,15 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
       return 'Night';
     }
   }
+
+  Future<void> setupFcm() async {
+    final result =
+        await ref.read(setupFcmTokenUsecasesProvider).call(params: null);
+
+    if (result.isError) {
+      AppLogger.log(result.errorMessage);
+    }
+  }
 }
 
 GlobalKey balanceWidgetKey = GlobalKey();
@@ -289,6 +315,7 @@ GlobalKey avatarWidgetKey = GlobalKey();
 GlobalKey scannerWidgetKey = GlobalKey();
 GlobalKey transferWidgetKey = GlobalKey();
 GlobalKey payAnyoneWidgetKey = GlobalKey();
+GlobalKey otherAssetsWidgetKey = GlobalKey();
 GlobalKey receiveWidgetKey = GlobalKey();
 GlobalKey allTransactionsButtonWidgetKey = GlobalKey();
 GlobalKey transactionSessionWidgetKey = GlobalKey();

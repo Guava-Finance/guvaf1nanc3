@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guava/const/resource.dart';
 import 'package:guava/core/app_strings.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/state.dart';
