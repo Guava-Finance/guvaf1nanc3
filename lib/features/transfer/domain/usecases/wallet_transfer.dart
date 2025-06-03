@@ -96,10 +96,10 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
         throw Exception('Recipient address not found');
       }
 
-      await solanaService.checkAndEnableATAForWallet(
-        params.recipientAddress!,
-        config.walletSettings.usdcMintAddress,
-      );
+      // await solanaService.checkAndEnableATAForWallet(
+      //   params.recipientAddress!,
+      //   config.walletSettings.usdcMintAddress,
+      // );
 
       final signedTx = await solanaService.transferUSDC(
         amount: usdcAmount,

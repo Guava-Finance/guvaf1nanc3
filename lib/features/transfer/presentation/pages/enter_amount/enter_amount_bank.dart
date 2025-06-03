@@ -57,7 +57,7 @@ class _EnterAmountWalletState extends ConsumerState<EnterAmountBank>
 
         usdcAmount = (amount ?? 0.0) / balanceAsync.exchangeRate;
 
-        isValidated = (amount ?? 0.0) > 999 &&
+        isValidated = (amount ?? 0.0) > 49 &&
             (amount ?? 0.0) <= balanceAsync.localBalance;
 
         ref.watch(usdcAountTransfer.notifier).state = usdcAmount;

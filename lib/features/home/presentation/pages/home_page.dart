@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/analytics/firebase/analytics.dart';
-import 'package:guava/core/resources/analytics/logger/logger.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/resources/util/debouncer.dart';
 import 'package:guava/features/home/domain/usecases/balance.dart';

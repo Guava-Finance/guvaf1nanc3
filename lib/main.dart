@@ -14,7 +14,6 @@ import 'package:go_router/go_router.dart';
 import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/analytics/mixpanel/const.dart';
 import 'package:guava/core/resources/extensions/context.dart';
-import 'package:guava/core/resources/notification/fcm/fcm.dart';
 import 'package:guava/core/resources/notification/wrapper/blur.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';

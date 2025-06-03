@@ -385,6 +385,10 @@ final class SolanaService {
   }) async {
     final config = await configService.getConfig();
 
+    AppLogger.log('usdc mint: ${config?.walletSettings.usdcMintAddress}');
+    AppLogger.log(
+        'company wallet: ${config?.companySettings.companyWalletAddress}');
+
     final Ed25519HDKeyPair wallet = await _getWallet();
 
     final Ed25519HDPublicKey senderUSDCWallet =
@@ -415,7 +419,9 @@ final class SolanaService {
 
     // Transfer to Recipient
     final TokenInstruction instruction = TokenInstruction.transfer(
-      amount: (amount * lamportsPerSol).toInt(),
+      amount: config.isMainnet
+          ? (amount * 1e6).toInt()
+          : (amount * lamportsPerSol).toInt(),
       source: senderUSDCWallet,
       destination: recipientUSDCWallet,
       owner: wallet.publicKey,
@@ -426,7 +432,9 @@ final class SolanaService {
     if (transactionFee != null) {
       // Transfer to Companies wallet
       txnFeeInstruction = TokenInstruction.transfer(
-        amount: (transactionFee * lamportsPerSol).toInt(),
+        amount: config.isMainnet
+            ? (transactionFee * 1e6).toInt()
+            : (transactionFee * lamportsPerSol).toInt(),
         source: senderUSDCWallet,
         destination: companyUSDCWallet,
         owner: wallet.publicKey,

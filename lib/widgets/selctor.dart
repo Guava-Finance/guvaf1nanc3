@@ -103,7 +103,9 @@ class _CustomListPickerState extends ConsumerState<CustomListPicker> {
                   child: TextField(
                     onChanged: (value) {
                       optionsCopies = [...widget.options];
-                      optionsCopies.retainWhere((e) => e.contains(value));
+                      optionsCopies.retainWhere(
+                        (e) => e.toLowerCase().contains(value),
+                      );
 
                       setState(() {});
                     },
