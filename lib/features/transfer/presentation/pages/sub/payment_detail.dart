@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/extensions/context.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/transfer/domain/usecases/countries_usecase.dart';
 import 'package:guava/features/transfer/domain/usecases/wallet_transfer.dart';
@@ -103,8 +104,11 @@ class PaymentDetail extends ConsumerWidget {
           Divider(color: BrandColors.light.withValues(alpha: 0.1)),
           TextButton(
             onPressed: () {
+              var url =
+                  'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
+
               launchUrl(
-                Uri.parse('https://solscan.io/tx/$txnId?cluster=devnet'),
+                Uri.parse(url),
                 mode: LaunchMode.externalApplication,
               );
             },

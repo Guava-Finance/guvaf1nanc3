@@ -47,6 +47,8 @@ final allAssetBalance = FutureProvider<List<TokenAccount>>((ref) async {
   final tokens = await solana.allAssets();
 
   tokens.removeWhere((e) => e.mint == config?.walletSettings.usdcMintAddress);
+  tokens.removeWhere((e) => e.amount < 0.1);
+  // tokens.removeWhere((e) => e.splToken == null);
 
   return [solBalance, ...tokens];
 });

@@ -271,7 +271,7 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   Future<String> usdcAmount(TransactionsHistory data) async {
     final balance = await ref.read(balanceUsecaseProvider.future);
     final exchangeRate = balance.exchangeRate;
-    final fmt = NumberFormat.currency(symbol: balance.symbol, decimalDigits: 2);
+    final fmt = NumberFormat.currency(symbol: '', decimalDigits: 2);
 
     double amount = data.amount ?? 0.0;
 

@@ -291,15 +291,14 @@ final class SolanaService {
     return transactionId;
   }
 
-  Future<String?> checkAndEnableATAForWallet(String walletAddress,
-      [String? mintAddress]) async {
+  Future<String?> checkAndEnableATAForWallet(String walletAddress) async {
     try {
       final config = await configService.getConfig();
       final wallet = await _getWallet();
 
       // Use provided mint address or default to USDC mint
       final tokenMint = Ed25519HDPublicKey.fromBase58(
-        mintAddress ?? config!.walletSettings.usdcMintAddress,
+        config!.walletSettings.usdcMintAddress,
       );
 
       // Get the associated token account address for this mint and owner
@@ -311,7 +310,7 @@ final class SolanaService {
       // Check if the token account exists
       final accountInfo = await rpcClient.getAccountInfo(
         ataAddress.toBase58(),
-        encoding: Encoding.jsonParsed,
+        encoding: Encoding.base64,
       );
 
       // If account doesn't exist, create it
@@ -385,9 +384,14 @@ final class SolanaService {
   }) async {
     final config = await configService.getConfig();
 
-    AppLogger.log('usdc mint: ${config?.walletSettings.usdcMintAddress}');
-    AppLogger.log(
-        'company wallet: ${config?.companySettings.companyWalletAddress}');
+    SplToken? splToken;
+
+    if (ref
+        .read(splTokenAccounts)
+        .containsKey(config?.walletSettings.usdcMintAddress)) {
+      splToken =
+          ref.read(splTokenAccounts)[config?.walletSettings.usdcMintAddress];
+    }
 
     final Ed25519HDKeyPair wallet = await _getWallet();
 
@@ -420,7 +424,9 @@ final class SolanaService {
     // Transfer to Recipient
     final TokenInstruction instruction = TokenInstruction.transfer(
       amount: config.isMainnet
-          ? (amount * 1e6).toInt()
+          ? splToken == null
+              ? (amount * 1e6).toInt()
+              : (pow(10, splToken.decimals) * amount).toInt()
           : (amount * lamportsPerSol).toInt(),
       source: senderUSDCWallet,
       destination: recipientUSDCWallet,
@@ -433,7 +439,9 @@ final class SolanaService {
       // Transfer to Companies wallet
       txnFeeInstruction = TokenInstruction.transfer(
         amount: config.isMainnet
-            ? (transactionFee * 1e6).toInt()
+            ? splToken == null
+                ? (transactionFee * 1e6).toInt()
+                : (pow(10, splToken.decimals) * transactionFee).toInt()
             : (transactionFee * lamportsPerSol).toInt(),
         source: senderUSDCWallet,
         destination: companyUSDCWallet,

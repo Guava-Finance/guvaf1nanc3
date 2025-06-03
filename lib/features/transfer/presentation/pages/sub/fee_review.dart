@@ -55,9 +55,10 @@ class FeeReview extends StatelessWidget {
                         TextSpan(
                           text: (localAmount).formatDecimal,
                           style: context.textTheme.bodyMedium?.copyWith(
-                              color: BrandColors.washedTextColor,
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.w600),
+                            color: BrandColors.washedTextColor,
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),
