@@ -89,22 +89,6 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
     }
   }
 
-  // check whether username is created
-  final username = await storage.readFromStorage(Strings.myUsername);
-
-  if (username == null) {
-    widgets.add(ActionBanners(
-      title: 'Create your @username',
-      subtitle: 'A unique identity for your wallet',
-      bannerKey: Strings.createUsername,
-      icon: R.ASSETS_ICONS_USERNAME_ICON_SVG,
-      onTap: () {
-        navkey.currentContext!.push(pSetUsername);
-        HapticFeedback.lightImpact();
-      },
-    ));
-  }
-
   // check whether seed phrase is backed up
   final backup = await storage.readFromStorage(Strings.mnenomicBackupComplete);
 
@@ -118,6 +102,22 @@ final pendingActions = FutureProvider<List<Widget>>((ref) async {
         // true: means backup seed phrase
         // false: means just see seed phrase
         navkey.currentContext!.push(pMnenomicInstruction, extra: true);
+        HapticFeedback.lightImpact();
+      },
+    ));
+  }
+
+  // check whether username is created
+  final username = await storage.readFromStorage(Strings.myUsername);
+
+  if (username == null) {
+    widgets.add(ActionBanners(
+      title: 'Create your @username',
+      subtitle: 'A unique identity for your wallet',
+      bannerKey: Strings.createUsername,
+      icon: R.ASSETS_ICONS_USERNAME_ICON_SVG,
+      onTap: () {
+        navkey.currentContext!.push(pSetUsername);
         HapticFeedback.lightImpact();
       },
     ));
@@ -216,6 +216,8 @@ class HomeNotifier extends _$HomeNotifier with ChangeNotifier {
   Color txnColor(String? status) {
     switch (status?.toLowerCase()) {
       case 'completed':
+        return BrandColors.washedGreen;
+      case 'success':
         return BrandColors.washedGreen;
       case 'failed':
         return BrandColors.washedRed;

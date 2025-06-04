@@ -43,14 +43,14 @@ final allAssetBalance = FutureProvider<List<TokenAccount>>((ref) async {
   final solana = ref.watch(solanaServiceProvider);
   final config = await ref.watch(configServiceProvider).getConfig();
 
-  final solBalance = await solana.getSolBalanceAsTokenAccount();
+  // final solBalance = await solana.getSolBalanceAsTokenAccount();
   final tokens = await solana.allAssets();
 
   tokens.removeWhere((e) => e.mint == config?.walletSettings.usdcMintAddress);
   tokens.removeWhere((e) => e.amount < 0.1);
   // tokens.removeWhere((e) => e.splToken == null);
 
-  return [solBalance, ...tokens];
+  return [...tokens];
 });
 
 final cachedBalanceProivder =

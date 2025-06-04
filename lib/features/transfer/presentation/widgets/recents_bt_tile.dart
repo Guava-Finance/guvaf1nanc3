@@ -26,9 +26,9 @@ class RecentsBankTransferTile<T> extends StatelessWidget {
       child: Row(
         children: [
           CustomIcon(
-            icon: R.ASSETS_ICONS_NGN_FLAG_SVG,
-            height: 40.h,
-            width: 40.w,
+            icon: R.ASSETS_ICONS_NIGERIA_FLAG_SVG,
+            height: 30.h,
+            width: 30.w,
           ),
           10.horizontalSpace,
           Expanded(

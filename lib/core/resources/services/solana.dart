@@ -411,10 +411,10 @@ final class SolanaService {
       ),
     );
 
-    final Ed25519HDPublicKey companyUSDCWallet =
+    final Ed25519HDPublicKey companyFeeUSDCWallet =
         await findAssociatedTokenAddress(
       owner: Ed25519HDPublicKey.fromBase58(
-        config.companySettings.companyWalletAddress,
+        config.companySettings.companFeeyWalletAddress,
       ),
       mint: Ed25519HDPublicKey.fromBase58(
         config.walletSettings.usdcMintAddress,
@@ -444,7 +444,7 @@ final class SolanaService {
                 : (pow(10, splToken.decimals) * transactionFee).toInt()
             : (transactionFee * lamportsPerSol).toInt(),
         source: senderUSDCWallet,
-        destination: companyUSDCWallet,
+        destination: companyFeeUSDCWallet,
         owner: wallet.publicKey,
       );
     }

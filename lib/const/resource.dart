@@ -130,8 +130,9 @@ class R {
   static const String ASSETS_ICONS_NFC_FLOATER_SVG =
       'assets/icons/nfc-floater.svg';
 
-  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/ngn-flag.svg)
-  static const String ASSETS_ICONS_NGN_FLAG_SVG = 'assets/icons/ngn-flag.svg';
+  /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/nigeria_flag.svg)
+  static const String ASSETS_ICONS_NIGERIA_FLAG_SVG =
+      'assets/icons/nigeria_flag.svg';
 
   /// ![preview](file:///Users/oghenekparobor/guavafinance/assets/icons/night.svg)
   static const String ASSETS_ICONS_NIGHT_SVG = 'assets/icons/night.svg';

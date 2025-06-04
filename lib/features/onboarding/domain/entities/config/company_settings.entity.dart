@@ -3,9 +3,11 @@ import 'package:equatable/equatable.dart';
 
 class CompanySettingsEntity extends Equatable {
   final String companyWalletAddress;
+  final String companFeeyWalletAddress;
 
   const CompanySettingsEntity({
     required this.companyWalletAddress,
+    required this.companFeeyWalletAddress,
   });
 
   @override

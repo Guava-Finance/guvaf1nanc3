@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/styles/colors.dart';
 import 'package:guava/features/home/presentation/pages/sub/transaction_detail.dart';
 import 'package:guava/features/home/presentation/pages/sub/transaction_fee.dart';
@@ -74,9 +75,12 @@ class TransactionDetailPage extends ConsumerWidget {
               final txnId =
                   ref.read(selectedTransactionHistory)?.explorerTransactionId;
 
+              final url =
+                  'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
+
               SharePlus.instance.share(
                 ShareParams(
-                  text: 'https://solscan.io/tx/$txnId?cluster=devnet',
+                  text: url,
                 ),
               );
             },

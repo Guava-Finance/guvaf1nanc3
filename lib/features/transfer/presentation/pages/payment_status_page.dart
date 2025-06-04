@@ -5,6 +5,7 @@ import 'package:guava/core/resources/analytics/firebase/analytics.dart';
 import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/double.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -65,10 +66,11 @@ class _PaymentStatusPageState extends ConsumerState<PaymentStatusPage> {
             onTap: () {
               final txnId = ref.read(transactionId.notifier).state;
 
+              final url =
+                  'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
+
               SharePlus.instance.share(
-                ShareParams(
-                  text: 'https://solscan.io/tx/$txnId?cluster=devnet',
-                ),
+                ShareParams(text: url),
               );
             },
             child: Text(

@@ -7,6 +7,7 @@ import 'package:guava/core/resources/extensions/context.dart';
 import 'package:guava/core/resources/extensions/string.dart';
 import 'package:guava/core/resources/extensions/widget.dart';
 import 'package:guava/core/resources/notification/wrapper/tile.dart';
+import 'package:guava/core/resources/services/config.dart';
 import 'package:guava/core/resources/services/pubnub.dart';
 import 'package:guava/core/routes/router.dart';
 import 'package:guava/core/styles/colors.dart';
@@ -65,10 +66,11 @@ class _SolanaPayStatusPageState extends ConsumerState<SolanaPayStatusPage> {
             onTap: () {
               final txnId = ref.read(transactionId.notifier).state;
 
+              final url =
+                  'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
+
               SharePlus.instance.share(
-                ShareParams(
-                  text: 'https://solscan.io/tx/$txnId?cluster=devnet',
-                ),
+                ShareParams(text: url),
               );
             },
             child: Text(
@@ -178,9 +180,11 @@ class _SolanaPayStatusPageState extends ConsumerState<SolanaPayStatusPage> {
                         onPressed: () {
                           final txnId = ref.read(transactionId);
 
+                          final url =
+                              'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
+
                           launchUrl(
-                            Uri.parse(
-                                'https://solscan.io/tx/$txnId?cluster=devnet'),
+                            Uri.parse(url),
                             mode: LaunchMode.externalApplication,
                           );
                         },

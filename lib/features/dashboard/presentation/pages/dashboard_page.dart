@@ -74,7 +74,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: (config?.isMainnet ?? false) ? 0 : 5.h,
+              bottom: (config?.isMainnet ?? true) ? 0.h : 2.h,
             ),
             child: Scaffold(
               body: IndexedStack(
