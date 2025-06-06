@@ -78,11 +78,7 @@ class TransactionDetailPage extends ConsumerWidget {
               final url =
                   'https://solscan.io/tx/$txnId${(ref.read(appConfig)?.isMainnet ?? true) ? '' : '?cluster=devnet'}';
 
-              SharePlus.instance.share(
-                ShareParams(
-                  text: url,
-                ),
-              );
+              SharePlus.instance.share(ShareParams(text: url));
             },
           ),
           30.verticalSpace,

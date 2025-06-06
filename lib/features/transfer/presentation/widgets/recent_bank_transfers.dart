@@ -76,8 +76,8 @@ class RecentBankTransfers<T> extends StatelessWidget {
                 )
               : Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: 8.h,
-                    horizontal: 15.w,
+                    vertical: 16.h,
+                    horizontal: 16.w,
                   ),
                   decoration: ShapeDecoration(
                     color: BrandColors.containerColor.withValues(alpha: .5),
@@ -88,16 +88,13 @@ class RecentBankTransfers<T> extends StatelessWidget {
                   child: ListView.separated(
                     shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 20.h,
-                      horizontal: 15.w,
-                    ),
                     itemCount: list!.take(3).length,
                     separatorBuilder: (ctx, i) => Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Divider(
-                        color:
-                            BrandColors.washedTextColor.withValues(alpha: 0.3),
+                        color: BrandColors.washedTextColor.withValues(
+                          alpha: 0.1,
+                        ),
                       ),
                     ),
                     itemBuilder: (ctx, i) {

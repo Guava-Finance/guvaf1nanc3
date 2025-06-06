@@ -244,8 +244,9 @@ class _WalletTransferState extends ConsumerState<WalletTransfer> with Loader {
                                       HapticFeedback.lightImpact();
                                       context.focusScope.unfocus();
 
-                                      navkey.currentContext!
-                                          .push(pEnterAmountWallet);
+                                      navkey.currentContext!.push(
+                                        pEnterAmountWallet,
+                                      );
                                     },
                               child: CircleAvatar(
                                 backgroundColor: result == null
