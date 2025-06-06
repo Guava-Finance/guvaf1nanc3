@@ -104,28 +104,34 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
         transactionFee: txFee,
       );
 
-      final newParam = params.copyWith(
-        amount: usdcAmount.toString(),
-        transactionFee: txFee.toString(),
-        signedTransaction: signedTx,
-        type: 'wallet',
-        recipientAddress: params.recipientAddress,
-        senderAddress: wallet,
-      );
+      AppLogger.log('Signed Tx: $signedTx');
 
-      final result = await repository.initWalletTransfer(
-        wallet,
-        newParam.toJson(),
-      );
+      final signature = await solanaService.walletSignature();
 
-      if (!result.isError) {
-        return LoadedState<Map<String, dynamic>>(
-          (result as LoadedState).data['data'],
-        );
-      }
+      AppLogger.log('Signature $signature');
 
-      return result;
-      // return ErrorState('');
+      // final newParam = params.copyWith(
+      //   amount: usdcAmount.toString(),
+      //   transactionFee: txFee.toString(),
+      //   signedTransaction: signedTx,
+      //   type: 'wallet',
+      //   recipientAddress: params.recipientAddress,
+      //   senderAddress: wallet,
+      // );
+
+      // final result = await repository.initWalletTransfer(
+      //   wallet,
+      //   newParam.toJson(),
+      // );
+
+      // if (!result.isError) {
+      //   return LoadedState<Map<String, dynamic>>(
+      //     (result as LoadedState).data['data'],
+      //   );
+      // }
+
+      // return result;
+      return ErrorState('');
     } catch (e) {
       return ErrorState(e.toString());
     }

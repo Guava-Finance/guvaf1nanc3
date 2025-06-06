@@ -129,6 +129,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.12.0"
+  base_codecs:
+    dependency: transitive
+    description:
+      name: base_codecs
+      sha256: "41701a12ede9912663decd708279924ece5018566daa7d1f484d5f4f10894f91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   bip39:
     dependency: "direct main"
     description:
@@ -437,10 +445,10 @@ packages:
     dependency: transitive
     description:
       name: ed25519_hd_key
-      sha256: "31e191ec97492873067e46dc9cc0c7d55170559c83a478400feffa0627acaccf"
+      sha256: c5c9f11a03f5789bf9dcd9ae88d641571c802640851f1cacdb13123f171b3a26
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.2.1"
   encrypt:
     dependency: "direct main"
     description:
@@ -937,7 +945,7 @@ packages:
     source: hosted
     version: "0.15.5+1"
   http:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: http
       sha256: fe7ab022b76f3034adc518fb6ea04a82387620e19977665ea18d30a1cf43442f
@@ -1321,13 +1329,13 @@ packages:
     source: hosted
     version: "6.1.0"
   pinenacl:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: pinenacl
-      sha256: "57e907beaacbc3c024a098910b6240758e899674de07d6949a67b52fd984cbdf"
+      sha256: "3a5503637587d635647c93ea9a8fecf48a420cc7deebe6f1fc85c2a5637ab327"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.5.1"
   pinput:
     dependency: "direct main"
     description:
@@ -1557,6 +1565,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.31.2+1"
+  solana_borsh:
+    dependency: transitive
+    description:
+      name: solana_borsh
+      sha256: "33b061a09c85bd34798a0104c26049511d55cc390e05c68243c8a9d5a344c5ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  solana_buffer:
+    dependency: transitive
+    description:
+      name: solana_buffer
+      sha256: fbd7b5139ac0e64cc190e50530dd369a78b8b83f5bf5178a0a014afa55b4e9d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  solana_common:
+    dependency: transitive
+    description:
+      name: solana_common
+      sha256: d181abe055c0df1f95818dfa67b12a2f1a93030745238e13f3aa49053f9aee6d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+1"
+  solana_jsonrpc:
+    dependency: "direct overridden"
+    description:
+      name: solana_jsonrpc
+      sha256: "1bb286b60918a621d5909503e0daa928c9f99f2241d8eb4b2cc7f74d1a78deee"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  solana_web3:
+    dependency: "direct main"
+    description:
+      name: solana_web3
+      sha256: "706b76a475e74dae5ffb523b66c0c51cc73f8e2a137bf418debaba096b42510c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3"
   source_gen:
     dependency: transitive
     description:
@@ -1621,6 +1669,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      sha256: "0669c70faae6270521ee4f05bffd2919892d42d1276e6c495be80174b6bc0ef6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.1"
   term_glyph:
     dependency: transitive
     description:
@@ -1798,7 +1854,7 @@ packages:
     source: hosted
     version: "0.1.6"
   web_socket_channel:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: web_socket_channel
       sha256: "0b8e2457400d8a859b7b2030786835a28a8e80836ef64402abef392ff4f1d0e5"

@@ -21,7 +21,9 @@ import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
 // import 'package:solana/encoder.dart';
 import 'package:solana/encoder.dart' as encoder;
+import 'package:solana_web3/programs.dart' as web3Program;
 import 'package:solana/solana.dart';
+import 'package:solana_web3/solana_web3.dart' as web3;
 
 import 'storage.dart';
 
@@ -376,7 +378,7 @@ final class SolanaService {
   /// on solana
   /// And the transaction would be signed locally using the user's
   /// private key securely kept on the device.
-  Future<String> transferUSDC({
+  Future<dynamic> transferUSDC({
     required double amount,
     required String receiverAddress,
     double? transactionFee,
@@ -421,64 +423,89 @@ final class SolanaService {
       ),
     );
 
-    // Transfer to Recipient
-    final TokenInstruction instruction = TokenInstruction.transfer(
-      amount: config.isMainnet
-          ? splToken == null
-              ? (amount * 1e6).toInt()
-              : (pow(10, splToken.decimals) * amount).toInt()
-          : (amount * lamportsPerSol).toInt(),
-      source: senderUSDCWallet,
-      destination: recipientUSDCWallet,
-      owner: wallet.publicKey,
-    );
+    // Convert to solana_web3 types
+    final web3SenderATA = web3.Pubkey.fromBase58(senderUSDCWallet.toBase58());
+    final web3RecipientATA =
+        web3.Pubkey.fromBase58(recipientUSDCWallet.toBase58());
+    final web3CompanyATA =
+        web3.Pubkey.fromBase58(companyFeeUSDCWallet.toBase58());
+    final web3WalletPubkey =
+        web3.Pubkey.fromBase58(wallet.publicKey.toBase58());
 
-    late TokenInstruction txnFeeInstruction;
+    // Create transfer instruction
+    final transferAmount = config.isMainnet
+        ? splToken == null
+            ? (amount * 1e6).toInt()
+            : (pow(10, splToken.decimals) * amount).toInt()
+        : (amount * lamportsPerSol).toInt();
 
+    final connection = web3.Connection(web3.Cluster.mainnet);
+    final blockhash = await connection.getLatestBlockhash();
+
+    List<web3.TransactionInstruction> instructions = [];
+
+    instructions.add(web3Program.TokenProgram.transfer(
+      amount: BigInt.from(transferAmount),
+      source: web3SenderATA,
+      destination: web3RecipientATA,
+      owner: web3WalletPubkey,
+    ));
+
+    // Add fee transfer if present
     if (transactionFee != null) {
-      // Transfer to Companies wallet
-      txnFeeInstruction = TokenInstruction.transfer(
-        amount: config.isMainnet
-            ? splToken == null
-                ? (transactionFee * 1e6).toInt()
-                : (pow(10, splToken.decimals) * transactionFee).toInt()
-            : (transactionFee * lamportsPerSol).toInt(),
-        source: senderUSDCWallet,
-        destination: companyFeeUSDCWallet,
-        owner: wallet.publicKey,
+      final feeAmount = config.isMainnet
+          ? splToken == null
+              ? (transactionFee * 1e6).toInt()
+              : (pow(10, splToken.decimals) * transactionFee).toInt()
+          : (transactionFee * lamportsPerSol).toInt();
+
+      instructions.add(
+        web3Program.TokenProgram.transfer(
+          amount: BigInt.from(feeAmount),
+          source: web3SenderATA,
+          destination: web3CompanyATA,
+          owner: web3WalletPubkey,
+        ),
       );
     }
 
-    MemoInstruction? memoInstruction;
-
+    // Add memo if present
     if (narration != null) {
-      memoInstruction = MemoInstruction(
-        memo: narration,
-        signers: <Ed25519HDPublicKey>[wallet.publicKey],
+      instructions.add(
+        web3Program.MemoProgram.create(narration),
       );
     }
 
-    final Message message = Message(
-      instructions: [
-        await _getGuavaWatermark(),
-        if (narration != null) memoInstruction!,
-        instruction,
-        if (transactionFee != null) txnFeeInstruction,
-      ],
+    // Create transaction v0 with the wallet as fee payer
+    final transaction = web3.Transaction.v0(
+      payer: web3WalletPubkey, // Use wallet as fee payer
+      instructions: instructions,
+      recentBlockhash: blockhash.blockhash,
     );
 
-    /// Sign the message instructions and send the encode SignedTx
-    /// to the backend for submission
-    final encoder.SignedTx signedTx = await wallet.signMessage(
-      message: message,
-      recentBlockhash: (await rpcClient.getLatestBlockhash()).value.blockhash,
-    );
+    // Sign the transaction using the wallet
+    final signedTx = await wallet.sign(transaction.serialize().toList());
 
-    // return signedTx.encode();
-    // Get the raw bytes from the signed transaction
+    // Return the transaction data for the relayer
+    return {
+      'tx': signedTx.toBase58(),
+      'address': web3WalletPubkey.toBase58(),
+    };
+  }
 
-    // Use bs58 package to encode the bytes in base58 instead of base64
-    return base58encode(signedTx.toByteArray().toList());
+  Future<String> walletSignature() async {
+    final wallet = await _getWallet();
+    // Message to sign (usually a challenge from your backend)
+    String message =
+        'Please sign this message to authenticate: ${DateTime.now().millisecondsSinceEpoch}';
+
+// Convert message to bytes
+    Uint8List messageBytes = Uint8List.fromList(utf8.encode(message));
+
+// Sign the message
+    final signature = await wallet.sign(messageBytes);
+
+    return signature.toBase58();
   }
 
   Future<encoder.Instruction> _getGuavaWatermark() async {
