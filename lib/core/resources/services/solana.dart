@@ -19,7 +19,6 @@ import 'package:guava/features/onboarding/data/models/account.dart';
 import 'package:guava/features/transfer/data/models/params/solana_pay.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/dto.dart';
-// import 'package:solana/encoder.dart';
 import 'package:solana/encoder.dart' as encoder;
 import 'package:solana_web3/programs.dart' as web3Program;
 import 'package:solana/solana.dart';
@@ -28,7 +27,11 @@ import 'package:solana_web3/solana_web3.dart' as web3;
 import 'storage.dart';
 
 final rpcClientProvider = Provider<RpcClient>((ref) {
-  return RpcClient(Env.rpcClient);
+  // Use a more reliable RPC endpoint
+  final rpcUrl = Env.rpcClient.isEmpty
+      ? 'https://api.mainnet-beta.solana.com'
+      : Env.rpcClient;
+  return RpcClient(rpcUrl);
 });
 
 final solanaServiceProvider = Provider<SolanaService>((ref) {
@@ -55,6 +58,8 @@ final class SolanaService {
   final NetworkInterceptor networkInterceptor;
   final ConfigService configService;
   final Ref ref;
+
+  static const int lamportsPerSol = 1000000000; // 1 SOL = 1 billion lamports
 
   Future<TokenAccount> getSolBalanceAsTokenAccount() async {
     final wallet = await _getWallet();
@@ -309,14 +314,36 @@ final class SolanaService {
         mint: tokenMint,
       );
 
-      // Check if the token account exists
-      final accountInfo = await rpcClient.getAccountInfo(
-        ataAddress.toBase58(),
-        encoding: Encoding.base64,
-      );
+      try {
+        // Check if the token account exists
+        final accountInfo = await rpcClient.getAccountInfo(
+          ataAddress.toBase58(),
+          encoding: Encoding.base64,
+        );
 
-      // If account doesn't exist, create it
-      if (accountInfo.value == null) {
+        // If account doesn't exist, create it
+        if (accountInfo.value == null) {
+          final instruction = AssociatedTokenAccountInstruction.createAccount(
+            funder: wallet.publicKey,
+            address: ataAddress,
+            owner: Ed25519HDPublicKey.fromBase58(walletAddress),
+            mint: tokenMint,
+          );
+
+          // Sign and send the transaction
+          final transactionId = await rpcClient.signAndSendTransaction(
+            Message.only(instruction),
+            [wallet],
+          );
+
+          return transactionId;
+        }
+
+        // If account exists, return null
+        return null;
+      } catch (e) {
+        AppLogger.log('Error checking account info: $e');
+        // If there's a network error, try to create the account anyway
         final instruction = AssociatedTokenAccountInstruction.createAccount(
           funder: wallet.publicKey,
           address: ataAddress,
@@ -332,9 +359,6 @@ final class SolanaService {
 
         return transactionId;
       }
-
-      // If account exists, return null
-      return null;
     } catch (e) {
       AppLogger.log('Error in checkAndEnableATAForWallet: $e');
       rethrow;
@@ -374,10 +398,72 @@ final class SolanaService {
     return tokenBalance.value;
   }
 
-  /// The amount would be converted to [lamport] the unit of measurement
-  /// on solana
-  /// And the transaction would be signed locally using the user's
-  /// private key securely kept on the device.
+  /// Helper method to get web3.Keypair from stored credentials
+  Future<web3.Keypair> _getWeb3Keypair() async {
+    final config = await configService.getConfig();
+
+    final String? mnemonics =
+        await storageService.readFromStorage(Strings.mnemonics);
+    if (mnemonics != null) {
+      final seed = mnemonicToSeed(mnemonics);
+      // Use the derivative path from config
+      final wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+        seed: seed,
+        hdPath: config!.walletSettings.derivativePath,
+      );
+      // Get the private key from the wallet's data
+      final walletData = await wallet.extract();
+      return web3.Keypair.fromSeed(Uint8List.fromList(walletData.bytes));
+    }
+
+    final String? privateKey =
+        await storageService.readFromStorage(Strings.privateKey);
+    if (privateKey != null) {
+      final seedBytes = processPrivateKey(privateKey);
+      return web3.Keypair.fromSeed(seedBytes);
+    }
+
+    throw Exception('No wallet credentials found');
+  }
+
+  Future<Ed25519HDKeyPair> _getWallet() async {
+    final config = await configService.getConfig();
+
+    // First, try to get wallet from mnemonics
+    final String? mnemonics = await storageService.readFromStorage(
+      Strings.mnemonics,
+    );
+
+    if (mnemonics != null && mnemonics.isNotEmpty) {
+      final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
+        seed: mnemonicToSeed(mnemonics),
+        hdPath: config!.walletSettings.derivativePath,
+      );
+      return wallet;
+    }
+
+    // If no mnemonics, try to get wallet from private key
+    final String? privateKey = await storageService.readFromStorage(
+      Strings.privateKey,
+    );
+
+    if (privateKey != null && privateKey.isNotEmpty) {
+      // Process the private key based on format (hex or base58)
+      final Uint8List seedBytes = processPrivateKey(privateKey);
+
+      // Create wallet from private key
+      final Ed25519HDKeyPair wallet =
+          await Ed25519HDKeyPair.fromPrivateKeyBytes(
+        privateKey: seedBytes,
+      );
+
+      return wallet;
+    }
+
+    // If we get here, no wallet information was found
+    throw Exception('No wallet found. Please create or import a wallet first.');
+  }
+
   Future<dynamic> transferUSDC({
     required double amount,
     required String receiverAddress,
@@ -395,79 +481,88 @@ final class SolanaService {
           ref.read(splTokenAccounts)[config?.walletSettings.usdcMintAddress];
     }
 
-    final Ed25519HDKeyPair wallet = await _getWallet();
+    // Get the keypair first
+    final keypair = await _getWeb3Keypair();
+    final web3WalletPubkey = keypair.pubkey;
 
-    final Ed25519HDPublicKey senderUSDCWallet =
-        await findAssociatedTokenAddress(
-      owner: wallet.publicKey,
+    final senderATA = await findAssociatedTokenAddress(
+      owner: Ed25519HDPublicKey.fromBase58(web3WalletPubkey.toBase58()),
+      mint: Ed25519HDPublicKey.fromBase58(
+        config!.walletSettings.usdcMintAddress,
+      ),
+    );
+    final receiverATA = await findAssociatedTokenAddress(
+      owner: Ed25519HDPublicKey.fromBase58(receiverAddress),
       mint: Ed25519HDPublicKey.fromBase58(
         config!.walletSettings.usdcMintAddress,
       ),
     );
 
-    final Ed25519HDPublicKey recipientUSDCWallet =
-        await findAssociatedTokenAddress(
-      owner: Ed25519HDPublicKey.fromBase58(receiverAddress),
-      mint: Ed25519HDPublicKey.fromBase58(
-        config.walletSettings.usdcMintAddress,
-      ),
-    );
-
-    final Ed25519HDPublicKey companyFeeUSDCWallet =
-        await findAssociatedTokenAddress(
-      owner: Ed25519HDPublicKey.fromBase58(
-        config.companySettings.companFeeyWalletAddress,
-      ),
-      mint: Ed25519HDPublicKey.fromBase58(
-        config.walletSettings.usdcMintAddress,
-      ),
-    );
-
     // Convert to solana_web3 types
-    final web3SenderATA = web3.Pubkey.fromBase58(senderUSDCWallet.toBase58());
-    final web3RecipientATA =
-        web3.Pubkey.fromBase58(recipientUSDCWallet.toBase58());
-    final web3CompanyATA =
-        web3.Pubkey.fromBase58(companyFeeUSDCWallet.toBase58());
-    final web3WalletPubkey =
-        web3.Pubkey.fromBase58(wallet.publicKey.toBase58());
+    final web3SenderATA = web3.Pubkey.fromBase58(senderATA.toBase58());
+    final web3ReceiverATA = web3.Pubkey.fromBase58(receiverATA.toBase58());
 
     // Create transfer instruction
     final transferAmount = config.isMainnet
         ? splToken == null
-            ? (amount * 1e6).toInt()
-            : (pow(10, splToken.decimals) * amount).toInt()
-        : (amount * lamportsPerSol).toInt();
+            ? (amount / 1e6).floor()
+            : (pow(10, splToken.decimals) / amount).floor()
+        : (amount / lamportsPerSol).floor();
+
+    // Ensure amount is greater than token fee (100000 from config)
+    if (transferAmount <= 100000) {
+      throw Exception('Amount must be greater than token fee');
+    }
 
     final connection = web3.Connection(web3.Cluster.mainnet);
     final blockhash = await connection.getLatestBlockhash();
 
+    // Check source account balance
+    final sourceAccount =
+        await connection.getTokenAccountBalance(web3SenderATA);
+    if (sourceAccount.amount < BigInt.from(transferAmount)) {
+      throw Exception('Insufficient balance');
+    }
+
     List<web3.TransactionInstruction> instructions = [];
 
-    instructions.add(web3Program.TokenProgram.transfer(
+    // Create transfer instruction with proper account metas
+    final transferInstruction = web3Program.TokenProgram.transfer(
       amount: BigInt.from(transferAmount),
       source: web3SenderATA,
-      destination: web3RecipientATA,
+      destination: web3ReceiverATA,
+      //  web3.Pubkey.fromBase58(
+      //     'AtHGwWe2cZQ1WbsPVHFsCm4FqUDW8pcPLYXWsA89iuDE'),
       owner: web3WalletPubkey,
-    ));
+    );
 
-    // Add fee transfer if present
-    if (transactionFee != null) {
-      final feeAmount = config.isMainnet
-          ? splToken == null
-              ? (transactionFee * 1e6).toInt()
-              : (pow(10, splToken.decimals) * transactionFee).toInt()
-          : (transactionFee * lamportsPerSol).toInt();
-
-      instructions.add(
-        web3Program.TokenProgram.transfer(
-          amount: BigInt.from(feeAmount),
-          source: web3SenderATA,
-          destination: web3CompanyATA,
-          owner: web3WalletPubkey,
-        ),
-      );
-    }
+    instructions.add(
+      web3.TransactionInstruction(
+        programId: web3Program.TokenProgram.programId,
+        keys: [
+          // Source account (writable, not signer)
+          web3.AccountMeta(
+            web3SenderATA,
+            isSigner: false,
+            isWritable: true,
+          ),
+          // Destination account (Octane's account - writable, not signer)
+          web3.AccountMeta(
+            web3.Pubkey.fromBase58(
+                'AtHGwWe2cZQ1WbsPVHFsCm4FqUDW8pcPLYXWsA89iuDE'),
+            isSigner: false,
+            isWritable: true,
+          ),
+          // Owner (signer, not writable)
+          web3.AccountMeta(
+            web3WalletPubkey,
+            isSigner: true,
+            isWritable: false,
+          ),
+        ],
+        data: transferInstruction.data,
+      ),
+    );
 
     // Add memo if present
     if (narration != null) {
@@ -476,36 +571,23 @@ final class SolanaService {
       );
     }
 
-    // Create transaction v0 with the wallet as fee payer
+    // Create transaction with Octane as fee payer
     final transaction = web3.Transaction.v0(
-      payer: web3WalletPubkey, // Use wallet as fee payer
+      payer: web3.Pubkey.fromBase58(
+          'Acau8iLY9Rv115UDzWPkDAopB6t9iFxGQuebZxffqoMv'),
       instructions: instructions,
       recentBlockhash: blockhash.blockhash,
     );
 
-    // Sign the transaction using the wallet
-    final signedTx = await wallet.sign(transaction.serialize().toList());
+    // Sign the transaction with the owner
+    transaction.sign([keypair]);
 
     // Return the transaction data for the relayer
     return {
-      'tx': signedTx.toBase58(),
+      'tx': base58encode(transaction.serialize().toList()),
       'address': web3WalletPubkey.toBase58(),
+      'receiver': receiverAddress,
     };
-  }
-
-  Future<String> walletSignature() async {
-    final wallet = await _getWallet();
-    // Message to sign (usually a challenge from your backend)
-    String message =
-        'Please sign this message to authenticate: ${DateTime.now().millisecondsSinceEpoch}';
-
-// Convert message to bytes
-    Uint8List messageBytes = Uint8List.fromList(utf8.encode(message));
-
-// Sign the message
-    final signature = await wallet.sign(messageBytes);
-
-    return signature.toBase58();
   }
 
   Future<encoder.Instruction> _getGuavaWatermark() async {
@@ -545,44 +627,6 @@ final class SolanaService {
     final wallet = await _getWallet();
 
     return wallet.destroy();
-  }
-
-  Future<Ed25519HDKeyPair> _getWallet() async {
-    final config = await configService.getConfig();
-
-    // First, try to get wallet from mnemonics
-    final String? mnemonics = await storageService.readFromStorage(
-      Strings.mnemonics,
-    );
-
-    if (mnemonics != null && mnemonics.isNotEmpty) {
-      final Ed25519HDKeyPair wallet = await Ed25519HDKeyPair.fromSeedWithHdPath(
-        seed: mnemonicToSeed(mnemonics),
-        hdPath: config!.walletSettings.derivativePath,
-      );
-      return wallet;
-    }
-
-    // If no mnemonics, try to get wallet from private key
-    final String? privateKey = await storageService.readFromStorage(
-      Strings.privateKey,
-    );
-
-    if (privateKey != null && privateKey.isNotEmpty) {
-      // Process the private key based on format (hex or base58)
-      final Uint8List seedBytes = processPrivateKey(privateKey);
-
-      // Create wallet from private key
-      final Ed25519HDKeyPair wallet =
-          await Ed25519HDKeyPair.fromPrivateKeyBytes(
-        privateKey: seedBytes,
-      );
-
-      return wallet;
-    }
-
-    // If we get here, no wallet information was found
-    throw Exception('No wallet found. Please create or import a wallet first.');
   }
 
   Future<Ed25519HDPublicKey> _getTokenAddress() async {

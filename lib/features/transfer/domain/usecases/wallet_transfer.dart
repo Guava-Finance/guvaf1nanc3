@@ -106,10 +106,6 @@ class WallTransferUsecase extends UseCase<AppState, WalletTransferParam> {
 
       AppLogger.log('Signed Tx: $signedTx');
 
-      final signature = await solanaService.walletSignature();
-
-      AppLogger.log('Signature $signature');
-
       // final newParam = params.copyWith(
       //   amount: usdcAmount.toString(),
       //   transactionFee: txFee.toString(),
